@@ -18,17 +18,22 @@ bool create_vulkan_descriptor_set_layouts (VkDevice device,
   {
     DBG_ASSERT (!CHECK_VULKAN_HANDLE (out_desc_set_layouts [i]));
 
-    // TODO: fix VkDescriptorSetLayoutCreateInfo
     VkDescriptorSetLayoutCreateInfo const dslci =
     {
       .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
       //.pNext = VK_NULL_HANDLE,
       //.flags = 0u,
-      .bindingCount = //???
-      .pBindings = //???
+      .bindingCount = desc_set_layout_binding_spans[i].size(),
+      .pBindings = desc_set_layout_binding_spans[i].data()
     };
 
-    VkResult const result = // TODO: add call to vkCreateDescriptorSetLayout here
+    VkResult const result = vkCreateDescriptorSetLayout
+    (
+        device,
+        &dslci,
+        nullptr,
+        &out_desc_set_layouts[i]
+    );
 
     if (!CHECK_VULKAN_RESULT (result) || !CHECK_VULKAN_HANDLE (out_desc_set_layouts [i]))
     {
@@ -55,13 +60,19 @@ bool create_vulkan_pipeline_layout (VkDevice device,
     .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
     //.pNext = VK_NULL_HANDLE,
     //.flags = 0u,
-    .setLayoutCount = //???
+    .setLayoutCount = num_desc_set_layouts,
     .pSetLayouts = desc_set_layouts,
     .pushConstantRangeCount = num_push_constant_ranges,
-    .pPushConstantRanges = //???
+    .pPushConstantRanges = push_constant_ranges
   };
 
-  VkResult const result = // TODO: add call to vkCreatePipelineLayout here
+  VkResult const result = vkCreatePipelineLayout
+  (
+      device,
+      &plci,
+      nullptr,
+      &out_pipeline_layout
+  );
 
   if (!CHECK_VULKAN_RESULT (result) || !CHECK_VULKAN_HANDLE (out_pipeline_layout))
   {
@@ -128,19 +139,26 @@ bool create_vulkan_pipeline_compute (VkDevice device,
     //.pSpecializationInfo = VK_NULL_HANDLE
   };
 
-  // TODO: fix VkComputePipelineCreateInfo
   VkComputePipelineCreateInfo const cpci =
   {
     .sType = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO,
     //.pNext = VK_NULL_HANDLE,
     //.flags = 0u,
-    .stage = //???
-    .layout = //???
+    .stage = pssci,
+    .layout = pipeline_layout,
     //.basePipelineHandle = VK_NULL_HANDLE,
     //.basePipelineIndex = 0u
   };
 
-  VkResult const result = // TODO: add call to vkCreateComputePipelines here
+  VkResult const result = vkCreateComputePipelines
+  (
+      device,
+      VK_NULL_HANDLE,
+      1u,    // This function is only setup for 1 pipeline. This needs to as well
+      &cpci,
+      VK_NULL_HANDLE,
+      &out_pipeline
+  );
 
   if (!CHECK_VULKAN_RESULT (result) || !CHECK_VULKAN_HANDLE (out_pipeline))
   {
@@ -205,11 +223,17 @@ bool create_vulkan_descriptor_pool (VkDevice device,
     //.flags = 0u,
     .flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT,
     .maxSets = max_sets,
-    .poolSizeCount = //???
-    .pPoolSizes = //???
+    .poolSizeCount = num_desc_pool_sizes,
+    .pPoolSizes = desc_pool_sizes
   };
 
-  VkResult const result = // TODO: add call to vkCreateDescriptorPool here
+  VkResult const result = vkCreateDescriptorPool
+  (
+      device,
+      &dpci,
+      VK_NULL_HANDLE,
+      &out_desc_pool
+  );
 
   if (!CHECK_VULKAN_RESULT (result) || !CHECK_VULKAN_HANDLE (out_desc_pool))
   {
@@ -242,9 +266,12 @@ bool create_vulkan_descriptor_sets (VkDevice device,
       .pSetLayouts = desc_set_infos [i].layout
     };
 
-    // TODO: fix call to vkAllocateDescriptorSets
-    VkResult const result = vkAllocateDescriptorSets (
-      &desc_set_infos [i].out_set->desc_set);                 // pDescriptorSets
+    VkResult const result = vkAllocateDescriptorSets
+    (
+        device,
+        VK_NULL_HANDLE,
+      &desc_set_infos [i].out_set->desc_set
+    );                 // pDescriptorSets
 
     if (!CHECK_VULKAN_RESULT (result) || !CHECK_VULKAN_HANDLE (desc_set_infos [i].out_set->desc_set))
     {

@@ -22,8 +22,8 @@ set_property(GLOBAL PROPERTY _CMAKE_FindGit_GIT_EXECUTABLE_VERSION
 include(ExternalProject)
 ExternalProject_Add(stb-populate
                      "UPDATE_DISCONNECTED" "False" "GIT_REPOSITORY" "https://github.com/nothings/stb" "GIT_TAG" "master"
-                    SOURCE_DIR          "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/stb-src"
-                    BINARY_DIR          "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/stb-build"
+                    SOURCE_DIR          "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/stb-src"
+                    BINARY_DIR          "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/stb-build"
                     CONFIGURE_COMMAND   ""
                     BUILD_COMMAND       ""
                     INSTALL_COMMAND     ""

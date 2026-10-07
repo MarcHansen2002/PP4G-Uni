@@ -1,24 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\CMakeFiles\d8d1bd79167093c31fa888935098f8e3\update_mappings.rule">
+    <CustomBuild Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\CMakeFiles\fb2f3806aaaaf0351d8027fe06a8f1ab\update_mappings.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
-    <CustomBuild Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-src\src\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\src\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-src\src\mappings.h.in">
+    <None Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\src\mappings.h.in">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-src\CMake\GenerateMappings.cmake" />
-    <None Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-build\src\CMakeFiles\update_mappings" />
+    <None Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\CMake\GenerateMappings.cmake" />
+    <None Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-build\src\CMakeFiles\update_mappings" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{C6B432A7-9BA3-3204-B8C5-EFE2F04DA53D}</UniqueIdentifier>
+      <UniqueIdentifier>{A4BB97D4-8F80-34E9-8072-236B6DDB308C}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{D025D8B4-E841-3CE1-A523-B84BE62681E6}</UniqueIdentifier>
+      <UniqueIdentifier>{CCC899DF-E8BF-307A-B896-625C8D450EA0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

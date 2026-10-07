@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-src/src
+# Install script for directory: C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glfw-src/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

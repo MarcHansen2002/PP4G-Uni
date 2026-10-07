@@ -18,7 +18,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{0B9A2820-418F-3BFB-8151-632DCD98AFBE}</ProjectGuid>
+    <ProjectGuid>{107231CE-6BF4-3132-9B8A-54135CAF23A5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.28000.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
@@ -50,32 +50,32 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c1023784\Desktop\starter_code_compute\bin\Debug\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c1023784\Desktop\PP4G-Uni\bin\Debug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">vulkan_compute_buffer.dir\Debug\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">vulkan_compute_buffer</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
-    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c1023784/Desktop/starter_code_compute/bin</LocalDebuggerWorkingDirectory>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\c1023784\Desktop\starter_code_compute\bin\Release\</OutDir>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:/Users/c1023784/Desktop/PP4G-Uni/bin</LocalDebuggerWorkingDirectory>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\c1023784\Desktop\PP4G-Uni\bin\Release\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">vulkan_compute_buffer.dir\Release\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">vulkan_compute_buffer</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
-    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c1023784/Desktop/starter_code_compute/bin</LocalDebuggerWorkingDirectory>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\c1023784\Desktop\starter_code_compute\bin\RelWithDebInfo\</OutDir>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:/Users/c1023784/Desktop/PP4G-Uni/bin</LocalDebuggerWorkingDirectory>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\c1023784\Desktop\PP4G-Uni\bin\RelWithDebInfo\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">vulkan_compute_buffer.dir\RelWithDebInfo\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">vulkan_compute_buffer</TargetName>
     <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.exe</TargetExt>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
-    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/c1023784/Desktop/starter_code_compute/bin</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:/Users/c1023784/Desktop/PP4G-Uni/bin</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/c1023784/Desktop/starter_code_compute/vendor/VulkanSDK/Include"</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/c1023784/Desktop/PP4G-Uni/vendor/VulkanSDK/Include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -92,10 +92,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;MAGPIE_IMGUI;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src;C:\Users\c1023784\Desktop\starter_code_compute\vendor\VulkanSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\VulkanSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src;C:\Users\c1023784\Desktop\starter_code_compute\vendor\VulkanSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\VulkanSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -103,7 +103,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>C:\Users\c1023784\Desktop\starter_code_compute\vendor\VulkanSDK\Lib\vulkan-1.lib;\Debug\glfw3.lib;\Debug\imgui.lib;C:\Users\c1023784\Desktop\starter_code_compute\vendor\VulkanSDK\Lib\vulkan-1.lib;\Debug\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\c1023784\Desktop\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;\Debug\glfw3.lib;\Debug\imgui.lib;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;\Debug\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -118,8 +118,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/c1023784/Desktop/starter_code_compute/vendor/VulkanSDK/Include"</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/c1023784/Desktop/PP4G-Uni/vendor/VulkanSDK/Include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <ExceptionHandling>Sync</ExceptionHandling>
       <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
@@ -136,10 +136,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;MAGPIE_IMGUI;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src;C:\Users\c1023784\Desktop\starter_code_compute\vendor\VulkanSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\VulkanSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src;C:\Users\c1023784\Desktop\starter_code_compute\vendor\VulkanSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\VulkanSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -147,7 +147,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>C:\Users\c1023784\Desktop\starter_code_compute\vendor\VulkanSDK\Lib\vulkan-1.lib;\Release\glfw3.lib;\Release\imgui.lib;C:\Users\c1023784\Desktop\starter_code_compute\vendor\VulkanSDK\Lib\vulkan-1.lib;\Release\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\c1023784\Desktop\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;\Release\glfw3.lib;\Release\imgui.lib;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;\Release\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -162,8 +162,8 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/c1023784/Desktop/starter_code_compute/vendor/VulkanSDK/Include"</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /external:I "C:/Users/c1023784/Desktop/PP4G-Uni/vendor/VulkanSDK/Include"</AdditionalOptions>
       <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -179,10 +179,10 @@
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;GLM_FORCE_RADIANS;GLM_FORCE_LEFT_HANDED;GLM_FORCE_DEPTH_ZERO_TO_ONE;MAGPIE_IMGUI;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src;C:\Users\c1023784\Desktop\starter_code_compute\vendor\VulkanSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\VulkanSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
-      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src;C:\Users\c1023784\Desktop\starter_code_compute\vendor\VulkanSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\stb-src;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\include;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\VulkanSDK\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
       <HeaderFileName>%(Filename).h</HeaderFileName>
       <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
@@ -190,7 +190,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>C:\Users\c1023784\Desktop\starter_code_compute\vendor\VulkanSDK\Lib\vulkan-1.lib;\RelWithDebInfo\glfw3.lib;\RelWithDebInfo\imgui.lib;C:\Users\c1023784\Desktop\starter_code_compute\vendor\VulkanSDK\Lib\vulkan-1.lib;\RelWithDebInfo\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\c1023784\Desktop\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;\RelWithDebInfo\glfw3.lib;\RelWithDebInfo\imgui.lib;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;\RelWithDebInfo\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -204,11 +204,11 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\CMakeLists.txt">
+    <CustomBuild Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/c1023784/Desktop/starter_code_compute/projects/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/c1023784/Desktop/PP4G-Uni/projects/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/starter_code_compute -BC:/Users/c1023784/Desktop/starter_code_compute/cmake --check-stamp-file C:/Users/c1023784/Desktop/starter_code_compute/cmake/projects/CMakeFiles/generate.stamp
+C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/PP4G-Uni -BC:/Users/c1023784/Desktop/PP4G-Uni/cmake --check-stamp-file C:/Users/c1023784/Desktop/PP4G-Uni/cmake/projects/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -217,11 +217,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c1023784\Desktop\starter_code_compute\cmake\projects\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c1023784\Desktop\PP4G-Uni\cmake\projects\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/c1023784/Desktop/starter_code_compute/projects/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/c1023784/Desktop/PP4G-Uni/projects/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/starter_code_compute -BC:/Users/c1023784/Desktop/starter_code_compute/cmake --check-stamp-file C:/Users/c1023784/Desktop/starter_code_compute/cmake/projects/CMakeFiles/generate.stamp
+C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/PP4G-Uni -BC:/Users/c1023784/Desktop/PP4G-Uni/cmake --check-stamp-file C:/Users/c1023784/Desktop/PP4G-Uni/cmake/projects/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -230,11 +230,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\c1023784\Desktop\starter_code_compute\cmake\projects\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\c1023784\Desktop\PP4G-Uni\cmake\projects\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/c1023784/Desktop/starter_code_compute/projects/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/c1023784/Desktop/PP4G-Uni/projects/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/starter_code_compute -BC:/Users/c1023784/Desktop/starter_code_compute/cmake --check-stamp-file C:/Users/c1023784/Desktop/starter_code_compute/cmake/projects/CMakeFiles/generate.stamp
+C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/PP4G-Uni -BC:/Users/c1023784/Desktop/PP4G-Uni/cmake --check-stamp-file C:/Users/c1023784/Desktop/PP4G-Uni/cmake/projects/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -243,38 +243,38 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\c1023784\Desktop\starter_code_compute\cmake\projects\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\c1023784\Desktop\PP4G-Uni\cmake\projects\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\maths.cpp" />
-    <ClInclude Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\maths.h" />
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\utility.cpp" />
-    <ClInclude Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\utility.h" />
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\vulkan_context.cpp" />
-    <ClInclude Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\vulkan_context.h" />
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\vulkan_pipeline.cpp" />
-    <ClInclude Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\vulkan_pipeline.h" />
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\vulkan_resources.cpp" />
-    <ClInclude Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\vulkan_resources.h" />
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\buffer\main.cpp" />
-    <None Include="C:\Users\c1023784\Desktop\starter_code_compute\bin\data\shaders\glsl\vulkan_compute_buffer\vulkan_compute_buffer.comp">
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\maths.cpp" />
+    <ClInclude Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\maths.h" />
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\utility.cpp" />
+    <ClInclude Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\utility.h" />
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\vulkan_context.cpp" />
+    <ClInclude Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\vulkan_context.h" />
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\vulkan_pipeline.cpp" />
+    <ClInclude Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\vulkan_pipeline.h" />
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\vulkan_resources.cpp" />
+    <ClInclude Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\vulkan_resources.h" />
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\buffer\main.cpp" />
+    <None Include="C:\Users\c1023784\Desktop\PP4G-Uni\bin\data\shaders\glsl\vulkan_compute_buffer\vulkan_compute_buffer.comp">
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\ZERO_CHECK.vcxproj">
-      <Project>{D8301042-ECFD-33EC-B732-532B1D8A6E34}</Project>
+    <ProjectReference Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\ZERO_CHECK.vcxproj">
+      <Project>{6C57A8D2-82E4-39ED-BF4D-F8372D8ED2B7}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glfw-build\src\glfw.vcxproj">
-      <Project>{E7B0049F-C035-3A9B-9657-5B8AE24BBB54}</Project>
+    <ProjectReference Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-build\src\glfw.vcxproj">
+      <Project>{C5D8EDC5-31AD-3460-9592-F52BA290CCC3}</Project>
       <Name>glfw</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\imgui.vcxproj">
-      <Project>{8E359AC8-5E80-37C2-BEFB-485DFABE9A6B}</Project>
+    <ProjectReference Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\imgui.vcxproj">
+      <Project>{4D5F2E95-8EA3-3232-81E2-3891CE3F5585}</Project>
       <Name>imgui</Name>
     </ProjectReference>
   </ItemGroup>

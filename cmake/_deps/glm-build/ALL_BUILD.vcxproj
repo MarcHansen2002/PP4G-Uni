@@ -21,7 +21,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{73AC704C-6C3C-3803-A87F-51B12C564F63}</ProjectGuid>
+    <ProjectGuid>{A076A5A6-044F-38F6-ABF9-E057AD36CCA3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.28000.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
@@ -88,11 +88,11 @@
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-src\CMakeLists.txt">
+    <CustomBuild Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-src\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-src/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-src/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/starter_code_compute -BC:/Users/c1023784/Desktop/starter_code_compute/cmake --check-stamp-file C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-build/CMakeFiles/generate.stamp
+C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/PP4G-Uni -BC:/Users/c1023784/Desktop/PP4G-Uni/cmake --check-stamp-file C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -101,11 +101,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-build\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-src/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-src/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
-C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/starter_code_compute -BC:/Users/c1023784/Desktop/starter_code_compute/cmake --check-stamp-file C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-build/CMakeFiles/generate.stamp
+C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/PP4G-Uni -BC:/Users/c1023784/Desktop/PP4G-Uni/cmake --check-stamp-file C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -114,11 +114,11 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-build\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-src/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-src/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
-C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/starter_code_compute -BC:/Users/c1023784/Desktop/starter_code_compute/cmake --check-stamp-file C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-build/CMakeFiles/generate.stamp
+C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/PP4G-Uni -BC:/Users/c1023784/Desktop/PP4G-Uni/cmake --check-stamp-file C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -127,15 +127,15 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-build\CMakeFiles\generate.stamp</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-build\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\ZERO_CHECK.vcxproj">
-      <Project>{D8301042-ECFD-33EC-B732-532B1D8A6E34}</Project>
+    <ProjectReference Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\ZERO_CHECK.vcxproj">
+      <Project>{6C57A8D2-82E4-39ED-BF4D-F8372D8ED2B7}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

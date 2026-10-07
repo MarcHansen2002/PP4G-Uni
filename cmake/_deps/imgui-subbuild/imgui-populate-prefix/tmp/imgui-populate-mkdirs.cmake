@@ -4,19 +4,19 @@
 cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/imgui-src"
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/imgui-build"
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/imgui-subbuild/imgui-populate-prefix"
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/imgui-subbuild/imgui-populate-prefix/tmp"
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp"
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/imgui-subbuild/imgui-populate-prefix/src"
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/imgui-src"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/imgui-build"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/imgui-subbuild/imgui-populate-prefix"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/imgui-subbuild/imgui-populate-prefix/tmp"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/imgui-subbuild/imgui-populate-prefix/src"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp"
 )
 
 set(configSubDirs Debug)
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp/${subDir}")
+    file(MAKE_DIRECTORY "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/imgui-subbuild/imgui-populate-prefix/src/imgui-populate-stamp${cfgdir}") # cfgdir has leading slash
 endif()

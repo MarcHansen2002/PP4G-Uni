@@ -1,36 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\maths.cpp" />
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\utility.cpp" />
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\vulkan_context.cpp" />
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\vulkan_pipeline.cpp" />
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\vulkan_resources.cpp" />
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\buffer\main.cpp">
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\maths.cpp" />
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\utility.cpp" />
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\vulkan_context.cpp" />
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\vulkan_pipeline.cpp" />
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\vulkan_resources.cpp" />
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\buffer\main.cpp">
       <Filter>buffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\maths.h" />
-    <ClInclude Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\utility.h" />
-    <ClInclude Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\vulkan_context.h" />
-    <ClInclude Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\vulkan_pipeline.h" />
-    <ClInclude Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\vulkan_compute\vulkan_resources.h" />
+    <ClInclude Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\maths.h" />
+    <ClInclude Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\utility.h" />
+    <ClInclude Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\vulkan_context.h" />
+    <ClInclude Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\vulkan_pipeline.h" />
+    <ClInclude Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\vulkan_compute\vulkan_resources.h" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\c1023784\Desktop\starter_code_compute\projects\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\c1023784\Desktop\PP4G-Uni\projects\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\Users\c1023784\Desktop\starter_code_compute\bin\data\shaders\glsl\vulkan_compute_buffer\vulkan_compute_buffer.comp">
+    <None Include="C:\Users\c1023784\Desktop\PP4G-Uni\bin\data\shaders\glsl\vulkan_compute_buffer\vulkan_compute_buffer.comp">
       <Filter>shaders_glsl</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="buffer">
-      <UniqueIdentifier>{9CF0780B-C4B6-3139-B027-1C667C535463}</UniqueIdentifier>
+      <UniqueIdentifier>{152F1CE2-FDFA-3739-8466-60EF2D25A05D}</UniqueIdentifier>
     </Filter>
     <Filter Include="shaders_glsl">
-      <UniqueIdentifier>{16D47FF2-94A8-3A16-878C-B22A06CCEEBA}</UniqueIdentifier>
+      <UniqueIdentifier>{B13ABB22-041C-373E-8103-7ABB6288A34B}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

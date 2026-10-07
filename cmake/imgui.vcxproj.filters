@@ -1,48 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src\imgui.cpp">
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src\imgui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src\imgui_draw.cpp">
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src\imgui_draw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src\imgui_demo.cpp">
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src\imgui_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src\imgui_tables.cpp">
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src\imgui_tables.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src\imgui_widgets.cpp">
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src\backends\imgui_impl_vulkan.cpp">
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src\backends\imgui_impl_vulkan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src\backends\imgui_impl_glfw.cpp">
+    <ClCompile Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src\backends\imgui_impl_glfw.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src\imgui.h">
+    <ClInclude Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src\imgui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src\backends\imgui_impl_vulkan.h">
+    <ClInclude Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src\backends\imgui_impl_vulkan.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\imgui-src\backends\imgui_impl_glfw.h">
+    <ClInclude Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-src\backends\imgui_impl_glfw.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\c1023784\Desktop\starter_code_compute\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\c1023784\Desktop\PP4G-Uni\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{D025D8B4-E841-3CE1-A523-B84BE62681E6}</UniqueIdentifier>
+      <UniqueIdentifier>{CCC899DF-E8BF-307A-B896-625C8D450EA0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{DB7C44B1-B400-3EB0-AB35-E4E91BDF2388}</UniqueIdentifier>
+      <UniqueIdentifier>{244B0211-C2C4-3260-8FAB-A6CED32D8C44}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

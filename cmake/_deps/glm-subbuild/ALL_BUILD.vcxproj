@@ -13,7 +13,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{CA4CB71D-70C7-3790-A057-822018AAE350}</ProjectGuid>
+    <ProjectGuid>{1FF2181F-F088-37E8-88BA-CB54E5647B09}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.28000.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
@@ -48,11 +48,11 @@
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-subbuild\CMakeLists.txt">
+    <CustomBuild Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-subbuild\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-subbuild/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-subbuild/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
-C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-subbuild -BC:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-subbuild --check-stamp-file C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-subbuild/CMakeFiles/generate.stamp
+C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\bin\cmake.exe -SC:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-subbuild -BC:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-subbuild --check-stamp-file C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-subbuild/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -60,22 +60,22 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-subbuild\CMakeFiles\3.24.4\CMakeSystem.cmake;C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-subbuild\glm-populate-prefix\tmp\glm-populate-mkdirs.cmake;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\CMakeSystem.cmake.in;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\ExternalProject.cmake;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\ExternalProject\RepositoryInfo.txt.in;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\ExternalProject\cfgcmd.txt.in;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\ExternalProject\gitclone.cmake.in;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\ExternalProject\gitupdate.cmake.in;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\ExternalProject\mkdirs.cmake.in;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\Platform\Windows.cmake;C:\Users\c1023784\Desktop\starter_code_compute\vendor\cmake_bin\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-subbuild\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-subbuild\CMakeFiles\3.24.4\CMakeSystem.cmake;C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-subbuild\glm-populate-prefix\tmp\glm-populate-mkdirs.cmake;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\CMakeDetermineSystem.cmake;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\CMakeGenericSystem.cmake;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\CMakeInitializeConfigs.cmake;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\CMakeSystem.cmake.in;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\CMakeSystemSpecificInformation.cmake;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\CMakeSystemSpecificInitialize.cmake;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\ExternalProject.cmake;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\ExternalProject\RepositoryInfo.txt.in;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\ExternalProject\cfgcmd.txt.in;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\ExternalProject\gitclone.cmake.in;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\ExternalProject\gitupdate.cmake.in;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\ExternalProject\mkdirs.cmake.in;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\Platform\Windows.cmake;C:\Users\c1023784\Desktop\PP4G-Uni\vendor\cmake_bin\share\cmake-3.24\Modules\Platform\WindowsPaths.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-subbuild\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-subbuild\ZERO_CHECK.vcxproj">
-      <Project>{A353F15A-1852-3250-8EF3-89E808688CEF}</Project>
+    <ProjectReference Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-subbuild\ZERO_CHECK.vcxproj">
+      <Project>{D57EA234-250E-3C64-8C49-1691B835507D}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\c1023784\Desktop\starter_code_compute\cmake\_deps\glm-subbuild\glm-populate.vcxproj">
-      <Project>{A7CE9B0B-626B-3C30-99C4-14F8CDF70B83}</Project>
+    <ProjectReference Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glm-subbuild\glm-populate.vcxproj">
+      <Project>{63F8177C-BAA4-3F1A-AF68-22BAA665258E}</Project>
       <Name>glm-populate</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

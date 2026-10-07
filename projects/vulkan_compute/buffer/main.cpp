@@ -126,10 +126,8 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
 
   VkFence fence_compute = VK_NULL_HANDLE;
 
-
-  // TODO: create pipeline
   {
-    // describe the descriptors in set 0
+    // describe the descriptors
     std::array <VkDescriptorSetLayoutBinding, NUM_RESOURCES_COMPUTE_SET_0> const descriptor_set_layout_binding_info_0 =
     {
       VkDescriptorSetLayoutBinding {
@@ -139,8 +137,29 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
         .stageFlags = VK_SHADER_STAGE_COMPUTE_BIT,
         .pImmutableSamplers = VK_NULL_HANDLE
       },
-      // TODO: create VkDescriptorSetLayoutBinding for other 3 bindings
+        VkDescriptorSetLayoutBinding {
+        .binding = BINDING_ID_SET_0_SBO_INPUT_1,             // at binding point 1 we have
+        .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, // an SBO (input)
+        .descriptorCount = 1u,
+        .stageFlags = VK_SHADER_STAGE_COMPUTE_BIT,
+        .pImmutableSamplers = VK_NULL_HANDLE
+      },
+        VkDescriptorSetLayoutBinding {
+        .binding = BINDING_ID_SET_0_SBO_OUTPUT,              // at binding point 2 we have
+        .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, // an SBO (input)
+        .descriptorCount = 1u,
+        .stageFlags = VK_SHADER_STAGE_COMPUTE_BIT,
+        .pImmutableSamplers = VK_NULL_HANDLE
+      },
+        VkDescriptorSetLayoutBinding {
+        .binding = BINDING_ID_SET_0_UBO_INFO,                // at binding point 3 we have
+        .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, // an UBO (input)
+        .descriptorCount = 1u,
+        .stageFlags = VK_SHADER_STAGE_COMPUTE_BIT,
+        .pImmutableSamplers = VK_NULL_HANDLE
+      }
     };
+
     // group up all descriptor layout descriptions
     std::array <std::span <const VkDescriptorSetLayoutBinding>, NUM_SETS_COMPUTE> const descriptor_set_layout_bindings =
     {

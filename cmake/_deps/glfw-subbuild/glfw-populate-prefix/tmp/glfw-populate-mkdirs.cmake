@@ -4,19 +4,19 @@
 cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-src"
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-build"
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/glfw-populate-prefix"
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/glfw-populate-prefix/tmp"
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp"
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/glfw-populate-prefix/src"
-  "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glfw-src"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glfw-build"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glfw-subbuild/glfw-populate-prefix"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glfw-subbuild/glfw-populate-prefix/tmp"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glfw-subbuild/glfw-populate-prefix/src"
+  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp"
 )
 
 set(configSubDirs Debug)
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp/${subDir}")
+    file(MAKE_DIRECTORY "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp${cfgdir}") # cfgdir has leading slash
 endif()

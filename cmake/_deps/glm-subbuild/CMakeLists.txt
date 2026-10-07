@@ -22,8 +22,8 @@ set_property(GLOBAL PROPERTY _CMAKE_FindGit_GIT_EXECUTABLE_VERSION
 include(ExternalProject)
 ExternalProject_Add(glm-populate
                      "UPDATE_DISCONNECTED" "False" "GIT_REPOSITORY" "https://github.com/g-truc/glm" "GIT_TAG" "0.9.9.8"
-                    SOURCE_DIR          "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-src"
-                    BINARY_DIR          "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-build"
+                    SOURCE_DIR          "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-src"
+                    BINARY_DIR          "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-build"
                     CONFIGURE_COMMAND   ""
                     BUILD_COMMAND       ""
                     INSTALL_COMMAND     ""

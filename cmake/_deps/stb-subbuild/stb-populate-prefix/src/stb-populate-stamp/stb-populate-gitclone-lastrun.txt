@@ -3,9 +3,9 @@
 # No other meaning or use of this file is supported.
 
 method=git
-command=C:/Users/c1023784/Desktop/starter_code_compute/vendor/cmake_bin/bin/cmake.exe;-P;C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/stb-subbuild/stb-populate-prefix/tmp/stb-populate-gitclone.cmake
-source_dir=C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/stb-src
-work_dir=C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps
+command=C:/Users/c1023784/Desktop/PP4G-Uni/vendor/cmake_bin/bin/cmake.exe;-P;C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix/tmp/stb-populate-gitclone.cmake
+source_dir=C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/stb-src
+work_dir=C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps
 repository=https://github.com/nothings/stb
 remote=origin
 init_submodules=TRUE

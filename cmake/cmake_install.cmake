@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/c1023784/Desktop/starter_code_compute
+# Install script for directory: C:/Users/c1023784/Desktop/PP4G-Uni
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,17 +34,17 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-build/cmake_install.cmake")
+  include("C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glfw-build/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-build/cmake_install.cmake")
+  include("C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-build/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/c1023784/Desktop/starter_code_compute/cmake/projects/cmake_install.cmake")
+  include("C:/Users/c1023784/Desktop/PP4G-Uni/cmake/projects/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -55,5 +55,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/c1023784/Desktop/starter_code_compute/cmake/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
