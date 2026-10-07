@@ -286,7 +286,6 @@ static bool create_instance ()
   std::vector <char const*> layers = get_required_instance_layers ();
   std::vector <char const*> extensions = get_required_instance_extensions ();
 
-  // TODO: fix VkInstanceCreateInfo
   VkInstanceCreateInfo const ici =
   {
     .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
@@ -832,7 +831,6 @@ static bool create_logical_device (VkQueueFlags requested_queue_types)
     // just make sure they are supported first!
   };
 
-  // TODO: fix VkDeviceCreateInfo
   VkDeviceCreateInfo const dci =
   {
     .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
@@ -842,12 +840,18 @@ static bool create_logical_device (VkQueueFlags requested_queue_types)
     .pQueueCreateInfos = queue_create_infos.data (),
     //.enabledLayerCount                              // deprecated: https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-layers-devicelayerdeprecation
     //.ppEnabledLayerNames                            // deprecated
-    .enabledExtensionCount = //??? look above...
-    .ppEnabledExtensionNames = //???
-    .pEnabledFeatures = //???
+    .enabledExtensionCount = extensions.size(),
+    .ppEnabledExtensionNames = extensions.data(),
+    .pEnabledFeatures = &device_features
   };
 
-  VkResult const result = // TODO: add call to vkCreateDevice here
+  VkResult const result = vkCreateDevice
+  (
+      s_physical_device,
+      &dci,
+      VK_NULL_HANDLE,
+      &s_device
+  );
 
   if (!CHECK_VULKAN_RESULT (result) || !CHECK_VULKAN_HANDLE (s_device))
   {
@@ -1146,7 +1150,13 @@ bool create_vulkan_command_pool (VkQueueFlags requested_queue_type, VkCommandPoo
     .queueFamilyIndex = family.value ()
   };
 
-  VkResult const result = // TODO: add call to vkCreateCommandPool here
+  VkResult const result = vkCreateCommandPool
+  (
+      s_device,
+      &cpci,
+      VK_NULL_HANDLE,
+      &out_command_pool
+  );
 
   if (!CHECK_VULKAN_RESULT (result) || !CHECK_VULKAN_HANDLE (out_command_pool))
   {

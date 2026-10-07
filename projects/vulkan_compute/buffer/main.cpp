@@ -215,21 +215,30 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
     release_vulkan_shader (device,
       shader_module_compute); // don't need shader object now we have the pipeline
   }
-  // TODO: create descriptor sets
+  // create descriptor sets
   // at least one per pipeline...
   {
     // create pool of descriptors from which our descriptor sets will draw from
     //
     // we could have multiple descriptor pools, or one huge one
     // we are going to have one per pipeline in order to keep it simple
-    std::array <VkDescriptorPoolSize, 2u> const pool_sizes =
+    std::array <VkDescriptorPoolSize, 3u> const pool_sizes =
     {{ // yes this is deliberate!
       {
         // we have 1 x descriptor set that consists of 3 x SBO descriptors...
         .type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
         .descriptorCount = 3u
       },
-      // TODO: add VkDescriptorPoolSize for our single UBO descriptor
+      {
+          // we have 1 x descriptor set that consists of 1 x UBO descriptors...
+          .type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+          .descriptorCount = 1u
+      },
+      //{
+      //    // we have 1 x descriptor set that consists of 0 x Storage Image descriptors...
+      //    .type = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
+      //    .descriptorCount = 0u
+      //},
     }};
     if (!create_vulkan_descriptor_pool (device,
       1u, // how many descriptor sets will we make from the sets in the pool?
@@ -240,15 +249,14 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       return -1;
     }
 
-    // TODO: fix array of vulkan_descriptor_set_info
     std::array <vulkan_descriptor_set_info, NUM_SETS_COMPUTE> const descriptor_set_infos =
     {{
       // set 0
       {
-        .desc_pool = //???         // the pool from which to allocate the individual descriptors from
-        .layout = //???            // layout of the descriptor set
-        .set_index = //???         // index of the descriptor set
-        .out_set = //???           // pointer to where to instantiate the descriptor set to
+        .desc_pool = &descriptor_pool_compute,            // the pool from which to allocate the individual descriptors from
+        .layout = &descriptor_set_layouts_compute[0],     // layout of the descriptor set
+        .set_index = 0u,                                  // index of the descriptor set
+        .out_set = &desc_set_0_compute                    // pointer to where to instantiate the descriptor set to
       }
       // set 1...
     }};
@@ -275,7 +283,20 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       DBG_ASSERT (false);
       return -1;
     }
-    // TODO: create buffers for 'buffer_output' and 'buffer_info'
+    if (!create_vulkan_buffer(physical_device, device,
+        NUM_ELEMENTS * ELEMENT_SIZE, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+        buffer_output))
+    {
+        DBG_ASSERT(false);
+        return -1;
+    }
+    if (!create_vulkan_buffer(physical_device, device,
+        sizeof(compute_UBO_info_buffer) * ELEMENT_SIZE, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_SHARING_MODE_EXCLUSIVE, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+        buffer_info))
+    {
+        DBG_ASSERT(false);
+        return -1;
+    }
   }
   // TODO: bind resources to descriptor set
   {
@@ -312,11 +333,11 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       {
         .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
         //.pNext = VK_NULL_HANDLE,
-        .dstSet = //???
+        .dstSet = desc_set_0_compute.desc_set,
         .dstBinding = BINDING_ID_SET_0_SBO_INPUT_0,
         .dstArrayElement = 0u,
         .descriptorCount = 1u,
-        .descriptorType = //???
+        .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
         .pImageInfo = VK_NULL_HANDLE,
         .pBufferInfo = &buffer_infos [0], // buffer_input_0
         .pTexelBufferView = VK_NULL_HANDLE
@@ -325,27 +346,39 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
         .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
         //.pNext = VK_NULL_HANDLE,
         .dstSet = desc_set_0_compute.desc_set,
-        .dstBinding = //???
+        .dstBinding = BINDING_ID_SET_0_SBO_INPUT_1,
         .dstArrayElement = 0u,
         .descriptorCount = 1u,
         .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
         .pImageInfo = VK_NULL_HANDLE,
-        .pBufferInfo = //???             // buffer_input_1
+        .pBufferInfo = &buffer_infos [1],             // buffer_input_1
         .pTexelBufferView = VK_NULL_HANDLE
       },
       {
-        .sType = //???
+        .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
         //.pNext = VK_NULL_HANDLE,
         .dstSet = desc_set_0_compute.desc_set,
         .dstBinding = BINDING_ID_SET_0_SBO_OUTPUT,
-        .dstArrayElement = //???
-        .descriptorCount = //???
-        .descriptorType = //???
+        .dstArrayElement = 0u,
+        .descriptorCount = 1u,
+        .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
         .pImageInfo = VK_NULL_HANDLE,
         .pBufferInfo = &buffer_infos [2], // buffer_output
-        .pTexelBufferView = //???
+        .pTexelBufferView = VK_NULL_HANDLE
       },
       // TODO: Oops. The VkWriteDescriptorSet for 'buffer_info' is completely missing
+      {
+        .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+        //.pNext = VK_NULL_HANDLE,
+        .dstSet = desc_set_0_compute.desc_set,
+        .dstBinding = BINDING_ID_SET_0_UBO_INFO,
+        .dstArrayElement = 0u,
+        .descriptorCount = 1u,
+        .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+        .pImageInfo = VK_NULL_HANDLE,
+        .pBufferInfo = &buffer_infos[3], // buffer_info
+        .pTexelBufferView = VK_NULL_HANDLE
+      }
     };
 
     vkUpdateDescriptorSets (device, // device
@@ -379,7 +412,7 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
   }
 
 
-  // TODO: SET INPUT/INFO BUFFERS
+  // SET INPUT/INFO BUFFERS
   {
     std::random_device rd;
     std::ranlux24_base re (rd ()); // std::default_engine (std::mersenne_twister_engine) uses 5K bytes on the stack!!!
@@ -399,11 +432,34 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       return -1;
     }
 
-    // TODO: fill 'buffer_input_1.memory' with random numbers
+    // fill 'buffer_input_1.memory' with random numbers
+    if (!map_and_unmap_memory(device,
+        buffer_input_1.memory, [&rd, &distribution](void* mapped_memory)
+        {
+            f32* data = (f32*)mapped_memory;
+            for (u32 i = 0u; i < NUM_ELEMENTS; ++i)
+            {
+                data[i] = distribution(rd);
+            }
+        }))
+    {
+        DBG_ASSERT(false);
+        return -1;
+    }
 
     // no need to set/initialise 'buffer_output' as its content will be completely overwritten by the compute shader
 
-    // TODO: fill 'buffer_info.memory' with 'NUM_ELEMENTS'
+    // fill 'buffer_info.memory' with 'NUM_ELEMENTS'
+    if (!map_and_unmap_memory(device,
+        buffer_info.memory, [&rd, &distribution](void* mapped_memory)
+        {
+            compute_UBO_info_buffer* data = (compute_UBO_info_buffer*)mapped_memory;
+            data->num_elements = NUM_ELEMENTS;
+        }))
+    {
+        DBG_ASSERT(false);
+        return -1;
+    }
   }
 
   // TODO: RECORD COMMAND BUFFER
@@ -413,10 +469,10 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       DBG_ASSERT (false);
       return -1;
     }
-    {
       // any compute related command after this point is attached to this pipeline (on this command buffer)
 
       // TODO: call vkCmdBindPipeline
+        vkCmdBindPipeline(command_buffer_compute, , pipeline_compute)
 
       // bind descriptor set - buffer_input_0 + buffer_input_1 + buffer_output + buffer_info
 
@@ -447,7 +503,7 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
   // TODO: SUBMIT
   {
     // TODO: call vkResetFences
-
+    vkResetFences();
 
     // submit compute commands
     VkSubmitInfo const submit_info =

@@ -214,8 +214,6 @@ bool create_vulkan_descriptor_pool (VkDevice device,
   DBG_ASSERT (num_desc_pool_sizes > 0u && desc_pool_sizes != nullptr);
   DBG_ASSERT (!CHECK_VULKAN_HANDLE (out_desc_pool));
 
-
-  // TODO: fix VkDescriptorPoolCreateInfo
   VkDescriptorPoolCreateInfo const dpci =
   {
     .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
