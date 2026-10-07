@@ -1,0 +1,8 @@
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/CMakeFiles/imgui.dir
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/CMakeFiles/ALL_BUILD.dir
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/CMakeFiles/ZERO_CHECK.dir
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-build/CMakeFiles/ALL_BUILD.dir
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-build/src/CMakeFiles/update_mappings.dir
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-build/src/CMakeFiles/glfw.dir
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glm-build/CMakeFiles/ALL_BUILD.dir
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/projects/CMakeFiles/vulkan_compute_buffer.dir

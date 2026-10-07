@@ -1,0 +1,14 @@
+# Target labels
+ glfw-populate
+# Source files and their labels
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/glfw-populate
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/dffcdcccb48d591f21499574e68c1611/glfw-populate.rule
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/99f98d0b8aae67e31a506864fd63ce1a/glfw-populate-complete.rule
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-build.rule
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-configure.rule
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-download.rule
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-install.rule
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-mkdir.rule
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-patch.rule
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-test.rule
+C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-update.rule

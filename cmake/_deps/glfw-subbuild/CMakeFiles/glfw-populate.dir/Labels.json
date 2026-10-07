@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/glfw-populate"
+		},
+		{
+			"file" : "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/dffcdcccb48d591f21499574e68c1611/glfw-populate.rule"
+		},
+		{
+			"file" : "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/99f98d0b8aae67e31a506864fd63ce1a/glfw-populate-complete.rule"
+		},
+		{
+			"file" : "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-build.rule"
+		},
+		{
+			"file" : "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-configure.rule"
+		},
+		{
+			"file" : "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-download.rule"
+		},
+		{
+			"file" : "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-install.rule"
+		},
+		{
+			"file" : "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-patch.rule"
+		},
+		{
+			"file" : "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-test.rule"
+		},
+		{
+			"file" : "C:/Users/c1023784/Desktop/starter_code_compute/cmake/_deps/glfw-subbuild/CMakeFiles/9ae49570b8619e357cbd13028efbd26d/glfw-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"glfw-populate"
+		],
+		"name" : "glfw-populate"
+	}
+}
