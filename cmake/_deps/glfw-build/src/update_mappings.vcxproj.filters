@@ -1,24 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\CMakeFiles\fb2f3806aaaaf0351d8027fe06a8f1ab\update_mappings.rule">
+    <CustomBuild Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\cmake\CMakeFiles\14f12c3d0e85ae60a543c83a1e9db763\update_mappings.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
-    <CustomBuild Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\src\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\cmake\_deps\glfw-src\src\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\src\mappings.h.in">
+    <None Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\cmake\_deps\glfw-src\src\mappings.h.in">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-src\CMake\GenerateMappings.cmake" />
-    <None Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\glfw-build\src\CMakeFiles\update_mappings" />
+    <None Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\cmake\_deps\glfw-src\CMake\GenerateMappings.cmake" />
+    <None Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\cmake\_deps\glfw-build\src\CMakeFiles\update_mappings" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{A4BB97D4-8F80-34E9-8072-236B6DDB308C}</UniqueIdentifier>
+      <UniqueIdentifier>{F88FD750-E883-3D6C-9C39-924B3CC3ACD6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{CCC899DF-E8BF-307A-B896-625C8D450EA0}</UniqueIdentifier>
+      <UniqueIdentifier>{0E89F3AA-2845-36C0-AED8-DEEB923B0586}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

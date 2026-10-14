@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="C:\Users\c1023784\Desktop\PP4G-Uni\cmake\_deps\imgui-subbuild\CMakeFiles\321fb9d8ce345461fee4fc5883f89250\generate.stamp.rule">
+    <CustomBuild Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\cmake\_deps\imgui-subbuild\CMakeFiles\e756541a92c038e15a7b8fb462e3a41e\generate.stamp.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{8FBFEDD2-7CF5-3C79-BADB-6DDEF73D2245}</UniqueIdentifier>
+      <UniqueIdentifier>{4BD11547-FA6E-3C25-97A5-26BA0990E7FE}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

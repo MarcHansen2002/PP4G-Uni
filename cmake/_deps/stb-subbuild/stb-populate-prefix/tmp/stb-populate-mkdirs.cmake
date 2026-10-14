@@ -4,19 +4,19 @@
 cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
-  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/stb-src"
-  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/stb-build"
-  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix"
-  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix/tmp"
-  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix/src/stb-populate-stamp"
-  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix/src"
-  "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix/src/stb-populate-stamp"
+  "C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/_deps/stb-src"
+  "C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/_deps/stb-build"
+  "C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix"
+  "C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix/tmp"
+  "C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix/src/stb-populate-stamp"
+  "C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix/src"
+  "C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix/src/stb-populate-stamp"
 )
 
 set(configSubDirs Debug)
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix/src/stb-populate-stamp/${subDir}")
+    file(MAKE_DIRECTORY "C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix/src/stb-populate-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix/src/stb-populate-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/_deps/stb-subbuild/stb-populate-prefix/src/stb-populate-stamp${cfgdir}") # cfgdir has leading slash
 endif()

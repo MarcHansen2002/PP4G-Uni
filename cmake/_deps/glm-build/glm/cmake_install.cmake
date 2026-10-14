@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/glm-src/glm
+# Install script for directory: C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/_deps/glm-src/glm
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

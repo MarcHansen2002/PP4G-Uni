@@ -13,17 +13,17 @@ project(imgui-populate NONE)
 # Pass through things we've already detected in the main project to avoid
 # paying the cost of redetecting them again in ExternalProject_Add()
 set(GIT_EXECUTABLE [==[C:/Program Files/Git/cmd/git.exe]==])
-set(GIT_VERSION_STRING [==[2.55.0.windows.3]==])
+set(GIT_VERSION_STRING [==[2.50.1.windows.1]==])
 set_property(GLOBAL PROPERTY _CMAKE_FindGit_GIT_EXECUTABLE_VERSION
-  [==[C:/Program Files/Git/cmd/git.exe;2.55.0.windows.3]==]
+  [==[C:/Program Files/Git/cmd/git.exe;2.50.1.windows.1]==]
 )
 
 
 include(ExternalProject)
 ExternalProject_Add(imgui-populate
                      "UPDATE_DISCONNECTED" "False" "GIT_REPOSITORY" "https://github.com/ocornut/imgui" "GIT_TAG" "v1.88"
-                    SOURCE_DIR          "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/imgui-src"
-                    BINARY_DIR          "C:/Users/c1023784/Desktop/PP4G-Uni/cmake/_deps/imgui-build"
+                    SOURCE_DIR          "C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/_deps/imgui-src"
+                    BINARY_DIR          "C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/_deps/imgui-build"
                     CONFIGURE_COMMAND   ""
                     BUILD_COMMAND       ""
                     INSTALL_COMMAND     ""

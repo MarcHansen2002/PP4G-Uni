@@ -470,21 +470,18 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       return -1;
     }
       // any compute related command after this point is attached to this pipeline (on this command buffer)
-
-      // TODO: call vkCmdBindPipeline
-        vkCmdBindPipeline(command_buffer_compute, , pipeline_compute)
+      vkCmdBindPipeline(command_buffer_compute, VK_PIPELINE_BIND_POINT_COMPUTE, pipeline_compute);
 
       // bind descriptor set - buffer_input_0 + buffer_input_1 + buffer_output + buffer_info
-
+      vkCmdBindDescriptorSets(command_buffer_compute, VK_PIPELINE_BIND_POINT_COMPUTE, pipeline_layout_compute, desc_set_0_compute.set_index, 1, &desc_set_0_compute.desc_set, 0u, VK_NULL_HANDLE);
       // TODO: bind our DSI (desc_set_0_compute.desc_set) to the pipeline
-
       compute_push_constants const data =
       {
         .multiplier = MULTIPLIER
       };
 
       // TODO: call vkCmdPushConstants
-
+      vkCmdPushConstants(command_buffer_compute, pipeline_layout_compute, 0u, 0u, sizeof(compute_push_constants), &data);
 
       // trigger compute shader
       u32 const thread_group_dim = 256u; // this is set in the shader
@@ -492,6 +489,7 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       // TODO: calculate group_count_x
 
       // TODO: call vkCmdDispatch
+      vkCmdDispatch(command_buffer_compute, 256, 1, 1);
     }
     if (!end_command_buffer (command_buffer_compute))
     {
@@ -503,7 +501,7 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
   // TODO: SUBMIT
   {
     // TODO: call vkResetFences
-    vkResetFences();
+    vkResetFences(0);
 
     // submit compute commands
     VkSubmitInfo const submit_info =
