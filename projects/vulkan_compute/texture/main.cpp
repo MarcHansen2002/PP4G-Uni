@@ -385,7 +385,7 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
         image_format,
         VK_IMAGE_LAYOUT_GENERAL,
         VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT, // look me up!
-        texture_compute_input))
+        texture_compute_output))
     {
         assert(false, "Vulkan empty texture not created.");
     }
@@ -922,16 +922,18 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
         .set_index = 1u,
         .out_set = &desc_set_1_graphics_input
       },
+        // set 0 - output
       {
         .desc_pool = &descriptor_pool_graphics,
-        .layout = &descriptor_set_layouts_graphics[2],
-        .set_index = 2u,
+        .layout = &descriptor_set_layouts_graphics[0],
+        .set_index = 0u,
         .out_set = &desc_set_0_graphics_output
       },
+        // set 1 - output
       {
           .desc_pool = &descriptor_pool_graphics,
-          .layout = &descriptor_set_layouts_graphics[3],
-          .set_index = 3u,
+          .layout = &descriptor_set_layouts_graphics[1],
+          .set_index = 1u,
           .out_set = &desc_set_1_graphics_output
       }
 
@@ -956,8 +958,8 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       if (!create_vulkan_buffer(
           physical_device,
           device,
-          0u,
-          VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+          sizeof(camera_buffer),
+          VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
           VK_SHARING_MODE_EXCLUSIVE,
           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
           buffer_graphics_camera))
@@ -968,8 +970,8 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       if (!create_vulkan_buffer(
           physical_device,
           device,
-          0u,
-          VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+          sizeof(model_buffer),
+          VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
           VK_SHARING_MODE_EXCLUSIVE,
           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
           buffer_graphics_model_input))
@@ -980,8 +982,8 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       if (!create_vulkan_buffer(
           physical_device,
           device,
-          0u,
-          VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+          sizeof(model_buffer),
+          VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
           VK_SHARING_MODE_EXCLUSIVE,
           VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
           buffer_graphics_model_output))
@@ -1075,7 +1077,7 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
             .range = VK_WHOLE_SIZE
         }
     };
-    VkDescriptorImageInfo const image_infos [] =
+    VkDescriptorImageInfo const image_infos [2] =
     {
       {
         .sampler = texture_compute_input.sampler,
@@ -1089,17 +1091,17 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       }
     };
 
-    VkWriteDescriptorSet const write_descriptors [] =
+    VkWriteDescriptorSet const write_descriptors [6] =
     {
       // desc_set_0_graphics_input - binding 0
       {
         .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-        //.pNext = VK_NULL_HANDLE,
+        .pNext = VK_NULL_HANDLE,
         .dstSet = desc_set_0_graphics_input.desc_set,
         .dstBinding = BINDING_ID_SET_0_TEXTURE_INPUT,
         .dstArrayElement = 0u,
         .descriptorCount = 1u,
-        .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+        .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
         .pImageInfo = VK_NULL_HANDLE,
         .pBufferInfo = &buffer_infos[0], // buffer_graphics_camera
         .pTexelBufferView = VK_NULL_HANDLE
@@ -1107,12 +1109,12 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       // desc_set_0_graphics_input - binding 1
       {
         .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-        //.pNext = VK_NULL_HANDLE,
+        .pNext = VK_NULL_HANDLE,
         .dstSet = desc_set_0_graphics_input.desc_set,
-        .dstBinding = BINDING_ID_SET_0_TEXTURE_INPUT,
-        .dstArrayElement = 1u,
+        .dstBinding = 1,
+        .dstArrayElement = 0u,
         .descriptorCount = 1u,
-        .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+        .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
         .pImageInfo = VK_NULL_HANDLE,
         .pBufferInfo = &buffer_infos[1], // buffer_graphics_model_input
         .pTexelBufferView = VK_NULL_HANDLE
@@ -1121,12 +1123,12 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       // desc_set_1_graphics_input - binding 0
       {
         .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-        //.pNext = VK_NULL_HANDLE,
+        .pNext = VK_NULL_HANDLE,
         .dstSet = desc_set_1_graphics_input.desc_set,
         .dstBinding = BINDING_ID_SET_1_TEXTURE,
         .dstArrayElement = 0u,
         .descriptorCount = 1u,
-        .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, // combined image sampler
+        .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, // combined image sampler
         .pImageInfo = &image_infos [0], // texture_compute_input
         .pBufferInfo = VK_NULL_HANDLE,
         .pTexelBufferView = VK_NULL_HANDLE
@@ -1135,9 +1137,9 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       // desc_set_0_graphics_output - binding 0
       {
         .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-        //.pNext = VK_NULL_HANDLE,
+        .pNext = VK_NULL_HANDLE,
         .dstSet = desc_set_0_graphics_output.desc_set,
-        .dstBinding = BINDING_ID_SET_0_TEXTURE_OUTPUT,
+        .dstBinding = 0,
         .dstArrayElement = 0u,
         .descriptorCount = 1u,
         .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
@@ -1148,9 +1150,9 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       // desc_set_0_graphics_output - binding 1
       {
          .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-         //.pNext = VK_NULL_HANDLE,
+         .pNext = VK_NULL_HANDLE,
         .dstSet = desc_set_0_graphics_output.desc_set,
-        .dstBinding = BINDING_ID_SET_0_TEXTURE_OUTPUT,
+        .dstBinding = 1,
         .dstArrayElement = 0u,
         .descriptorCount = 1u,
         .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
@@ -1162,14 +1164,14 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       // desc_set_1_graphics_output - binding 0
       {
           .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-          //.pNext = VK_NULL_HANDLE,
+          .pNext = VK_NULL_HANDLE,
          .dstSet = desc_set_1_graphics_output.desc_set,
          .dstBinding = BINDING_ID_SET_1_TEXTURE,
          .dstArrayElement = 0u,
          .descriptorCount = 1u,
-         .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-         .pImageInfo = VK_NULL_HANDLE,
-         .pBufferInfo = &buffer_infos[2], // graphics_output
+         .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+         .pImageInfo = &image_infos[1],
+         .pBufferInfo = VK_NULL_HANDLE,
          .pTexelBufferView = VK_NULL_HANDLE
       }
     };
