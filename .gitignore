@@ -52,6 +52,8 @@ bld/
 # Uncomment if you have tasks that rely on *.refresh files to move binaries
 # (https://github.com/github/gitignore/pull/3736)
 #!**/[Bb]in/*.refresh
+!**/[Bb]in/data/
+!**/[Bb]in/data/**/*.hlsl
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

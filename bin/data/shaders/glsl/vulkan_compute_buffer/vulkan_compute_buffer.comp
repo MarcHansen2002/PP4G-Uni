@@ -1,0 +1,42 @@
+// compute shader
+#version 430
+
+layout (local_size_x = 256) in; // Thread Block size in x axis
+
+
+layout (std430, set = 0, binding = 0) readonly buffer input_a_buffer // Block Name
+{
+  float data [];
+} SBO_input_a; // Instance Name
+
+// TODO: create layout for input_b_buffer, output_buffer & info_buffer
+layout (std430, set = 0, binding = 1) readonly buffer input_b_buffer // Block Name
+{
+  float data [];
+} SBO_input_b; // Instance Name
+
+layout (std430, set = 0, binding = 2) buffer output_buffer // Block Name
+{
+  float data [];
+} SBO_output; // Instance Name
+
+layout (set = 0, binding = 3) uniform info_buffer // Block Name
+{
+  uint num_elements;
+} UBO_info; // Instance Name
+
+layout (push_constant) uniform my_push_constants
+{
+  float multiplier;
+} push_constants;
+
+// Entry Point
+void main ()
+{
+  const uint i = uint (gl_GlobalInvocationID.x); // get thread index
+
+  // TODO: make sure we don't access past the buffer size
+
+  // fused multiply add
+  SBO_output.data [i] = (SBO_input_a.data [i] * push_constants.multiplier) + SBO_input_b.data [i];
+}

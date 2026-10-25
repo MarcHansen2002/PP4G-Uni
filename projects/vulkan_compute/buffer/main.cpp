@@ -496,12 +496,12 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
       DBG_ASSERT (false);
       return -1;
     }
-  }
+  
 
   // TODO: SUBMIT
-  {
+  
     // TODO: call vkResetFences
-    vkResetFences(0);
+    vkResetFences(device, 1, &fence_compute);
 
     // submit compute commands
     VkSubmitInfo const submit_info =
@@ -527,11 +527,11 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
     // wait for fence to be triggered via vkQueueSubmit (slow!)
 
     // TODO: call vkWaitForFences
-  }
+  
 
 
   // OUTPUT RESULTS
-  {
+  
     dprintf ("output[i] = (input a[i] * multiplier) + input b [i]\n");
     dprintf ("multiplier = %.2f\n", MULTIPLIER);
 
@@ -595,39 +595,39 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
   }
 
 
-  // RELEASE
-  {
-    // COMPUTE PIPELINE
-    {
-      release_vulkan_fences (1u, &fence_compute);
-
-      release_vulkan_command_buffers (1u, command_pool_compute, &command_buffer_compute);
-      release_vulkan_command_pool (command_pool_compute);
-
-      release_vulkan_buffer (device, buffer_info);
-      release_vulkan_buffer (device, buffer_output);
-      release_vulkan_buffer (device, buffer_input_1);
-      release_vulkan_buffer (device, buffer_input_0);
-
-      release_vulkan_descriptor_sets (device,
-        1u, &desc_set_0_compute);
-      release_vulkan_descriptor_pool (device, descriptor_pool_compute);
-
-      release_vulkan_pipeline (device, pipeline_compute);
-      release_vulkan_pipeline_layout (device, pipeline_layout_compute);
-      release_vulkan_descriptor_set_layouts (device,
-        NUM_SETS_COMPUTE, descriptor_set_layouts_compute.data ());
-    }
-
-    // CONTEXT
-    {
-      release_vulkan_device ();
-      release_vulkan_instance ();
-      queue_compute = VK_NULL_HANDLE;
-      device = VK_NULL_HANDLE;
-      physical_device = VK_NULL_HANDLE;
-    }
-  }
-
-  return 0;
-}
+//  // RELEASE
+//  {
+//    // COMPUTE PIPELINE
+//    {
+//      release_vulkan_fences (1u, &fence_compute);
+//
+//      release_vulkan_command_buffers (1u, command_pool_compute, &command_buffer_compute);
+//      release_vulkan_command_pool (command_pool_compute);
+//
+//      release_vulkan_buffer (device, buffer_info);
+//      release_vulkan_buffer (device, buffer_output);
+//      release_vulkan_buffer (device, buffer_input_1);
+//      release_vulkan_buffer (device, buffer_input_0);
+//
+//      release_vulkan_descriptor_sets (device,
+//        1u, &desc_set_0_compute);
+//      release_vulkan_descriptor_pool (device, descriptor_pool_compute);
+//
+//      release_vulkan_pipeline (device, pipeline_compute);
+//      release_vulkan_pipeline_layout (device, pipeline_layout_compute);
+//      release_vulkan_descriptor_set_layouts (device,
+//        NUM_SETS_COMPUTE, descriptor_set_layouts_compute.data ());
+//    }
+//
+//    // CONTEXT
+//    {
+//      release_vulkan_device ();
+//      release_vulkan_instance ();
+//      queue_compute = VK_NULL_HANDLE;
+//      device = VK_NULL_HANDLE;
+//      physical_device = VK_NULL_HANDLE;
+//    }
+//  }
+//
+//  return 0;
+//}

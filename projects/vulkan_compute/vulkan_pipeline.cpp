@@ -23,7 +23,7 @@ bool create_vulkan_descriptor_set_layouts (VkDevice device,
       .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
       //.pNext = VK_NULL_HANDLE,
       //.flags = 0u,
-      .bindingCount = desc_set_layout_binding_spans[i].size(),
+      .bindingCount = (uint32_t)desc_set_layout_binding_spans[i].size(),
       .pBindings = desc_set_layout_binding_spans[i].data()
     };
 
@@ -267,7 +267,7 @@ bool create_vulkan_descriptor_sets (VkDevice device,
     VkResult const result = vkAllocateDescriptorSets
     (
         device,
-        VK_NULL_HANDLE,
+        &dsai,
       &desc_set_infos [i].out_set->desc_set
     );                 // pDescriptorSets
 

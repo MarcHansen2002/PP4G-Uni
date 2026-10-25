@@ -840,7 +840,7 @@ static bool create_logical_device (VkQueueFlags requested_queue_types)
     .pQueueCreateInfos = queue_create_infos.data (),
     //.enabledLayerCount                              // deprecated: https://registry.khronos.org/vulkan/specs/1.3-extensions/html/vkspec.html#extendingvulkan-layers-devicelayerdeprecation
     //.ppEnabledLayerNames                            // deprecated
-    .enabledExtensionCount = extensions.size(),
+    .enabledExtensionCount = (uint32_t)extensions.size(),
     .ppEnabledExtensionNames = extensions.data(),
     .pEnabledFeatures = &device_features
   };
@@ -1175,6 +1175,13 @@ bool create_vulkan_command_buffers (u32 num, VkCommandPool command_pool, VkComma
 
   // TODO: create an instance of 'VkCommandBufferAllocateInfo' called 'cbai'
   // make sure it is a PRIMARY level command buffer
+  VkCommandBufferAllocateInfo cbai = {
+      .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+      .pNext = VK_NULL_HANDLE,
+      .commandPool = command_pool,
+      .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+      .commandBufferCount = num
+  };
 
   for (u32 i = 0u; i < num; ++i)
   {
