@@ -20,8 +20,9 @@ void main ()
   // TODO: calculate greyscale colour for this pixel
   // you don't have to do greyscale!
   // ask Andy about ideas for other 'post effects' that you could apply instead
-
-  const vec4 res = {rgb.x, rgb.y, rgb.z, 1}; //???;
+  float gray = rgb.x + rgb.y + rgb.z;
+  gray = gray / 3;
+  const vec4 res = {gray, gray, gray, 1};
 
   imageStore (output_image, ivec2 (gl_GlobalInvocationID.xy), res);
 }

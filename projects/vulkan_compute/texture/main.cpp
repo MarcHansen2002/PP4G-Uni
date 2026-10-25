@@ -1288,7 +1288,19 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
           VkDeviceSize offsets = 0u; // use me for 'pOffsets' and 'offset'
           // TODO: bind vertices
           // TODO: bind indices
-
+          vkCmdBindVertexBuffers(
+              command_buffer_graphics,
+              0,
+              1,
+              &mesh_sprite.buffer_vertex,
+              &offsets
+          );
+          vkCmdBindIndexBuffer(
+              command_buffer_graphics,
+              mesh_sprite.buffer_index,
+              offsets,
+              VK_INDEX_TYPE_UINT16
+          );
 
 
           // bind graphics input descriptor set 0 - buffer_graphics_camera + buffer_graphics_model_input
@@ -1313,6 +1325,14 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
           // TODO: call vkCmdDrawIndexed
           // indexCount = number of indices in our mesh
           // look in 'mesh_sprite'
+          vkCmdDrawIndexed(
+              command_buffer_graphics,
+              mesh_sprite.num_indices,
+              1,
+              0,
+              offsets,
+              0
+          );
         }
 
         // render output image
@@ -1340,6 +1360,14 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
 
           // TODO: call vkCmdDrawIndexed
           // we are drawing the same mesh again (just with different DSIs now :)
+            vkCmdDrawIndexed(
+                command_buffer_graphics,
+                mesh_sprite.num_indices,
+                1,
+                0,
+                0,
+                0
+            );
         }
 
         end_render_pass (command_buffer_graphics);
