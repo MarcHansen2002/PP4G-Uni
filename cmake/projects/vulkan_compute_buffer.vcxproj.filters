@@ -21,8 +21,16 @@
     <CustomBuild Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\bin\data\shaders\glsl\vulkan_compute_buffer\vulkan_compute_buffer.comp">
+      <Filter>shaders_glsl</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
     <Filter Include="buffer">
       <UniqueIdentifier>{65C0EA89-56C0-3FBA-B3C6-6DC3F0700AEC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders_glsl">
+      <UniqueIdentifier>{597006EC-1533-33C9-BC05-7B5ACDF3AF9B}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
