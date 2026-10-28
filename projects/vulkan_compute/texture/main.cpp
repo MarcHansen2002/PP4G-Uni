@@ -500,11 +500,13 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
         // dispatch compute shader
         // see 'bin/data/shaders/glsl/vulkan_compute_texture/vulkan_compute_texture.comp' for thread group size!
         // HINT: the thread groups are 2D and so will the 'grid' of thread groups we want to create
-          u32 const thread_group_dim = 256u;
+          u32 const thread_group_dim = 16u;
+          u32 const thread_group_count_x = (u32)std::ceilf((float)texture_compute_input.dim.x / (float)thread_group_dim);
+          u32 const thread_group_count_y = (u32)std::ceilf((float)texture_compute_input.dim.y / (float)thread_group_dim);
           vkCmdDispatch(
               command_buffer_compute,
-              thread_group_dim,
-              1,
+              thread_group_count_x,
+              thread_group_count_y,
               1
           );
 
@@ -1310,7 +1312,7 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
               desc_set_0_graphics_input.set_index,
               1,
               &desc_set_0_graphics_input.desc_set,
-              offsets,
+              0,
               VK_NULL_HANDLE);
           // bind graphics input descriptor set 1 - texture_compute_input
           vkCmdBindDescriptorSets(command_buffer_graphics,
@@ -1319,7 +1321,7 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
               desc_set_1_graphics_input.set_index,
               1,
               &desc_set_1_graphics_input.desc_set,
-              offsets,
+              0,
               VK_NULL_HANDLE);
 
           // TODO: call vkCmdDrawIndexed
@@ -1397,7 +1399,7 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
         {
           .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
           //.pNext = VK_NULL_HANDLE,
-          .waitSemaphoreCount = 0u,
+          .waitSemaphoreCount = 1u,
           .pWaitSemaphores = &swapchain_image_available_semaphore, // wait for these semaphores to be signalled before submitting command buffers
           .pWaitDstStageMask = VK_NULL_HANDLE,
           .commandBufferCount = 1u,

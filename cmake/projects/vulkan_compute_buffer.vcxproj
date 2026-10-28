@@ -103,13 +103,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;..\Debug\glfw3.lib;..\Debug\imgui.lib;C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;..\Debug\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;\Debug\glfw3.lib;\Debug\imgui.lib;C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;\Debug\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/Debug/vulkan_compute_buffer.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/Debug/vulkan_compute_buffer.pdb</ProgramDataBaseFile>
+      <ImportLibrary>/Debug/vulkan_compute_buffer.lib</ImportLibrary>
+      <ProgramDataBaseFile>/Debug/vulkan_compute_buffer.pdb</ProgramDataBaseFile>
       <SubSystem>Windows</SubSystem>
     </Link>
     <ProjectReference>
@@ -147,13 +147,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;..\Release\glfw3.lib;..\Release\imgui.lib;C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;..\Release\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;\Release\glfw3.lib;\Release\imgui.lib;C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;\Release\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/Release/vulkan_compute_buffer.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/Release/vulkan_compute_buffer.pdb</ProgramDataBaseFile>
+      <ImportLibrary>/Release/vulkan_compute_buffer.lib</ImportLibrary>
+      <ProgramDataBaseFile>/Release/vulkan_compute_buffer.pdb</ProgramDataBaseFile>
       <SubSystem>Windows</SubSystem>
     </Link>
     <ProjectReference>
@@ -190,13 +190,13 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;..\RelWithDebInfo\glfw3.lib;..\RelWithDebInfo\imgui.lib;C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;..\RelWithDebInfo\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;\RelWithDebInfo\glfw3.lib;\RelWithDebInfo\imgui.lib;C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\vendor\VulkanSDK\Lib\vulkan-1.lib;\RelWithDebInfo\glfw3.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/RelWithDebInfo/vulkan_compute_buffer.lib</ImportLibrary>
-      <ProgramDataBaseFile>C:/Users/MarcH/Desktop/Projects/Uni/Masters/PP4G/PP4G-Uni/cmake/RelWithDebInfo/vulkan_compute_buffer.pdb</ProgramDataBaseFile>
+      <ImportLibrary>/RelWithDebInfo/vulkan_compute_buffer.lib</ImportLibrary>
+      <ProgramDataBaseFile>/RelWithDebInfo/vulkan_compute_buffer.pdb</ProgramDataBaseFile>
       <SubSystem>Windows</SubSystem>
     </Link>
     <ProjectReference>
