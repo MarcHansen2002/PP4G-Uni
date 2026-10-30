@@ -1234,38 +1234,6 @@ int VulkanApp::Render()
                     offsets,
                     VK_INDEX_TYPE_UINT16
                 );
-
-
-                // bind graphics input descriptor set 0 - buffer_graphics_camera + buffer_graphics_model_input
-                vkCmdBindDescriptorSets(command_buffer_graphics,
-                    VK_PIPELINE_BIND_POINT_GRAPHICS,
-                    pipeline_layout_graphics,
-                    desc_set_0_graphics_input.set_index,
-                    1,
-                    &desc_set_0_graphics_input.desc_set,
-                    0,
-                    VK_NULL_HANDLE);
-                // bind graphics input descriptor set 1 - texture_compute_input
-                vkCmdBindDescriptorSets(command_buffer_graphics,
-                    VK_PIPELINE_BIND_POINT_GRAPHICS,
-                    pipeline_layout_graphics,
-                    desc_set_1_graphics_input.set_index,
-                    1,
-                    &desc_set_1_graphics_input.desc_set,
-                    0,
-                    VK_NULL_HANDLE);
-
-                // TODO: call vkCmdDrawIndexed
-                // indexCount = number of indices in our mesh
-                // look in 'mesh_sprite'
-                vkCmdDrawIndexed(
-                    command_buffer_graphics,
-                    mesh_sprite.num_indices,
-                    1,
-                    0,
-                    offsets,
-                    0
-                );
             }
 
             // render output image
