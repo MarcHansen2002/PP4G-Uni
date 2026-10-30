@@ -123,7 +123,6 @@ private:
 	VkPipeline pipeline_graphics = VK_NULL_HANDLE;
 
 	VkDescriptorPool descriptor_pool_graphics = VK_NULL_HANDLE;
-	vulkan_descriptor_set desc_set_1_graphics_input;  // for rendering input image , texture_compute_input
 	vulkan_descriptor_set desc_set_0_graphics_output; // for rendering output image, buffer_graphics_camera + buffer_graphics_model_output
 	vulkan_descriptor_set desc_set_1_graphics_output; // for rendering output image, texture_compute_output
 
