@@ -976,23 +976,13 @@ int VulkanApp::BindGraphicsAndComputeResources()
             .range = VK_WHOLE_SIZE
         },
         {
-            .buffer = buffer_graphics_model_input.buffer,
-            .offset = 0u,
-            .range = VK_WHOLE_SIZE
-        },
-        {
             .buffer = buffer_graphics_model_output.buffer,
             .offset = 0u,
             .range = VK_WHOLE_SIZE
         }
     };
-    VkDescriptorImageInfo const image_infos[2] =
+    VkDescriptorImageInfo const image_infos[1]=//2] =
     {
-      {
-        .sampler = texture_compute_input.sampler,
-        .imageView = texture_compute_input.view,
-        .imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL // not in this format yet, but it will be!
-      },
       {
         .sampler = texture_compute_output.sampler,
         .imageView = texture_compute_output.view,
@@ -1000,49 +990,8 @@ int VulkanApp::BindGraphicsAndComputeResources()
       }
     };
 
-    VkWriteDescriptorSet const write_descriptors[6] =
+    VkWriteDescriptorSet const write_descriptors[3]=//6] =
     {
-        // desc_set_0_graphics_input - binding 0
-        {
-          .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-          .pNext = VK_NULL_HANDLE,
-          .dstSet = desc_set_0_graphics_input.desc_set,
-          .dstBinding = BINDING_ID_SET_0_TEXTURE_INPUT,
-          .dstArrayElement = 0u,
-          .descriptorCount = 1u,
-          .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-          .pImageInfo = VK_NULL_HANDLE,
-          .pBufferInfo = &buffer_infos[0], // buffer_graphics_camera
-          .pTexelBufferView = VK_NULL_HANDLE
-        },
-        // desc_set_0_graphics_input - binding 1
-        {
-          .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-          .pNext = VK_NULL_HANDLE,
-          .dstSet = desc_set_0_graphics_input.desc_set,
-          .dstBinding = 1,
-          .dstArrayElement = 0u,
-          .descriptorCount = 1u,
-          .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-          .pImageInfo = VK_NULL_HANDLE,
-          .pBufferInfo = &buffer_infos[1], // buffer_graphics_model_input
-          .pTexelBufferView = VK_NULL_HANDLE
-        },
-
-        // desc_set_1_graphics_input - binding 0
-        {
-          .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-          .pNext = VK_NULL_HANDLE,
-          .dstSet = desc_set_1_graphics_input.desc_set,
-          .dstBinding = BINDING_ID_SET_1_TEXTURE,
-          .dstArrayElement = 0u,
-          .descriptorCount = 1u,
-          .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, // combined image sampler
-          .pImageInfo = &image_infos[0], // texture_compute_input
-          .pBufferInfo = VK_NULL_HANDLE,
-          .pTexelBufferView = VK_NULL_HANDLE
-        },
-
         // desc_set_0_graphics_output - binding 0
         {
           .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
@@ -1066,7 +1015,7 @@ int VulkanApp::BindGraphicsAndComputeResources()
           .descriptorCount = 1u,
           .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
           .pImageInfo = VK_NULL_HANDLE,
-          .pBufferInfo = &buffer_infos[2], // graphics_output
+          .pBufferInfo = &buffer_infos[1],//2], // graphics_output
           .pTexelBufferView = VK_NULL_HANDLE
         },
 
@@ -1079,14 +1028,14 @@ int VulkanApp::BindGraphicsAndComputeResources()
            .dstArrayElement = 0u,
            .descriptorCount = 1u,
            .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-           .pImageInfo = &image_infos[1],
+           .pImageInfo = &image_infos[0],//1],
            .pBufferInfo = VK_NULL_HANDLE,
            .pTexelBufferView = VK_NULL_HANDLE
         }
     };
 
     vkUpdateDescriptorSets(device, // device
-        6u,                           // descriptorWriteCount
+        3u,                           // descriptorWriteCount
         write_descriptors,            // pDescriptorWrites
         0u,                           // descriptorCopyCount
         VK_NULL_HANDLE);              // pDescriptorCopies
@@ -1209,7 +1158,6 @@ int VulkanApp::Render()
             // any graphics related command after this point is attached to this pipeline (on this command buffer)
             // bind graphics pipeline
 
-            // TODO: Remove this, we only need 1 image being rendered for smoke sim
             vkCmdBindPipeline(
                 command_buffer_graphics,
                 VK_PIPELINE_BIND_POINT_GRAPHICS,
@@ -1217,59 +1165,52 @@ int VulkanApp::Render()
             );
 
             // render input image
-            {
-                VkDeviceSize offsets = 0u; // use me for 'pOffsets' and 'offset'
-                // TODO: bind vertices
-                // TODO: bind indices
-                vkCmdBindVertexBuffers(
-                    command_buffer_graphics,
-                    0,
-                    1,
-                    &mesh_sprite.buffer_vertex,
-                    &offsets
-                );
-                vkCmdBindIndexBuffer(
-                    command_buffer_graphics,
-                    mesh_sprite.buffer_index,
-                    offsets,
-                    VK_INDEX_TYPE_UINT16
-                );
-            }
-
-            // render output image
-            {
-                // vertices & indices are already bound!!!
-
-                // bind graphics output descriptor set 0 - buffer_graphics_camera + buffer_graphics_model_output
-                vkCmdBindDescriptorSets(command_buffer_graphics,
-                    VK_PIPELINE_BIND_POINT_GRAPHICS,
-                    pipeline_layout_graphics,
-                    desc_set_0_graphics_output.set_index,
-                    1,
-                    &desc_set_0_graphics_output.desc_set,
-                    0u,
-                    VK_NULL_HANDLE);
-                // bind graphics output descriptor set 1 - texture_compute_output
-                vkCmdBindDescriptorSets(command_buffer_graphics,
-                    VK_PIPELINE_BIND_POINT_GRAPHICS,
-                    pipeline_layout_graphics,
-                    desc_set_1_graphics_output.set_index,
-                    1,
-                    &desc_set_1_graphics_output.desc_set,
-                    0u,
-                    VK_NULL_HANDLE);
-
-                // TODO: call vkCmdDrawIndexed
-                // we are drawing the same mesh again (just with different DSIs now :)
-                vkCmdDrawIndexed(
-                    command_buffer_graphics,
-                    mesh_sprite.num_indices,
-                    1,
-                    0,
-                    0,
-                    0
-                );
-            }
+            VkDeviceSize offsets = 0u; // use me for 'pOffsets' and 'offset'
+            vkCmdBindVertexBuffers(
+                command_buffer_graphics,
+                0,
+                1,
+                &mesh_sprite.buffer_vertex,
+                &offsets
+            );
+            vkCmdBindIndexBuffer(
+                command_buffer_graphics,
+                mesh_sprite.buffer_index,
+                offsets,
+                VK_INDEX_TYPE_UINT16
+            );
+            
+            // vertices & indices are already bound!!!
+            
+            // bind graphics output descriptor set 0 - buffer_graphics_camera + buffer_graphics_model_output
+            vkCmdBindDescriptorSets(command_buffer_graphics,
+                VK_PIPELINE_BIND_POINT_GRAPHICS,
+                pipeline_layout_graphics,
+                desc_set_0_graphics_output.set_index,
+                1,
+                &desc_set_0_graphics_output.desc_set,
+                0u,
+                VK_NULL_HANDLE);
+            // bind graphics output descriptor set 1 - texture_compute_output
+            vkCmdBindDescriptorSets(command_buffer_graphics,
+                VK_PIPELINE_BIND_POINT_GRAPHICS,
+                pipeline_layout_graphics,
+                desc_set_1_graphics_output.set_index,
+                1,
+                &desc_set_1_graphics_output.desc_set,
+                0u,
+                VK_NULL_HANDLE);
+            
+            // TODO: call vkCmdDrawIndexed
+            // we are drawing the same mesh again (just with different DSIs now :)
+            vkCmdDrawIndexed(
+                command_buffer_graphics,
+                mesh_sprite.num_indices,
+                1,
+                0,
+                0,
+                0
+            );
 
             end_render_pass(command_buffer_graphics);
 
