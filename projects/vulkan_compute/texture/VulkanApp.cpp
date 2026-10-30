@@ -981,7 +981,7 @@ int VulkanApp::BindGraphicsAndComputeResources()
             .range = VK_WHOLE_SIZE
         }
     };
-    VkDescriptorImageInfo const image_infos[1]=//2] =
+    VkDescriptorImageInfo const image_infos[1]=
     {
       {
         .sampler = texture_compute_output.sampler,
@@ -990,7 +990,7 @@ int VulkanApp::BindGraphicsAndComputeResources()
       }
     };
 
-    VkWriteDescriptorSet const write_descriptors[3]=//6] =
+    VkWriteDescriptorSet const write_descriptors[3]=
     {
         // desc_set_0_graphics_output - binding 0
         {
@@ -1015,7 +1015,7 @@ int VulkanApp::BindGraphicsAndComputeResources()
           .descriptorCount = 1u,
           .descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
           .pImageInfo = VK_NULL_HANDLE,
-          .pBufferInfo = &buffer_infos[1],//2], // graphics_output
+          .pBufferInfo = &buffer_infos[1], // graphics_output
           .pTexelBufferView = VK_NULL_HANDLE
         },
 
@@ -1028,7 +1028,7 @@ int VulkanApp::BindGraphicsAndComputeResources()
            .dstArrayElement = 0u,
            .descriptorCount = 1u,
            .descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-           .pImageInfo = &image_infos[0],//1],
+           .pImageInfo = &image_infos[0],
            .pBufferInfo = VK_NULL_HANDLE,
            .pTexelBufferView = VK_NULL_HANDLE
         }
