@@ -257,7 +257,7 @@ int VulkanApp::CreateComputeResources()
         }
 
         const uvec2 ext = { GridSizeX, GridSizeY };
-
+        // TODO: Remove this, but first we need to change the compute shader to stop needing this (only needs the smoke data arrays)
         if (!create_vulkan_texture_empty(
             physical_device,
             device,
@@ -773,22 +773,8 @@ int VulkanApp::CreateGraphicsDescriptorSets()
         return -1;
     }
 
-    std::array <vulkan_descriptor_set_info, NUM_SETS_GRAPHICS * 2u> const descriptor_set_infos =
+    std::array <vulkan_descriptor_set_info, NUM_SETS_GRAPHICS /** 2u*/> const descriptor_set_infos =
     { {
-            // set 0 - input
-            {
-              .desc_pool = &descriptor_pool_graphics,         // the pool from which to allocate the individual descriptors from
-              .layout = &descriptor_set_layouts_graphics[0], // layout of the descriptor set
-              .set_index = 0u,                                // index of the descriptor set
-              .out_set = &desc_set_0_graphics_input           // pointer to where to instantiate the descriptor set to
-            },
-        // set 1 - input
-        {
-          .desc_pool = &descriptor_pool_graphics,
-          .layout = &descriptor_set_layouts_graphics[1],
-          .set_index = 1u,
-          .out_set = &desc_set_1_graphics_input
-        },
         // set 0 - output
       {
         .desc_pool = &descriptor_pool_graphics,
@@ -878,18 +864,7 @@ int VulkanApp::CreateGraphicsResources()
             DBG_ASSERT(false);
             return -1;
         }
-        if (!create_vulkan_buffer(
-            physical_device,
-            device,
-            sizeof(model_buffer),
-            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-            VK_SHARING_MODE_EXCLUSIVE,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-            buffer_graphics_model_input))
-        {
-            DBG_ASSERT(false);
-            return -1;
-        }
+
         if (!create_vulkan_buffer(
             physical_device,
             device,
@@ -1270,17 +1245,12 @@ void VulkanApp::Terminate()
     release_vulkan_command_pool(command_pool_graphics);
     
     release_vulkan_buffer(device, buffer_graphics_model_output);
-    release_vulkan_buffer(device, buffer_graphics_model_input);
     release_vulkan_buffer(device, buffer_graphics_camera);
     
     release_vulkan_descriptor_sets(device,
         1u, &desc_set_1_graphics_output);
     release_vulkan_descriptor_sets(device,
         1u, &desc_set_0_graphics_output);
-    release_vulkan_descriptor_sets(device,
-        1u, &desc_set_1_graphics_input);
-    release_vulkan_descriptor_sets(device,
-        1u, &desc_set_0_graphics_input);
     release_vulkan_descriptor_pool(device, descriptor_pool_graphics);
     
     release_vulkan_pipeline(device, pipeline_graphics);

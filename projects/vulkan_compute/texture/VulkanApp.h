@@ -123,16 +123,14 @@ private:
 	VkPipeline pipeline_graphics = VK_NULL_HANDLE;
 
 	VkDescriptorPool descriptor_pool_graphics = VK_NULL_HANDLE;
-	vulkan_descriptor_set desc_set_0_graphics_input,  // for rendering input image , buffer_graphics_camera + buffer_graphics_model_input
-		desc_set_1_graphics_input,  // for rendering input image , texture_compute_input
-		desc_set_0_graphics_output, // for rendering output image, buffer_graphics_camera + buffer_graphics_model_output
-		desc_set_1_graphics_output; // for rendering output image, texture_compute_output
+	vulkan_descriptor_set desc_set_1_graphics_input;  // for rendering input image , texture_compute_input
+	vulkan_descriptor_set desc_set_0_graphics_output; // for rendering output image, buffer_graphics_camera + buffer_graphics_model_output
+	vulkan_descriptor_set desc_set_1_graphics_output; // for rendering output image, texture_compute_output
 
-	vulkan_buffer buffer_graphics_camera,
-		buffer_graphics_model_input,  // for when rendering the input texture
-		buffer_graphics_model_output, // for when rendering the output texture
-		buffer_density_a,				// For storing density to put into the previous image
-		buffer_density_b;				// For storing density to put into the rendered image
+	vulkan_buffer buffer_graphics_camera;
+	vulkan_buffer buffer_graphics_model_output; // for when rendering the output texture
+	vulkan_buffer buffer_density_a;				// For storing density to put into the previous image
+	vulkan_buffer buffer_density_b;				// For storing density to put into the rendered image
 
 	VkCommandPool command_pool_graphics = VK_NULL_HANDLE;
 	VkCommandBuffer command_buffer_graphics = VK_NULL_HANDLE;
