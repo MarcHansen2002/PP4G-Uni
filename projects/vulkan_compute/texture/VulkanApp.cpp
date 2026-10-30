@@ -930,27 +930,9 @@ int VulkanApp::CreateGraphicsResources()
             return -1;
         }
 
-        // TODO: Remove this, it's for the input which we don't need
-        vec2 const texture_dim = (vec2)texture_compute_input.dim * 0.65f;
-        if (!map_and_unmap_memory(device,
-            buffer_graphics_model_input.memory,
-            [&texture_dim](void* mem)
-            {
-                model_buffer* buf = (model_buffer*)mem;
-
-                buf->model_matrix = fast_transform_2D(-texture_dim.x / 2.f, 0.f,
-                    0.f,
-                    0.f, 0.f,
-                    texture_dim.x, texture_dim.y);
-            }))
-        {
-            DBG_ASSERT(false);
-            return -1;
-        }
-
         if (!map_and_unmap_memory(device,
             buffer_graphics_model_output.memory,
-            [&texture_dim, this](void* mem)
+            [this](void* mem)
             {
                 model_buffer* buf = (model_buffer*)mem;
 
