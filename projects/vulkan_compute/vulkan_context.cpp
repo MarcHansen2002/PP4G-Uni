@@ -1358,7 +1358,7 @@ bool create_vulkan_command_buffers (u32 num, VkCommandPool command_pool, VkComma
   // TODO: create an instance of 'VkCommandBufferAllocateInfo' called 'cbai'
   // make sure it is a PRIMARY level command buffer
   VkCommandBufferAllocateInfo cbai = {
-      .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+      .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
       .pNext = VK_NULL_HANDLE,
       .commandPool = command_pool,
       .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
