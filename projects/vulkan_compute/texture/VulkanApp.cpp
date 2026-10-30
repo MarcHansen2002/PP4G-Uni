@@ -256,17 +256,21 @@ int VulkanApp::CreateComputeResources()
             return -1;
         }
 
-        if (!create_vulkan_texture(physical_device, device,
-            TEXTURE_PATH,
-            image_format, VK_IMAGE_LAYOUT_GENERAL,
-            // but can not be 'VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL' because
-            // it will be used initially in a VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
-            VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT, // look me up!
+        const uvec2 ext = { GridSizeX, GridSizeY };
+
+        if (!create_vulkan_texture_empty(
+            physical_device,
+            device,
+            ext,
+            image_format,
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
             texture_compute_input))
         {
-            DBG_ASSERT(false);
-            return -1;
+            assert(false, "Input empty texture unable to create");
         }
+
+        
 
         // call create_vulkan_texture_empty to create 'texture_compute_output'
         // needs to have the exact same size as texture_compute_input
@@ -277,10 +281,10 @@ int VulkanApp::CreateComputeResources()
         if (!create_vulkan_texture_empty(
             physical_device,
             device,
-            texture_compute_input.dim,
+            ext,
             image_format,
-            VK_IMAGE_LAYOUT_GENERAL,
-            VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT, // look me up!
+            VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
             texture_compute_output))
         {
             assert(false, "Vulkan empty texture not created.");
@@ -823,6 +827,48 @@ int VulkanApp::CreateGraphicsResources()
         if (!create_vulkan_buffer(
             physical_device,
             device,
+            sizeof(float) * CellCount,
+            VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+            VK_SHARING_MODE_EXCLUSIVE,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            buffer_density_a
+        ));
+        if (!create_vulkan_buffer(
+            physical_device,
+            device,
+            sizeof(float) * CellCount,
+            VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+            VK_SHARING_MODE_EXCLUSIVE,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            buffer_density_b
+        ));
+
+        if (!map_and_unmap_memory(
+            device,
+            buffer_density_a.memory,
+            [this](void* mem)
+            {
+                memcpy(mem, SmokeStateA.Density, sizeof(float) * CellCount);
+            }
+        ))
+        {
+            return -1;
+        }
+        if (!map_and_unmap_memory(
+            device,
+            buffer_density_b.memory,
+            [this](void* mem)
+            {
+                memcpy(mem, SmokeStateB.Density, sizeof(float) * CellCount);
+            }
+        ))
+        {
+            return -1;
+        }
+
+        if (!create_vulkan_buffer(
+            physical_device,
+            device,
             sizeof(camera_buffer),
             VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
             VK_SHARING_MODE_EXCLUSIVE,
@@ -884,6 +930,7 @@ int VulkanApp::CreateGraphicsResources()
             return -1;
         }
 
+        // TODO: Remove this, it's for the input which we don't need
         vec2 const texture_dim = (vec2)texture_compute_input.dim * 0.65f;
         if (!map_and_unmap_memory(device,
             buffer_graphics_model_input.memory,
@@ -903,14 +950,14 @@ int VulkanApp::CreateGraphicsResources()
 
         if (!map_and_unmap_memory(device,
             buffer_graphics_model_output.memory,
-            [&texture_dim](void* mem)
+            [&texture_dim, this](void* mem)
             {
                 model_buffer* buf = (model_buffer*)mem;
 
-                buf->model_matrix = fast_transform_2D(texture_dim.x / 2.f, 0.f,
+                buf->model_matrix = fast_transform_2D(0.f, 0.f,
                     0.f,
                     0.f, 0.f,
-                    texture_dim.x, texture_dim.y);
+                    extent.width, extent.height);
             }))
         {
             DBG_ASSERT(false);
@@ -1100,6 +1147,8 @@ int VulkanApp::CreatePlane()
     }
 }
 
+
+// Render & Shutdown
 int VulkanApp::Render()
 {
         // this semaphore will be triggered when a swapchain image is available to be rendered to
@@ -1124,11 +1173,43 @@ int VulkanApp::Render()
                 return -1;
             }
 
+            VkBufferImageCopy copyRegion =
+            {
+                .bufferOffset = 0,
+                .bufferRowLength = 0,
+                .bufferImageHeight = 0,
+                .imageSubresource =
+                {
+                    .aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+                    .mipLevel = 0,
+                    .baseArrayLayer = 0,
+                    .layerCount = 1
+                },
+                .imageOffset = {0, 0, 0},
+                .imageExtent =
+                {
+                    GridSizeX,
+                    GridSizeY,
+                    1
+                }
+            };
+
+            vkCmdCopyBufferToImage(
+                command_buffer_graphics,
+                buffer_density_a.buffer,
+                texture_compute_output.image,
+                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                1,
+                &copyRegion
+            );
+
 
             begin_render_pass(command_buffer_graphics, { 0.39f, 0.8f, 0.92f }); // cornflower blue
 
             // any graphics related command after this point is attached to this pipeline (on this command buffer)
             // bind graphics pipeline
+
+            // TODO: Remove this, we only need 1 image being rendered for smoke sim
             vkCmdBindPipeline(
                 command_buffer_graphics,
                 VK_PIPELINE_BIND_POINT_GRAPHICS,
@@ -1252,7 +1333,7 @@ int VulkanApp::Submit()
       //.pNext = VK_NULL_HANDLE,
       .waitSemaphoreCount = 1u,
       .pWaitSemaphores = &swapchain_image_available_semaphore, // wait for these semaphores to be signalled before submitting command buffers
-      .pWaitDstStageMask = VK_NULL_HANDLE,
+      .pWaitDstStageMask = &wait_stage_mask,
       .commandBufferCount = 1u,
       .pCommandBuffers = &command_buffer_graphics,
       .signalSemaphoreCount = 0u,

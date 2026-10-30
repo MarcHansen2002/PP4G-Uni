@@ -5,6 +5,7 @@
 #include "../vulkan_context.h"
 #include "../vulkan_pipeline.h"
 #include "../vulkan_resources.h"
+#include "SmokeSimulation/SmokeData.h"
 
 #include <array>                  // for std::array
 #include <cmath>                  // for std::ceilf
@@ -28,6 +29,10 @@ struct camera_buffer
 struct model_buffer
 {
 	mat4 model_matrix;
+};
+struct smoke_render_buffer
+{
+	float density[CellCount];
 };
 
 constexpr char const* WINDOW_TITLE = "vulkan_compute_texture";
@@ -54,6 +59,16 @@ constexpr u32 BINDING_ID_SET_1_TEXTURE = 0u;
 class VulkanApp
 {
 public:
+	VulkanApp()
+	{
+		// Randomise densities for testing purposes
+		// TODO: Don't
+		for (int i = 0; i < CellCount; i++)
+		{
+			SmokeStateA.Density[i] = ((double)rand() / (RAND_MAX)) + 1;
+		}
+	}
+
 	int Init();
 
 	int CreateContext();
@@ -115,7 +130,9 @@ private:
 
 	vulkan_buffer buffer_graphics_camera,
 		buffer_graphics_model_input,  // for when rendering the input texture
-		buffer_graphics_model_output; // for when rendering the output texture
+		buffer_graphics_model_output, // for when rendering the output texture
+		buffer_density_a,				// For storing density to put into the previous image
+		buffer_density_b;				// For storing density to put into the rendered image
 
 	VkCommandPool command_pool_graphics = VK_NULL_HANDLE;
 	VkCommandBuffer command_buffer_graphics = VK_NULL_HANDLE;
@@ -124,4 +141,8 @@ private:
 
 	VkSemaphore swapchain_image_available_semaphore = VK_NULL_HANDLE;
 	VkFence fence_submit_graphics = VK_NULL_HANDLE;
+
+	// Smoke Simulation
+	SmokeState SmokeStateA;
+	SmokeState SmokeStateB;
 };

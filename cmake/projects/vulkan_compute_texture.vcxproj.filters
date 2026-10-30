@@ -6,6 +6,9 @@
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\vulkan_context.cpp" />
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\vulkan_pipeline.cpp" />
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\vulkan_resources.cpp" />
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\SmokeSimulation\SmokeData.cpp">
+      <Filter>texture\SmokeSimulation</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\VulkanApp.cpp">
       <Filter>texture</Filter>
     </ClCompile>
@@ -19,6 +22,9 @@
     <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\vulkan_context.h" />
     <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\vulkan_pipeline.h" />
     <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\vulkan_resources.h" />
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\SmokeSimulation\SmokeData.h">
+      <Filter>texture\SmokeSimulation</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\VulkanApp.h">
       <Filter>texture</Filter>
     </ClInclude>
@@ -43,6 +49,9 @@
     </Filter>
     <Filter Include="texture">
       <UniqueIdentifier>{E026F278-B828-31C3-8C6F-1D7F278BF526}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="texture\SmokeSimulation">
+      <UniqueIdentifier>{1F249BC7-EEC8-3B88-9688-263134EE618C}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
