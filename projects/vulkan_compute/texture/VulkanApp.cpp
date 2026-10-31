@@ -1037,7 +1037,14 @@ int VulkanApp::CreatePlane()
 // Render & Shutdown
 int VulkanApp::Render(float dTime)
 {
-    EmitSmoke(GridSizeX / 2, GridSizeY / 2, 1.f, 1.f);
+    elapsed += dTime;
+    if (elapsed >= 3.f)
+    {
+        EmitSmoke(GridSizeX / 2, GridSizeY / 2, 0.2f, 5.f);
+        elapsed = 0;
+    }
+
+    
     UpdateSmoke(dTime);
 
         // this semaphore will be triggered when a swapchain image is available to be rendered to

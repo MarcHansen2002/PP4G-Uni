@@ -140,6 +140,7 @@ private:
 	// ImGui
 	VkDescriptorPool imgui_descriptor_pool;
 
+	float elapsed = 0;
 	
 	// Could turn this into ImGui Editable
 	void EmitSmoke(int x, int y, float density, float temp)
@@ -167,6 +168,14 @@ private:
 		Smoke.AdvectDye(&Smoke, dTime);;
 		Smoke.AdvectVelocity(&Smoke, dTime);
 
+		// TODO: (Smoke additions, do after moving current stuff to compute shader
+		// Bouyancy
+		// Velocity Dissipation
+		// Density Dissipation
+		// Velocity Diffusion
+		// Vorticity Confinement
+		// Temperature Dissipation
+		// Obstacle interaction (very big stretch, not likely to happen)
 
 		//SmokeIndex = 1 - SmokeIndex;
 		// Re-copy memory to the GPU. This will not be needed once in the compute shader
