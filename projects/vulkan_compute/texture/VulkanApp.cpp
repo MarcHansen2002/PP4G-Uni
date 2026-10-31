@@ -834,18 +834,19 @@ int VulkanApp::CreateGraphicsResources()
             buffer_density_a.memory,
             [this](void* mem)
             {
-                memcpy(mem, SmokeStates[0].Density, sizeof(float) * CellCount);
+                memcpy(mem, Smoke.Density, sizeof(float) * CellCount);
             }
         ))
         {
             return -1;
         }
+        // TODO: Remove this buffer, we no longer ping pong
         if (!map_and_unmap_memory(
             device,
             buffer_density_b.memory,
             [this](void* mem)
             {
-                memcpy(mem, SmokeStates[1].Density, sizeof(float) * CellCount);
+                memcpy(mem, Smoke.Density, sizeof(float) * CellCount);
             }
         ))
         {
@@ -1058,16 +1059,7 @@ int VulkanApp::CreatePlane()
 int VulkanApp::Render(float dTime)
 {
     EmitSmoke(GridSizeX / 2, GridSizeY / 2, 1.f, 1.f);
-
-    std::ostringstream before;
-    before << "Before Update: " << std::to_string(SmokeStates[SmokeIndex].Density[GetCellIndex(GridSizeX / 2, GridSizeY / 2)]) << "\n";
-    OutputDebugString(before.str().c_str());
-
     UpdateSmoke(dTime);
-
-    std::ostringstream after;
-    after << "After Update: " << std::to_string(SmokeStates[SmokeIndex].Density[GetCellIndex(GridSizeX / 2, GridSizeY / 2)]) << "\n";
-    OutputDebugString(after.str().c_str());
 
         // this semaphore will be triggered when a swapchain image is available to be rendered to
         if (!acquire_next_swapchain_image(swapchain_image_available_semaphore))
@@ -1114,7 +1106,7 @@ int VulkanApp::Render(float dTime)
 
             vkCmdCopyBufferToImage(
                 command_buffer_graphics,
-                SmokeIndex == 0 ? buffer_density_a.buffer : buffer_density_b.buffer,
+                buffer_density_a.buffer,
                 texture_compute_output.image,
                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                 1,
