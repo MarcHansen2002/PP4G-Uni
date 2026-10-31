@@ -37,6 +37,7 @@ struct SmokeState
 
 	PressureSolver PressureSolveData[CellCount]{};
 
+	// TODO: Move all this to a compute shader
 	int GetCellIndex(int x, int y)
 	{
 		return x + (y * GridSizeX);

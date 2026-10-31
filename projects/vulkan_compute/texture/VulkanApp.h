@@ -127,8 +127,7 @@ private:
 
 	vulkan_buffer buffer_graphics_camera;
 	vulkan_buffer buffer_graphics_model_output; // for when rendering the output texture
-	vulkan_buffer buffer_density_a;				// For storing density to put into the previous image
-	vulkan_buffer buffer_density_b;				// For storing density to put into the rendered image
+	vulkan_buffer buffer_density;				// For storing density to put into the previous image
 
 	VkCommandPool command_pool_graphics = VK_NULL_HANDLE;
 	VkCommandBuffer command_buffer_graphics = VK_NULL_HANDLE;
@@ -174,7 +173,7 @@ private:
 		// As they will be modified on the GPU not on the CPU
 		if (!map_and_unmap_memory(
 			device,
-			buffer_density_a.memory,
+			buffer_density.memory,
 			[this](void* mem)
 			{
 				memcpy(mem, Smoke.Density, sizeof(float) * CellCount);

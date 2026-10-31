@@ -817,33 +817,12 @@ int VulkanApp::CreateGraphicsResources()
             VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             VK_SHARING_MODE_EXCLUSIVE,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-            buffer_density_a
-        ));
-        if (!create_vulkan_buffer(
-            physical_device,
-            device,
-            sizeof(float) * CellCount,
-            VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-            VK_SHARING_MODE_EXCLUSIVE,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-            buffer_density_b
+            buffer_density
         ));
 
         if (!map_and_unmap_memory(
             device,
-            buffer_density_a.memory,
-            [this](void* mem)
-            {
-                memcpy(mem, Smoke.Density, sizeof(float) * CellCount);
-            }
-        ))
-        {
-            return -1;
-        }
-        // TODO: Remove this buffer, we no longer ping pong
-        if (!map_and_unmap_memory(
-            device,
-            buffer_density_b.memory,
+            buffer_density.memory,
             [this](void* mem)
             {
                 memcpy(mem, Smoke.Density, sizeof(float) * CellCount);
@@ -1106,7 +1085,7 @@ int VulkanApp::Render(float dTime)
 
             vkCmdCopyBufferToImage(
                 command_buffer_graphics,
-                buffer_density_a.buffer,
+                buffer_density.buffer,
                 texture_compute_output.image,
                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                 1,
