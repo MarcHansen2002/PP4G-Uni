@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 
 static constexpr int GridSizeX = 256;
 static constexpr int GridSizeY = 256;
@@ -6,18 +7,24 @@ static constexpr int CellCount = GridSizeX * GridSizeY;
 
 struct SmokeState
 {
-	float Density[CellCount];
-	float VelocityX[CellCount];
-	float VelocityY[CellCount];
-
-	// TODO: Implement later
-	//float Temperature[CellCount];
+	// Cell centered
+	float Density[CellCount]{};
+	float Temperature[CellCount]{};
+	float Pressure[CellCount]{};
+	// Edge Centered
+	float VelocityX[CellCount + GridSizeX]{};
+	float VelocityY[CellCount + GridSizeY]{};
+	
+	
 };
 
-// TODO: Implement later on
-struct SmokeSolver
+struct PressureSolver
 {
-	//float Pressure[CellCount];
-	//float Divergence[CellCount];
-	//float Vorticity[CellCount];
+	float flowLeft;
+	float flowRight;
+	float flowTop;
+	float flowBottom;
+	int flowEdgeCount;
+	bool isSolid;
+	float velocityTerm;
 };

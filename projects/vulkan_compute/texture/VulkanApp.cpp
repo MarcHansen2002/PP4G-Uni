@@ -86,15 +86,15 @@ int VulkanApp::Init()
 int VulkanApp::CreateContext()
 {
     // create window, vulkan instance & device etc
-    if (!create_window (WINDOW_TITLE))
+    if (!create_window(WINDOW_TITLE))
     {
-      DBG_ASSERT (false);
-      return -1;
+        DBG_ASSERT(false);
+        return -1;
     }
-    if (!create_vulkan_instance ())
+    if (!create_vulkan_instance())
     {
-      DBG_ASSERT (false);
-      return -1;
+        DBG_ASSERT(false);
+        return -1;
     }
     if (!create_vulkan_surface ())
     {
@@ -834,7 +834,7 @@ int VulkanApp::CreateGraphicsResources()
             buffer_density_a.memory,
             [this](void* mem)
             {
-                memcpy(mem, SmokeStateA.Density, sizeof(float) * CellCount);
+                memcpy(mem, SmokeStates[0].Density, sizeof(float) * CellCount);
             }
         ))
         {
@@ -845,7 +845,7 @@ int VulkanApp::CreateGraphicsResources()
             buffer_density_b.memory,
             [this](void* mem)
             {
-                memcpy(mem, SmokeStateB.Density, sizeof(float) * CellCount);
+                memcpy(mem, SmokeStates[1].Density, sizeof(float) * CellCount);
             }
         ))
         {
@@ -1052,11 +1052,23 @@ int VulkanApp::CreatePlane()
         return -1;
     }
 }
-
+#include <sstream>
 
 // Render & Shutdown
-int VulkanApp::Render()
+int VulkanApp::Render(float dTime)
 {
+    EmitSmoke(GridSizeX / 2, GridSizeY / 2, 1.f, 1.f);
+
+    std::ostringstream before;
+    before << "Before Update: " << std::to_string(SmokeStates[SmokeIndex].Density[GetCellIndex(GridSizeX / 2, GridSizeY / 2)]) << "\n";
+    OutputDebugString(before.str().c_str());
+
+    UpdateSmoke(dTime);
+
+    std::ostringstream after;
+    after << "After Update: " << std::to_string(SmokeStates[SmokeIndex].Density[GetCellIndex(GridSizeX / 2, GridSizeY / 2)]) << "\n";
+    OutputDebugString(after.str().c_str());
+
         // this semaphore will be triggered when a swapchain image is available to be rendered to
         if (!acquire_next_swapchain_image(swapchain_image_available_semaphore))
         {
@@ -1102,7 +1114,7 @@ int VulkanApp::Render()
 
             vkCmdCopyBufferToImage(
                 command_buffer_graphics,
-                buffer_density_a.buffer,
+                SmokeIndex == 0 ? buffer_density_a.buffer : buffer_density_b.buffer,
                 texture_compute_output.image,
                 VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                 1,
