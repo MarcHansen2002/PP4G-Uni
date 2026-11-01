@@ -12,6 +12,12 @@
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\VulkanApp.cpp">
       <Filter>texture</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\VulkanApp_Compute.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\VulkanApp_Graphics.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\main.cpp">
       <Filter>texture</Filter>
     </ClCompile>
@@ -26,6 +32,12 @@
       <Filter>texture\SmokeSimulation</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\VulkanApp.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\VulkanApp_Compute.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\VulkanApp_Graphics.h">
       <Filter>texture</Filter>
     </ClInclude>
   </ItemGroup>

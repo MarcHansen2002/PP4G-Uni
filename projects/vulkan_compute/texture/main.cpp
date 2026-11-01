@@ -20,7 +20,6 @@ int WINAPI WinMain (_In_ HINSTANCE/* hInstance*/,
         auto start = clock.now();
 
         app->Render(dTime);
-        app->Submit();
 
         auto end = clock.now();
         dTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();

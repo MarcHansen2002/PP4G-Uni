@@ -8,9 +8,6 @@
 #include "SmokeSimulation/SmokeData.h"
 
 #include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_vulkan.h"
-
 
 #include <array>                  // for std::array
 #include <cmath>                  // for std::ceilf
@@ -21,6 +18,9 @@
 #define WIN32_LEAN_AND_MEAN       // exclude rarely-used content from the Windows headers
 #define NOMINMAX                  // prevent Windows macros defining their own min and max macros
 #include <Windows.h>              // for WinMain
+
+#include "VulkanApp_Compute.h"
+#include "VulkanApp_Graphics.h"
 
 struct vertex_2d_uv
 {
@@ -42,9 +42,7 @@ struct smoke_render_buffer
 
 constexpr char const* WINDOW_TITLE = "vulkan_compute_texture";
 constexpr char const* COMPILED_COMPUTE_SHADER_PATH = "data/shaders/glsl/vulkan_compute_texture/vulkan_compute_texture.comp.spv";
-constexpr char const* COMPILED_GRAPHICS_SHADER_PATH_VERT = "data/shaders/glsl/vulkan_compute_texture/sprite.vert.spv";
-constexpr char const* COMPILED_GRAPHICS_SHADER_PATH_FRAG = "data/shaders/glsl/vulkan_compute_texture/sprite.frag.spv";
-constexpr char const* TEXTURE_PATH = "data/textures/test.png";
+
 
 constexpr u32 NUM_SETS_COMPUTE = 1u;
 
@@ -52,7 +50,7 @@ constexpr u32 NUM_RESOURCES_COMPUTE_SET_0 = 2u;
 constexpr u32 BINDING_ID_SET_0_TEXTURE_INPUT = 0u;
 constexpr u32 BINDING_ID_SET_0_TEXTURE_OUTPUT = 1u;
 
-constexpr u32 NUM_SETS_GRAPHICS = 2u;
+
 
 constexpr u32 NUM_RESOURCES_GRAPHICS_SET_0 = 2u;
 constexpr u32 BINDING_ID_SET_0_UBO_CAMERA = 0u;
@@ -68,6 +66,15 @@ public:
 	{
 	}
 
+	VulkanApp_Graphics Graphics;
+
+	VkDevice* GetDevice() { return &device; }
+	VkPhysicalDevice* GetPhysicalDevice() { return &physical_device; }
+	VkRenderPass* GetRenderPass() { return &render_pass; }
+	VkExtent2D* GetExtent() { return &extent; }
+
+	vulkan_buffer* GetDensityBuffer() { return &buffer_density; }
+
 	int Init();
 
 	int CreateContext();
@@ -80,18 +87,10 @@ public:
 	int CreateComputeSyncObjects();
 	int ComputeDispatch();
 
-	int CreateGraphicsPipeline();
-	int CreateGraphicsDescriptorSets();
-	int CreateGraphicsResources();
-	int BindGraphicsAndComputeResources();
-	int CreateGraphicsCommandBuffers();
-	int CreateGraphicsSyncObjects();
-
-	int CreatePlane();
+	
 
 	int Render(float dTime);
 	void RenderImGui(float dTime);
-	int Submit();
 
 	void Terminate();
 private:
@@ -101,7 +100,7 @@ private:
 	VkExtent2D extent = {};
 	VkRenderPass render_pass = VK_NULL_HANDLE;
 
-	VkQueue queue_compute = VK_NULL_HANDLE, queue_graphics = VK_NULL_HANDLE;
+	VkQueue queue_compute = VK_NULL_HANDLE;
 
 	std::array <VkDescriptorSetLayout, NUM_SETS_COMPUTE> descriptor_set_layouts_compute = { VK_NULL_HANDLE };
 	VkPipelineLayout pipeline_layout_compute = VK_NULL_HANDLE;
@@ -110,34 +109,16 @@ private:
 	VkDescriptorPool descriptor_pool_compute = VK_NULL_HANDLE;
 	vulkan_descriptor_set desc_set_0_compute; //for compute, texture_compute_input + texture_compute_output
 
-	vulkan_texture texture_compute_input;
-	vulkan_texture texture_compute_output;
+	//vulkan_texture texture_compute_input;
+	//vulkan_texture texture_compute_output;
 
 	VkCommandPool command_pool_compute = VK_NULL_HANDLE;
 	VkCommandBuffer command_buffer_compute = VK_NULL_HANDLE;
 
 	VkFence fence_compute = VK_NULL_HANDLE;
 
-	// Graphics
-	std::array <VkDescriptorSetLayout, NUM_SETS_GRAPHICS> descriptor_set_layouts_graphics = { VK_NULL_HANDLE, VK_NULL_HANDLE };
-	VkPipelineLayout pipeline_layout_graphics = VK_NULL_HANDLE;
-	VkPipeline pipeline_graphics = VK_NULL_HANDLE;
 
-	VkDescriptorPool descriptor_pool_graphics = VK_NULL_HANDLE;
-	vulkan_descriptor_set desc_set_0_graphics_output; // for rendering output image, buffer_graphics_camera + buffer_graphics_model_output
-	vulkan_descriptor_set desc_set_1_graphics_output; // for rendering output image, texture_compute_output
-
-	vulkan_buffer buffer_graphics_camera;
-	vulkan_buffer buffer_graphics_model_output; // for when rendering the output texture
 	vulkan_buffer buffer_density;				// For storing density to put into the previous image
-
-	VkCommandPool command_pool_graphics = VK_NULL_HANDLE;
-	VkCommandBuffer command_buffer_graphics = VK_NULL_HANDLE;
-
-	vulkan_mesh mesh_sprite;
-
-	VkSemaphore swapchain_image_available_semaphore = VK_NULL_HANDLE;
-	VkFence fence_submit_graphics = VK_NULL_HANDLE;
 
 	// ImGui
 	VkDescriptorPool imgui_descriptor_pool;
