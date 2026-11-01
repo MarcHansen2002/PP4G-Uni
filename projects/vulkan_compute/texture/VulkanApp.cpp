@@ -80,6 +80,8 @@ int VulkanApp::Init()
         DBG_ASSERT(false);
         return -1;
     }
+
+    imgui_setup_context(&command_buffer_graphics);
 }
 
 // Compute
@@ -1069,6 +1071,8 @@ int VulkanApp::Render(float dTime)
                 return -1;
             }
 
+            imgui_beginframe();
+
             VkBufferImageCopy copyRegion =
             {
                 .bufferOffset = 0,
@@ -1159,6 +1163,8 @@ int VulkanApp::Render(float dTime)
                 0
             );
 
+            RenderImGui(dTime);
+            imgui_endframe(&command_buffer_graphics);
             end_render_pass(command_buffer_graphics);
 
 
@@ -1168,6 +1174,21 @@ int VulkanApp::Render(float dTime)
                 return -1;
             }
         }
+}
+
+void VulkanApp::RenderImGui(float dTime)
+{
+    ImGui::Begin("Test window");
+
+    ImGui::Text("FPS: %i", (int)(dTime / 60.f));
+    ImGui::NewLine();
+
+    ImGui::Text("Smoke Parameters");
+    // TODO: Smoke params
+    ImGui::NewLine();
+    ImGui::Text("Emitter Parameters");
+    // TODO: Emitter params
+    ImGui::End();
 }
 
 int VulkanApp::Submit()
@@ -1226,6 +1247,8 @@ int VulkanApp::Submit()
 
 void VulkanApp::Terminate()
 {
+    imgui_shutdown();
+
     release_vulkan_fences(1u, &fence_submit_graphics);
     release_vulkan_semaphores(1u, &swapchain_image_available_semaphore);
     

@@ -104,3 +104,11 @@ void release_vulkan_device ();
 void release_vulkan_surface ();
 void release_vulkan_instance ();
 void release_window ();
+
+
+/// ImGui
+void imgui_setup_descriptor_pool();
+void imgui_setup_context(VkCommandBuffer* cmdBuffer);
+void imgui_beginframe();
+void imgui_endframe(VkCommandBuffer* cmdBuffer);
+void imgui_shutdown();

@@ -90,10 +90,12 @@ public:
 	int CreatePlane();
 
 	int Render(float dTime);
+	void RenderImGui(float dTime);
 	int Submit();
 
 	void Terminate();
 private:
+	// TODO: Separate compute and graphics pipelines into their own classes for clarity
 	VkPhysicalDevice physical_device = VK_NULL_HANDLE;
 	VkDevice device = VK_NULL_HANDLE;
 	VkExtent2D extent = {};
