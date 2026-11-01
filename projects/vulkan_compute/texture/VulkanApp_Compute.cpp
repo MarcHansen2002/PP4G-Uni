@@ -178,14 +178,14 @@ int VulkanApp_Compute::BindComputeResources()
                 //TODO: Do we need this still?
                 // Compute only really needs a bunch of float arrays as it's modifying the smoke data
                 // Not a smoke texture
-            .sampler = VkApp->Graphics.render_texture.sampler,
-            .imageView = VkApp->Graphics.render_texture.view,
-            .imageLayout = VkApp->Graphics.render_texture.layout
+            .sampler = VkApp->Graphics.Render_Texture.sampler,
+            .imageView = VkApp->Graphics.Render_Texture.view,
+            .imageLayout = VkApp->Graphics.Render_Texture.layout
           },
           {
-            .sampler = VkApp->Graphics.render_texture.sampler,
-            .imageView = VkApp->Graphics.render_texture.view,
-            .imageLayout = VkApp->Graphics.render_texture.layout
+            .sampler = VkApp->Graphics.Render_Texture.sampler,
+            .imageView = VkApp->Graphics.Render_Texture.view,
+            .imageLayout = VkApp->Graphics.Render_Texture.layout
           }
         };
         VkWriteDescriptorSet const write_descriptors[NUM_RESOURCES_COMPUTE_SET_0] =
