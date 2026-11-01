@@ -44,8 +44,6 @@ constexpr char const* WINDOW_TITLE = "vulkan_compute_texture";
 constexpr char const* COMPILED_COMPUTE_SHADER_PATH = "data/shaders/glsl/vulkan_compute_texture/vulkan_compute_texture.comp.spv";
 
 
-constexpr u32 NUM_SETS_COMPUTE = 1u;
-
 constexpr u32 NUM_RESOURCES_COMPUTE_SET_0 = 2u;
 constexpr u32 BINDING_ID_SET_0_TEXTURE_INPUT = 0u;
 constexpr u32 BINDING_ID_SET_0_TEXTURE_OUTPUT = 1u;
@@ -67,6 +65,7 @@ public:
 	}
 
 	VulkanApp_Graphics Graphics;
+	VulkanApp_Compute Compute;
 
 	VkDevice* GetDevice() { return &device; }
 	VkPhysicalDevice* GetPhysicalDevice() { return &physical_device; }
@@ -79,16 +78,6 @@ public:
 
 	int CreateContext();
 
-	int CreateComputePipeline();
-	int CreateComputeDescriptorSets();
-	int CreateComputeResources();
-	int BindComputeResources();
-	int CreateComputeCommandBuffers();
-	int CreateComputeSyncObjects();
-	int ComputeDispatch();
-
-	
-
 	int Render(float dTime);
 	void RenderImGui(float dTime);
 
@@ -99,24 +88,6 @@ private:
 	VkDevice device = VK_NULL_HANDLE;
 	VkExtent2D extent = {};
 	VkRenderPass render_pass = VK_NULL_HANDLE;
-
-	VkQueue queue_compute = VK_NULL_HANDLE;
-
-	std::array <VkDescriptorSetLayout, NUM_SETS_COMPUTE> descriptor_set_layouts_compute = { VK_NULL_HANDLE };
-	VkPipelineLayout pipeline_layout_compute = VK_NULL_HANDLE;
-	VkPipeline pipeline_compute = VK_NULL_HANDLE;
-
-	VkDescriptorPool descriptor_pool_compute = VK_NULL_HANDLE;
-	vulkan_descriptor_set desc_set_0_compute; //for compute, texture_compute_input + texture_compute_output
-
-	//vulkan_texture texture_compute_input;
-	//vulkan_texture texture_compute_output;
-
-	VkCommandPool command_pool_compute = VK_NULL_HANDLE;
-	VkCommandBuffer command_buffer_compute = VK_NULL_HANDLE;
-
-	VkFence fence_compute = VK_NULL_HANDLE;
-
 
 	vulkan_buffer buffer_density;				// For storing density to put into the previous image
 
