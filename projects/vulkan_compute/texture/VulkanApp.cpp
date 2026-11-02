@@ -87,12 +87,7 @@ int VulkanApp::CreateContext()
 // Render & Shutdown
 int VulkanApp::Render(float dTime)
 {
-    elapsed += dTime;
-    if (elapsed >= 3.f)
-    {
-        EmitSmoke(GridSizeX / 2, GridSizeY / 2, 0.2f, 5.f);
-        elapsed = 0;
-    }
+    Emitter.Emit(Smoke, dTime);
     UpdateSmoke(dTime);
 
     Graphics.Render(dTime);
@@ -109,9 +104,21 @@ void VulkanApp::RenderImGui(float dTime)
     ImGui::NewLine();
 
     ImGui::Text("Smoke Parameters");
+    ImGui::SliderFloat("Fluid Density", &FluidDensity, 0.001f, 100.f);
+
     // TODO: Smoke params
     ImGui::NewLine();
     ImGui::Text("Emitter Parameters");
+
+    Emitter.ShowInspector();
+
+    if (ImGui::Button("Clear Smoke"))
+    {
+        std::fill_n(Smoke.Density, CellCount, 0.f);
+        std::fill_n(Smoke.Temperature, CellCount, 0.f);
+        std::fill_n(Smoke.VelocityX, CellCount, 0.f);
+        std::fill_n(Smoke.VelocityY, CellCount, 0.f);
+    }
     // TODO: Emitter params
     ImGui::End();
 }

@@ -1,12 +1,12 @@
 #pragma once
 #include <algorithm>
+#include "imgui.h"
 
 static constexpr int GridSizeX = 256;
 static constexpr int GridSizeY = 256;
 static constexpr int CellCount = GridSizeX * GridSizeY;
 
-static constexpr float FluidDensity = 1.f;
-static constexpr float CellSize = 1.f;
+static constexpr float CellSize = 1.0f;
 
 struct PressureSolver
 {
@@ -91,7 +91,7 @@ struct SmokeState
 			}
 		}
 	}
-	void PressureSolve(SmokeState* read)
+	void PressureSolve(SmokeState* read, float FluidDensity)
 	{
 		for (int x = 0; x < GridSizeX; x++)
 		{
@@ -120,17 +120,17 @@ struct SmokeState
 			}
 		}
 	}
-	void RunPressureSolver(SmokeState* read, float dTime)
+	void RunPressureSolver(SmokeState* read, float FluidDensity, float dTime)
 	{
 		int numIts = 80;
 		PreparePressureSolver(dTime);
 		for (int i = 0; i < numIts; i++)
 		{
-			PressureSolve(read);
+			PressureSolve(read, FluidDensity);
 		}
 	}
 
-	void UpdateVelocities(SmokeState* state, float dTime)
+	void UpdateVelocities(SmokeState* state, float FluidDensity, float dTime)
 	{
 		float K = dTime / (FluidDensity * CellSize);
 
@@ -224,8 +224,6 @@ struct SmokeState
 
 	void AdvectDye(SmokeState* state, float dTime)
 	{
-		float CellSize = 1.0f;
-
 		for (int x = 0; x < GridSizeX; x++)
 		{
 			for (int y = 0; y < GridSizeY; y++)
@@ -287,8 +285,6 @@ struct SmokeState
 	}
 	void AdvectVelocity(SmokeState* state, float dTime)
 	{
-		float CellSize = 1.0f;
-
 		for (int x = 0; x < GridSizeX + 1; x++)
 		{
 			for (int y = 0; y < GridSizeY; y++)
@@ -353,3 +349,53 @@ struct SmokeState
 	}
 };
 
+struct SmokeEmitter
+{
+	float speed = 3.f;
+
+	int x = GridSizeX / 2;
+	int y = GridSizeY / 2;
+
+	float Density = 2.f;
+	float Temperature = 5.f;
+
+	float VelocityX = 0;
+	float VelocityY = -10;
+
+	void Emit(SmokeState& state, float dTime)
+	{
+		timer += dTime;
+		if (timer >= speed * 1000)
+		{
+			timer = 0.f;
+
+			int i = state.GetCellIndex(x, y);
+
+			state.Density[i] = Density;
+			state.Temperature[i] = Temperature;
+
+			state.VelocityX[state.GetVelocityXIndex(x, y)] = VelocityX;
+			state.VelocityX[state.GetVelocityXIndex(x + 1, y)] = VelocityX;
+
+			state.VelocityY[state.GetVelocityYIndex(x, y)] = VelocityY;
+			state.VelocityY[state.GetVelocityYIndex(x, y + 1)] = VelocityY;
+		}
+	}
+
+	void ShowInspector()
+	{
+		ImGui::SliderFloat("Spawn every X second", &speed, 0.001f, 10.f);
+
+		ImGui::SliderInt("X Spawn", &x, 0, GridSizeX - 1);
+		ImGui::SliderInt("Y Spawn", &y, 0, GridSizeY - 1);
+
+		ImGui::SliderFloat("Density", &Density, 0.f, 10.f);
+		ImGui::SliderFloat("Temperature", &Temperature, -50.f, 50.f);
+
+		ImGui::SliderFloat("Velocity X", &VelocityX, -10.f, 10.f);
+		ImGui::SliderFloat("Velocity Y", &VelocityY, -10.f, 10.f);
+	}
+
+private:
+	float timer = 0.f;
+};

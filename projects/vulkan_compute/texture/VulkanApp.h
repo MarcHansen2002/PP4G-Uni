@@ -94,21 +94,9 @@ private:
 	// ImGui
 	VkDescriptorPool imgui_descriptor_pool;
 
-	float elapsed = 0;
-	
-	// Could turn this into ImGui Editable
-	void EmitSmoke(int x, int y, float density, float temp)
-	{
-		int i = Smoke.GetCellIndex(x, y);
-		Smoke.Density[i] += density;
-		Smoke.Temperature[i] += temp;
+	// Smoke Settings
+	float FluidDensity = 1.f;
 
-		// TODO: Temp testing values
-		Smoke.VelocityY[Smoke.GetVelocityYIndex(x, y)] = -10.0f;
-		Smoke.VelocityY[Smoke.GetVelocityYIndex(x, y + 1)] = -10.0f;
-	}
-
-	
 	
 	// Smoke Simulation
 	// TODO: Move this into the compute shader
@@ -117,8 +105,8 @@ private:
 		if (dTime <= 0)
 			return;
 
-		Smoke.RunPressureSolver(&Smoke, dTime);
-		Smoke.UpdateVelocities(&Smoke, dTime);
+		Smoke.RunPressureSolver(&Smoke, FluidDensity, dTime);
+		Smoke.UpdateVelocities(&Smoke, FluidDensity, dTime);
 		Smoke.AdvectDye(&Smoke, dTime);;
 		Smoke.AdvectVelocity(&Smoke, dTime);
 
@@ -148,5 +136,6 @@ private:
 		}
 	}
 
+	SmokeEmitter Emitter;
 	SmokeState Smoke;
 };
