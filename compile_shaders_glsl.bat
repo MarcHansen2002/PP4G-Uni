@@ -13,7 +13,7 @@ for /R "bin/data/shaders/glsl" %%f in (.) do (
 	pushd %%f
 		for %%i in (*) do (
 			set temp=%%i
-			if "!temp:~-4!" neq ".spv" if "!temp:~-6!" neq ".embed" (
+			if "!temp:~-4!" neq ".spv" if "!temp:~-6!" neq ".embed" if "!temp:~-5!" neq ".glsl" (
 				rem found shader
 				%VULKAN_SHADER_COMPILER_FILE% -V %%i -o "!temp!.spv"
 			)

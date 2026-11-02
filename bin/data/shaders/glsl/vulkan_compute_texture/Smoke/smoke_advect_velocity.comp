@@ -1,0 +1,75 @@
+// compute shader
+#version 430
+#extension GL_GOOGLE_include_directive : require
+
+layout (local_size_x = 16, local_size_y = 16) in;
+
+layout (std430, set = 0, binding = 0) readonly buffer velocity_x
+{
+	float VelocityX[];
+};
+layout (std430, set = 0, binding = 1) readonly buffer velocity_y
+{
+	float VelocityY[];
+};
+layout (std430, set = 0, binding = 2) writeonly buffer temp_velocity_x
+{
+	float TempVelocityX[];
+};
+layout (std430, set = 0, binding = 3) writeonly buffer temp_velocity_y
+{
+	float TempVelocityY[];
+};
+
+layout(push_constant) uniform Values
+{
+	int GridSizeX;
+	int GridSizeY;
+	float dTime;
+	float CellSize;
+};
+
+#include "SmokeHelpers.glsl"
+
+void main ()
+{
+	ivec2 id = ivec2(gl_GlobalInvocationID.xy);
+
+	int x = id.x;
+	int y = id.y;
+
+	if (x >= GridSizeX + 1 || y >= GridSizeY)
+	{
+		return;
+	}
+
+	// Horizontal Velocity
+	int i = GetVelocityXIndex(x, y);
+
+	if (IsSolid(ivec2(x - 1, y)) || IsSolid(ivec2(x, y)))
+	{
+		TempVelocityX[i] = 0.f;
+		return;
+	}
+
+	vec2 pos = vec2(float(x), float(y) + 0.5);
+	vec2 vel = GetVelocityAtGridPos(pos);
+	vec2 posPrev = pos - vel * (dTime / CellSize);
+
+	TempVelocityX[i] = SampleVelocityX(posPrev);
+
+	 vel = GetVelocityAtGridPos(pos);
+	 posPrev = pos - vel * (dTime / CellSize);
+
+	TempVelocityX[i] = SampleVelocityX(posPrev);
+
+	// Vertical Velocity
+    pos = vec2(
+        float(x) + 0.5,
+        float(y)
+    );
+
+    TempVelocityY[i] = SampleVelocityY(posPrev);
+
+
+}

@@ -41,8 +41,6 @@ struct smoke_render_buffer
 };
 
 constexpr char const* WINDOW_TITLE = "vulkan_compute_texture";
-constexpr char const* COMPILED_COMPUTE_SHADER_PATH = "data/shaders/glsl/vulkan_compute_texture/vulkan_compute_texture.comp.spv";
-
 
 constexpr u32 NUM_RESOURCES_COMPUTE_SET_0 = 2u;
 constexpr u32 BINDING_ID_SET_0_TEXTURE_INPUT = 0u;
@@ -73,6 +71,7 @@ public:
 	VkExtent2D* GetExtent() { return &extent; }
 
 	vulkan_buffer* GetDensityBuffer() { return &buffer_density; }
+	SmokeState* GetSmoke() { return &Smoke; }
 
 	int Init();
 
@@ -96,6 +95,7 @@ private:
 
 	// Smoke Settings
 	float FluidDensity = 1.f;
+	bool RunCompute = true;
 
 	
 	// Smoke Simulation
@@ -105,10 +105,21 @@ private:
 		if (dTime <= 0)
 			return;
 
-		Smoke.RunPressureSolver(&Smoke, FluidDensity, dTime);
-		Smoke.UpdateVelocities(&Smoke, FluidDensity, dTime);
-		Smoke.AdvectDye(&Smoke, dTime);;
-		Smoke.AdvectVelocity(&Smoke, dTime);
+		if (RunCompute)
+		{
+			Smoke.RunPressureSolver(&Smoke, FluidDensity, dTime);
+			Smoke.UpdateVelocities(&Smoke, FluidDensity, dTime);
+			Smoke.AdvectDye(&Smoke, dTime);;
+			Compute.ComputeDispatch();
+		}
+		else
+		{
+			Smoke.RunPressureSolver(&Smoke, FluidDensity, dTime);
+			Smoke.UpdateVelocities(&Smoke, FluidDensity, dTime);
+			Smoke.AdvectDye(&Smoke, dTime);;
+			Smoke.AdvectVelocity(&Smoke, dTime);
+		}
+		
 
 		// TODO: (Smoke additions, do after moving current stuff to compute shader
 		// Bouyancy

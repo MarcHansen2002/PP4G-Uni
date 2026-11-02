@@ -47,22 +47,36 @@ int VulkanApp_Compute::Init(VulkanApp* app)
 int VulkanApp_Compute::CreateComputePipeline()
 {
     // describe the descriptors in set 0
-    std::array <VkDescriptorSetLayoutBinding, NUM_RESOURCES_COMPUTE_SET_0> const descriptor_set_layout_binding_info_0 =
+    std::array <VkDescriptorSetLayoutBinding, 4u> const descriptor_set_layout_binding_info_0 =
     {
-      VkDescriptorSetLayoutBinding {
-        .binding = BINDING_ID_SET_0_TEXTURE_INPUT,          // at binding point 0 we have
-        .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, // an image (input)
-        .descriptorCount = 1u,
-        .stageFlags = VK_SHADER_STAGE_COMPUTE_BIT,
-        .pImmutableSamplers = VK_NULL_HANDLE
-      },
-      VkDescriptorSetLayoutBinding {
-        .binding = BINDING_ID_SET_0_TEXTURE_OUTPUT,         // at binding point 1 we have
-        .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, // another image (output)
-        .descriptorCount = 1u,
-        .stageFlags = VK_SHADER_STAGE_COMPUTE_BIT,
-        .pImmutableSamplers = VK_NULL_HANDLE
-      }
+        VkDescriptorSetLayoutBinding {
+          .binding = 0u,          // VelocityX Binding
+          .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, // SBO (float array)
+          .descriptorCount = 1u,
+          .stageFlags = VK_SHADER_STAGE_COMPUTE_BIT,
+          .pImmutableSamplers = VK_NULL_HANDLE
+        },
+        VkDescriptorSetLayoutBinding {
+            .binding = 1u,         // VelocityY Binding
+            .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, // SBO (float array)
+            .descriptorCount = 1u,
+            .stageFlags = VK_SHADER_STAGE_COMPUTE_BIT,
+            .pImmutableSamplers = VK_NULL_HANDLE
+        },
+        VkDescriptorSetLayoutBinding {
+            .binding = 2u,
+            .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+            .descriptorCount = 1u,
+            .stageFlags = VK_SHADER_STAGE_COMPUTE_BIT,
+            .pImmutableSamplers = VK_NULL_HANDLE
+        },
+        VkDescriptorSetLayoutBinding {
+            .binding = 3u,
+            .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+            .descriptorCount = 1u,
+            .stageFlags = VK_SHADER_STAGE_COMPUTE_BIT,
+            .pImmutableSamplers = VK_NULL_HANDLE
+        }
     };
     // group up all descriptor layout descriptions
     std::array <std::span <const VkDescriptorSetLayoutBinding>, NUM_SETS_COMPUTE> const descriptor_set_layout_bindings =
@@ -70,7 +84,8 @@ int VulkanApp_Compute::CreateComputePipeline()
       descriptor_set_layout_binding_info_0 // set 0
                                            // set 1...
     };
-    if (!create_vulkan_descriptor_set_layouts(*VkApp->GetDevice(),
+    if (!create_vulkan_descriptor_set_layouts(
+        *VkApp->GetDevice(),
         NUM_SETS_COMPUTE,
         descriptor_set_layout_bindings.data(),
         descriptor_set_layouts_compute.data()))
@@ -79,9 +94,19 @@ int VulkanApp_Compute::CreateComputePipeline()
         return -1;
     }
 
-    if (!create_vulkan_pipeline_layout(*VkApp->GetDevice(),
+    VkPushConstantRange const push_constant_ranges[] =
+    {
+        {
+            .stageFlags = VK_SHADER_STAGE_COMPUTE_BIT,
+            .offset = 0u,
+            .size = sizeof(smoke_push_constants_compute)
+        }
+    };
+
+    if (!create_vulkan_pipeline_layout(
+        *VkApp->GetDevice(),
         descriptor_set_layouts_compute.size(), descriptor_set_layouts_compute.data(),
-        0u, nullptr,
+        1u, push_constant_ranges,
         pipeline_layout_compute))
     {
         DBG_ASSERT(false);
@@ -91,17 +116,19 @@ int VulkanApp_Compute::CreateComputePipeline()
     // fill in compute shader 'bin/data/shaders/glsl/vulkan_compute_texture/vulkan_compute_texture.comp'
     // compile shaders by running 'compile_shaders_glsl.bat' (from the command line so you can check there are no errors)
 
-    VkShaderModule shader_module_compute = VK_NULL_HANDLE;
-    if (!create_vulkan_shader(*VkApp->GetDevice(),
-        COMPILED_COMPUTE_SHADER_PATH,
-        shader_module_compute))
+    // TODO: Make shaders for all the other smoke simulation steps
+    VkShaderModule shader_module_advect_velocity = VK_NULL_HANDLE;
+    if (!create_vulkan_shader(
+        *VkApp->GetDevice(),
+        COMPILED_COMPUTE_SHADER_ADVECT_VELOCITY,
+        shader_module_advect_velocity))
     {
         DBG_ASSERT(false);
         return -1;
     }
 
     if (!create_vulkan_pipeline_compute(*VkApp->GetDevice(),
-        shader_module_compute, "main",
+        shader_module_advect_velocity, "main",
         pipeline_layout_compute,
         pipeline_compute))
     {
@@ -109,8 +136,8 @@ int VulkanApp_Compute::CreateComputePipeline()
         return -1;
     }
 
-    release_vulkan_shader(*VkApp->GetDevice(),
-        shader_module_compute); // don't need shader object now we have the pipeline
+    // No longer need shader objects once they're in the pipeline
+    release_vulkan_shader(*VkApp->GetDevice(), shader_module_advect_velocity);
 }
 
 int VulkanApp_Compute::CreateComputeDescriptorSets()
@@ -122,16 +149,14 @@ int VulkanApp_Compute::CreateComputeDescriptorSets()
         // we are going to have one per pipeline in order to keep it simple
         std::array <VkDescriptorPoolSize, 1u> const pool_sizes =
         { { // yes this is deliberate!
-          {
-                // we have 1 x descriptor set that consists of 2 x 'storage image' descriptors
-                // A storage image (VK_DESCRIPTOR_TYPE_STORAGE_IMAGE) is a descriptor type associated with an image
-                // resource via an image view that load, store and atomic operations can be performed on.
-                .type = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
-                .descriptorCount = 2u
-              }
+            {
+                  .type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+                  .descriptorCount = 4u
+            }
             // if you also needed n uniform buffer descriptors you would need to create a new VkDescriptorPoolSize here
           } };
-        if (!create_vulkan_descriptor_pool(*VkApp->GetDevice(),
+        if (!create_vulkan_descriptor_pool(
+            *VkApp->GetDevice(),
             1u, // how many descriptor sets will we make from the sets in the pool?
             pool_sizes.size(), pool_sizes.data(),
             descriptor_pool_compute))
@@ -151,7 +176,8 @@ int VulkanApp_Compute::CreateComputeDescriptorSets()
                 }
             // set 1...
           } };
-        if (!create_vulkan_descriptor_sets(*VkApp->GetDevice(),
+        if (!create_vulkan_descriptor_sets(
+            *VkApp->GetDevice(),
             descriptor_set_infos.size(), descriptor_set_infos.data()))
         {
             DBG_ASSERT(false);
@@ -162,60 +188,87 @@ int VulkanApp_Compute::CreateComputeDescriptorSets()
 
 int VulkanApp_Compute::CreateComputeResources()
 {
-    //TODO: I don't think we need this anymore
     return 1;
 }
 
 int VulkanApp_Compute::BindComputeResources()
 {
     {
-        // desc_set_0_compute = for compute = texture_compute_input + texture_compute_output
-        // TODO: Don't think we need this anymore but we'll set it just to make it happy because we're nice like that
-        VkDescriptorImageInfo const image_infos[NUM_RESOURCES_COMPUTE_SET_0] =
+        VkDescriptorBufferInfo const buffer_infos[] =
         {
-          {
-
-                //TODO: Do we need this still?
-                // Compute only really needs a bunch of float arrays as it's modifying the smoke data
-                // Not a smoke texture
-            .sampler = VkApp->Graphics.Render_Texture.sampler,
-            .imageView = VkApp->Graphics.Render_Texture.view,
-            .imageLayout = VkApp->Graphics.Render_Texture.layout
-          },
-          {
-            .sampler = VkApp->Graphics.Render_Texture.sampler,
-            .imageView = VkApp->Graphics.Render_Texture.view,
-            .imageLayout = VkApp->Graphics.Render_Texture.layout
-          }
+            {
+                .buffer = VkApp->GetSmoke()->Buffer_VelocityX.buffer,
+                .offset = 0u,
+                .range = VK_WHOLE_SIZE
+            },
+            {
+                .buffer = VkApp->GetSmoke()->Buffer_VelocityY.buffer,
+                .offset = 0u,
+                .range = VK_WHOLE_SIZE
+            },
+            {
+                .buffer = VkApp->GetSmoke()->Buffer_Temp_VelocityX.buffer,
+                .offset = 0u,
+                .range = VK_WHOLE_SIZE
+            },
+            {
+                .buffer = VkApp->GetSmoke()->Buffer_Temp_VelocityY.buffer,
+                .offset = 0u,
+                .range = VK_WHOLE_SIZE
+            }
         };
-        VkWriteDescriptorSet const write_descriptors[NUM_RESOURCES_COMPUTE_SET_0] =
+
+        VkWriteDescriptorSet const write_descriptors[4] =
         {
             // desc_set_0_compute
             {
               .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
               //.pNext = VK_NULL_HANDLE,
               .dstSet = desc_set_0_compute.desc_set,
-              .dstBinding = BINDING_ID_SET_0_TEXTURE_INPUT,
+              .dstBinding = 0u,
               .dstArrayElement = 0u,
               .descriptorCount = 1u,
-              .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
-              .pImageInfo = &image_infos[0], // texture_compute_input
-              .pBufferInfo = VK_NULL_HANDLE,
+              .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+              .pImageInfo = VK_NULL_HANDLE, // Velocity X
+              .pBufferInfo = &buffer_infos[0],
               .pTexelBufferView = VK_NULL_HANDLE
             },
-            // desc_set_0_compute
             {
               .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
               //.pNext = VK_NULL_HANDLE,
               .dstSet = desc_set_0_compute.desc_set,
-              .dstBinding = BINDING_ID_SET_0_TEXTURE_OUTPUT,
+              .dstBinding = 0u,
               .dstArrayElement = 0u,
               .descriptorCount = 1u,
-              .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,
-              .pImageInfo = &image_infos[1], // texture_compute_output
-              .pBufferInfo = VK_NULL_HANDLE,
+              .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+              .pImageInfo = VK_NULL_HANDLE, // Velocity Y
+              .pBufferInfo = &buffer_infos[1],
               .pTexelBufferView = VK_NULL_HANDLE
-            }
+            },
+            {
+              .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+              //.pNext = VK_NULL_HANDLE,
+              .dstSet = desc_set_0_compute.desc_set,
+              .dstBinding = 0u,
+              .dstArrayElement = 0u,
+              .descriptorCount = 1u,
+              .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+              .pImageInfo = VK_NULL_HANDLE, // Velocity X (TEMP)
+              .pBufferInfo = &buffer_infos[2],
+              .pTexelBufferView = VK_NULL_HANDLE
+            },
+            {
+              .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+              //.pNext = VK_NULL_HANDLE,
+              .dstSet = desc_set_0_compute.desc_set,
+              .dstBinding = 0u,
+              .dstArrayElement = 0u,
+              .descriptorCount = 1u,
+              .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+              .pImageInfo = VK_NULL_HANDLE, // Velocity Y (TEMP)
+              .pBufferInfo = &buffer_infos[3],
+              .pTexelBufferView = VK_NULL_HANDLE
+            },
         };
 
         vkUpdateDescriptorSets(*VkApp->GetDevice(), // device
@@ -256,6 +309,102 @@ int VulkanApp_Compute::CreateComputeSyncObjects()
 
 int VulkanApp_Compute::ComputeDispatch()
 {
+    if (!map_and_unmap_memory(
+        *VkApp->GetDevice(),
+        VkApp->GetSmoke()->Buffer_VelocityX.memory, [this](void* mem)
+        {
+            memcpy(mem, VkApp->GetSmoke()->VelocityX, sizeof(float) * CellCount);
+        }
+    ))
+    {
+        assert(false);
+        return -1;
+    }
+    if (!map_and_unmap_memory(
+        *VkApp->GetDevice(),
+        VkApp->GetSmoke()->Buffer_VelocityY.memory, [this](void* mem)
+        {
+            memcpy(mem, VkApp->GetSmoke()->VelocityY, sizeof(float) * CellCount);
+        }
+    ))
+    {
+        assert(false);
+        return -1;
+    }
+    if (!map_and_unmap_memory(
+        *VkApp->GetDevice(),
+        VkApp->GetSmoke()->Buffer_Temp_VelocityY.memory, [this](void* mem)
+        {
+            memcpy(mem, VkApp->GetSmoke()->TempVelocityX, sizeof(float) * CellCount);
+        }
+    ))
+    {
+        assert(false);
+        return -1;
+    }
+    if (!map_and_unmap_memory(
+        *VkApp->GetDevice(),
+        VkApp->GetSmoke()->Buffer_Temp_VelocityY.memory, [this](void* mem)
+        {
+            memcpy(mem, VkApp->GetSmoke()->TempVelocityX, sizeof(float) * CellCount);
+        }
+    ))
+    {
+        assert(false);
+        return -1;
+    }
+
+    if (!begin_command_buffer(command_buffer_compute, 0u))
+    {
+        assert(false);
+        return -1;
+    }
+
+    vkCmdBindPipeline(command_buffer_compute, VK_PIPELINE_BIND_POINT_COMPUTE, pipeline_compute);
+    vkCmdBindDescriptorSets(command_buffer_compute, VK_PIPELINE_BIND_POINT_COMPUTE, pipeline_layout_compute,
+        desc_set_0_compute.set_index, 1, &desc_set_0_compute.desc_set, 0u, VK_NULL_HANDLE);
+
+    smoke_push_constants_compute const data =
+    { 
+        .GridSizeX = GridSizeX,
+        .GridSizeY = GridSizeY,
+        .CellCount = (u32)CellCount,
+        .CellSize = CellSize,
+    };
+
+    vkCmdPushConstants(command_buffer_compute, pipeline_layout_compute, 0u, 0u, sizeof(smoke_push_constants_compute),
+        &data);
+
+    u32 const thread_group_dim = 256u; // Set in shader
+
+    vkCmdDispatch(command_buffer_compute, 256, 1, 1);
+    if (!end_command_buffer(command_buffer_compute))
+    {
+        assert(false);
+        return -1;
+    }
+
+    vkResetFences(*VkApp->GetDevice(), 1, &fence_compute);
+
+    VkSubmitInfo const submit_info =
+    {
+      .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+      //.pNext = VK_NULL_HANDLE,
+      .waitSemaphoreCount = 0u,
+      .pWaitSemaphores = VK_NULL_HANDLE,          // wait for these semaphores to be signalled before submitting command buffers
+      .pWaitDstStageMask = VK_NULL_HANDLE,
+      .commandBufferCount = 1u,
+      .pCommandBuffers = &command_buffer_compute,
+      .signalSemaphoreCount = 0u,
+      .pSignalSemaphores = VK_NULL_HANDLE         // semaphores to trigger when command buffer has finished executing
+    };
+    if (!CHECK_VULKAN_RESULT(vkQueueSubmit(queue_compute, 1u, &submit_info,
+        fence_compute))) // fence to signal when complete
+    {
+        DBG_ASSERT(false);
+        return -1;
+    }
+
     return 1;
     {
         // RECORD COMMAND BUFFER

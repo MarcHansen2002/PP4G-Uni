@@ -9,6 +9,8 @@ int VulkanApp::Init()
         return -1;
     }
 
+    Smoke.CreateBuffers(physical_device, device);
+
     Compute.Init(this);
 
     // Setup smoke buffer
@@ -88,6 +90,9 @@ int VulkanApp::CreateContext()
 int VulkanApp::Render(float dTime)
 {
     Emitter.Emit(Smoke, dTime);
+
+    Compute.BindComputeResources();
+
     UpdateSmoke(dTime);
 
     Graphics.Render(dTime);
@@ -105,6 +110,7 @@ void VulkanApp::RenderImGui(float dTime)
 
     ImGui::Text("Smoke Parameters");
     ImGui::SliderFloat("Fluid Density", &FluidDensity, 0.001f, 100.f);
+    ImGui::Checkbox("Run Compute", &RunCompute);
 
     // TODO: Smoke params
     ImGui::NewLine();

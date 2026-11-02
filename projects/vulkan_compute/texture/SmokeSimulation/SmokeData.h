@@ -2,11 +2,22 @@
 #include <algorithm>
 #include "imgui.h"
 
+#include <vulkan/vulkan.h>
+#include "../../vulkan_resources.h"
+
 static constexpr int GridSizeX = 256;
 static constexpr int GridSizeY = 256;
 static constexpr int CellCount = GridSizeX * GridSizeY;
 
 static constexpr float CellSize = 1.0f;
+
+struct smoke_push_constants_compute
+{
+	u32 GridSizeX;
+	u32 GridSizeY;
+	u32 CellCount;
+	float CellSize;
+};
 
 struct PressureSolver
 {
@@ -36,6 +47,110 @@ struct SmokeState
 	float TempTemperature[CellCount]{};
 
 	PressureSolver PressureSolveData[CellCount]{};
+
+	vulkan_buffer Buffer_Density;
+	vulkan_buffer Buffer_Temperature;
+	vulkan_buffer Buffer_Pressure;
+	vulkan_buffer Buffer_VelocityX;
+	vulkan_buffer Buffer_VelocityY;
+	vulkan_buffer Buffer_Temp_VelocityX;
+	vulkan_buffer Buffer_Temp_VelocityY;
+	vulkan_buffer Buffer_Temp_Density;
+	vulkan_buffer Buffer_Temp_Temperature;
+
+	int CreateBuffers(VkPhysicalDevice physDev, VkDevice dev)
+	{
+		if (!create_vulkan_buffer(physDev, dev,
+			sizeof(float) * CellCount,
+			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+			VK_SHARING_MODE_EXCLUSIVE,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			Buffer_Density))
+		{
+			assert(false);
+			return -1;
+		}
+		if (!create_vulkan_buffer(physDev, dev,
+			sizeof(float) * CellCount,
+			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+			VK_SHARING_MODE_EXCLUSIVE,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			Buffer_Temperature))
+		{
+			assert(false);
+			return -1;
+		}
+		if (!create_vulkan_buffer(physDev, dev,
+			sizeof(float) * CellCount,
+			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+			VK_SHARING_MODE_EXCLUSIVE,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			Buffer_Pressure))
+		{
+			assert(false);
+			return -1;
+		}
+		if (!create_vulkan_buffer(physDev, dev,
+			sizeof(float) * CellCount,
+			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+			VK_SHARING_MODE_EXCLUSIVE,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			Buffer_VelocityX))
+		{
+			assert(false);
+			return -1;
+		}
+		if (!create_vulkan_buffer(physDev, dev,
+			sizeof(float) * CellCount,
+			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+			VK_SHARING_MODE_EXCLUSIVE,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			Buffer_VelocityY))
+		{
+			assert(false);
+			return -1;
+		}
+		if (!create_vulkan_buffer(physDev, dev,
+			sizeof(float) * CellCount,
+			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+			VK_SHARING_MODE_EXCLUSIVE,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			Buffer_Temp_VelocityX))
+		{
+			assert(false);
+			return -1;
+		}
+		if (!create_vulkan_buffer(physDev, dev,
+			sizeof(float) * CellCount,
+			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+			VK_SHARING_MODE_EXCLUSIVE,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			Buffer_Temp_VelocityY))
+		{
+			assert(false);
+			return -1;
+		}
+		if (!create_vulkan_buffer(physDev, dev,
+			sizeof(float) * CellCount,
+			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+			VK_SHARING_MODE_EXCLUSIVE,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			Buffer_Temp_Density))
+		{
+			assert(false);
+			return -1;
+		}
+		if (!create_vulkan_buffer(physDev, dev,
+			sizeof(float) * CellCount,
+			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+			VK_SHARING_MODE_EXCLUSIVE,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			Buffer_Temp_Temperature))
+		{
+			assert(false);
+			return -1;
+		}
+	}
 
 	// TODO: Move all this to a compute shader
 	int GetCellIndex(int x, int y)
