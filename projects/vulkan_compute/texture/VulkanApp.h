@@ -18,6 +18,7 @@
 #define WIN32_LEAN_AND_MEAN       // exclude rarely-used content from the Windows headers
 #define NOMINMAX                  // prevent Windows macros defining their own min and max macros
 #include <Windows.h>              // for WinMain
+#include <string>
 
 #include "VulkanApp_Compute.h"
 #include "VulkanApp_Graphics.h"
@@ -97,6 +98,43 @@ private:
 	float FluidDensity = 1.f;
 	bool RunCompute = true;
 
+	bool CompareSmokes = false;
+
+	bool CheckArraySimilarity(float* A, float* B, int Count, std::string step, std::string arr, float Tolerance = 0.00001f)
+	{
+		for (int i = 0; i < Count; i++)
+		{
+			float diff = std::abs(A[i] - B[i]);
+			if (diff > Tolerance)
+			{
+				assert(false);
+				return false;
+			}
+		}
+		return true;
+	}
+
+	bool CheckSmokeSimilarity(std::string step)
+	{
+		if (!CheckArraySimilarity(Smoke.Density, Smoke_CPU.Density, CellCount, step, "Density"))
+		{
+			assert(false);
+			return false;
+		}
+		if (!CheckArraySimilarity(Smoke.VelocityX, Smoke_CPU.VelocityX, VeloSizeX, step, "VeloX"))
+		{
+			assert(false);
+			return false;
+		}
+		if (!CheckArraySimilarity(Smoke.VelocityY, Smoke_CPU.VelocityY, VeloSizeY, step, "VeloY"))
+		{
+			assert(false);
+			return false;
+		}
+
+
+		return true;
+	}
 	
 	// Smoke Simulation
 	// TODO: Move this into the compute shader
@@ -105,19 +143,83 @@ private:
 		if (dTime <= 0)
 			return;
 
-		if (RunCompute)
+		if (CompareSmokes)
 		{
-			Smoke.RunPressureSolver(&Smoke, FluidDensity, dTime);
-			Smoke.UpdateVelocities(&Smoke, FluidDensity, dTime);
-			Smoke.AdvectDye(&Smoke, dTime);;
-			Compute.ComputeDispatch();
+			CheckSmokeSimilarity("Before update");
+
+			Smoke_CPU.RunPressureSolver(FluidDensity, dTime);
+			Smoke.RunPressureSolver(FluidDensity, dTime);
+			// Compare
+			CheckSmokeSimilarity("Pressure Solve");
+
+			Smoke_CPU.UpdateVelocities(FluidDensity, dTime);
+			Smoke.UpdateVelocities(FluidDensity, dTime);
+			CheckSmokeSimilarity("Update Velocities");
+			// Compare
+
+			Smoke_CPU.AdvectDye(dTime);
+			Smoke.AdvectDye(dTime);
+			CheckSmokeSimilarity("Advect Dye");
+			// Compare
+
+			Smoke_CPU.AdvectVelocity(dTime);
+			Compute.ComputeDispatch(dTime);
+
+			CheckArraySimilarity(
+				Smoke.TempVelocityX,
+				Smoke_CPU.TempVelocityX,
+				VeloSizeX,
+				"Advect Velocity",
+				"TempVelocityX");
+
+			CheckArraySimilarity(
+				Smoke.TempVelocityY,
+				Smoke_CPU.TempVelocityY,
+				VeloSizeY,
+				"Advect Velocity",
+				"TempVelocityY");
+
+			for (int i = 0; i < (GridSizeX + 1) * GridSizeY; i++)
+			{
+				Smoke.VelocityX[i] = Smoke.TempVelocityX[i];
+			}
+
+			for (int i = 0; i < GridSizeX * (GridSizeY + 1); i++)
+			{
+				Smoke.VelocityY[i] = Smoke.TempVelocityY[i];
+			}
+			CheckSmokeSimilarity("Advect Velocity");
+			// Compare
+		}
+		else if (RunCompute)
+		{
+			Smoke.RunPressureSolver(FluidDensity, dTime);
+			Smoke.UpdateVelocities(FluidDensity, dTime);
+			Smoke.AdvectDye(dTime);
+			if (!Compute.ComputeDispatch(dTime))
+			{
+				assert(false);
+				return;
+			}
+
+			
+
+			for (int i = 0; i < (GridSizeX + 1) * GridSizeY; i++)
+			{
+				Smoke.VelocityX[i] = Smoke.TempVelocityX[i];
+			}
+
+			for (int i = 0; i < GridSizeX * (GridSizeY + 1); i++)
+			{
+				Smoke.VelocityY[i] = Smoke.TempVelocityY[i];
+			}
 		}
 		else
 		{
-			Smoke.RunPressureSolver(&Smoke, FluidDensity, dTime);
-			Smoke.UpdateVelocities(&Smoke, FluidDensity, dTime);
-			Smoke.AdvectDye(&Smoke, dTime);;
-			Smoke.AdvectVelocity(&Smoke, dTime);
+			Smoke.RunPressureSolver(FluidDensity, dTime);
+			Smoke.UpdateVelocities(FluidDensity, dTime);
+			Smoke.AdvectDye(dTime);
+			Smoke.AdvectVelocity(dTime);
 		}
 		
 
@@ -149,4 +251,5 @@ private:
 
 	SmokeEmitter Emitter;
 	SmokeState Smoke;
+	SmokeState Smoke_CPU;
 };

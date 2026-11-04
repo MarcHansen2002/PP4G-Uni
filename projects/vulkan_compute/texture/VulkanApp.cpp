@@ -90,6 +90,10 @@ int VulkanApp::CreateContext()
 int VulkanApp::Render(float dTime)
 {
     Emitter.Emit(Smoke, dTime);
+    if (CompareSmokes)
+    {
+        Emitter.Emit(Smoke_CPU, dTime);
+    }
 
     Compute.BindComputeResources();
 
@@ -111,6 +115,14 @@ void VulkanApp::RenderImGui(float dTime)
     ImGui::Text("Smoke Parameters");
     ImGui::SliderFloat("Fluid Density", &FluidDensity, 0.001f, 100.f);
     ImGui::Checkbox("Run Compute", &RunCompute);
+    if (ImGui::Checkbox("Compare Smokes", &CompareSmokes))
+    {
+        if (CompareSmokes)
+        {
+            Smoke.ClearSmoke();
+            Smoke_CPU.ClearSmoke();
+        }
+    }
 
     // TODO: Smoke params
     ImGui::NewLine();
@@ -120,10 +132,7 @@ void VulkanApp::RenderImGui(float dTime)
 
     if (ImGui::Button("Clear Smoke"))
     {
-        std::fill_n(Smoke.Density, CellCount, 0.f);
-        std::fill_n(Smoke.Temperature, CellCount, 0.f);
-        std::fill_n(Smoke.VelocityX, CellCount, 0.f);
-        std::fill_n(Smoke.VelocityY, CellCount, 0.f);
+        Smoke.ClearSmoke();
     }
     // TODO: Emitter params
     ImGui::End();

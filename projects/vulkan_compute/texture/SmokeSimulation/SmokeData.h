@@ -9,13 +9,16 @@ static constexpr int GridSizeX = 256;
 static constexpr int GridSizeY = 256;
 static constexpr int CellCount = GridSizeX * GridSizeY;
 
+static constexpr int VeloSizeX = (GridSizeX + 1) * GridSizeY;
+static constexpr int VeloSizeY = GridSizeX * (GridSizeY + 1);
+
 static constexpr float CellSize = 1.0f;
 
 struct smoke_push_constants_compute
 {
 	u32 GridSizeX;
 	u32 GridSizeY;
-	u32 CellCount;
+	float dTime;
 	float CellSize;
 };
 
@@ -58,6 +61,17 @@ struct SmokeState
 	vulkan_buffer Buffer_Temp_Density;
 	vulkan_buffer Buffer_Temp_Temperature;
 
+	void ClearSmoke()
+	{
+		std::fill_n(Density, CellCount, 0.f);
+		std::fill_n(Temperature, CellCount, 0.f);
+		std::fill_n(Pressure, CellCount, 0.f);
+		std::fill_n(VelocityX, VeloSizeX, 0.f);
+		std::fill_n(VelocityY, VeloSizeY, 0.f);
+		std::fill_n(TempVelocityX, VeloSizeX, 0.f);
+		std::fill_n(TempVelocityY, VeloSizeY, 0.f);
+	}
+
 	int CreateBuffers(VkPhysicalDevice physDev, VkDevice dev)
 	{
 		if (!create_vulkan_buffer(physDev, dev,
@@ -91,7 +105,7 @@ struct SmokeState
 			return -1;
 		}
 		if (!create_vulkan_buffer(physDev, dev,
-			sizeof(float) * CellCount,
+			sizeof(float) * VeloSizeX,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
@@ -101,7 +115,7 @@ struct SmokeState
 			return -1;
 		}
 		if (!create_vulkan_buffer(physDev, dev,
-			sizeof(float) * CellCount,
+			sizeof(float) * VeloSizeY,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
@@ -111,7 +125,7 @@ struct SmokeState
 			return -1;
 		}
 		if (!create_vulkan_buffer(physDev, dev,
-			sizeof(float) * CellCount,
+			sizeof(float) * VeloSizeX,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
@@ -121,7 +135,7 @@ struct SmokeState
 			return -1;
 		}
 		if (!create_vulkan_buffer(physDev, dev,
-			sizeof(float) * CellCount,
+			sizeof(float) * VeloSizeY,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
@@ -206,7 +220,7 @@ struct SmokeState
 			}
 		}
 	}
-	void PressureSolve(SmokeState* read, float FluidDensity)
+	void PressureSolve(float FluidDensity)
 	{
 		for (int x = 0; x < GridSizeX; x++)
 		{
@@ -218,10 +232,10 @@ struct SmokeState
 				if (info.isSolid || info.flowEdgeCount == 0) newPressure = 0;
 				else
 				{
-					float pressureTop = read->Pressure[GetCellIndex(x, (std::min)(y + 1, GridSizeY - 1))] * info.flowTop;
-					float pressureLeft = read->Pressure[GetCellIndex((std::max)(x - 1, 0), y)] * info.flowLeft;
-					float pressureRight = read->Pressure[GetCellIndex((std::min)(x + 1, GridSizeX - 1), y)] * info.flowRight;
-					float pressureBottom = read->Pressure[GetCellIndex(x, (std::max)(y - 1, 0))] * info.flowBottom;
+					float pressureTop = Pressure[GetCellIndex(x, (std::min)(y + 1, GridSizeY - 1))] * info.flowTop;
+					float pressureLeft = Pressure[GetCellIndex((std::max)(x - 1, 0), y)] * info.flowLeft;
+					float pressureRight = Pressure[GetCellIndex((std::min)(x + 1, GridSizeX - 1), y)] * info.flowRight;
+					float pressureBottom = Pressure[GetCellIndex(x, (std::max)(y - 1, 0))] * info.flowBottom;
 
 					float pressureSum = pressureRight + pressureLeft + pressureTop + pressureBottom;
 					float CellSize = 1.f;
@@ -229,23 +243,23 @@ struct SmokeState
 					newPressure = (pressureSum - FluidDensity * CellSize * info.velocityTerm) / (float)info.flowEdgeCount;
 				}
 
-				float oldPressure = read->Pressure[GetCellIndex(x, y)];
+				float oldPressure = Pressure[GetCellIndex(x, y)];
 				float SOR = 1.f;
-				read->Pressure[GetCellIndex(x, y)] = oldPressure + (newPressure - oldPressure) * SOR;
+				Pressure[GetCellIndex(x, y)] = oldPressure + (newPressure - oldPressure) * SOR;
 			}
 		}
 	}
-	void RunPressureSolver(SmokeState* read, float FluidDensity, float dTime)
+	void RunPressureSolver(float FluidDensity, float dTime)
 	{
 		int numIts = 80;
 		PreparePressureSolver(dTime);
 		for (int i = 0; i < numIts; i++)
 		{
-			PressureSolve(read, FluidDensity);
+			PressureSolve(FluidDensity);
 		}
 	}
 
-	void UpdateVelocities(SmokeState* state, float FluidDensity, float dTime)
+	void UpdateVelocities(float FluidDensity, float dTime)
 	{
 		float K = dTime / (FluidDensity * CellSize);
 
@@ -257,14 +271,9 @@ struct SmokeState
 				if (IsSolid(x - 1, y) || IsSolid(x, y))
 					continue;
 
-				float pressureRight =
-					state->Pressure[GetCellIndex(x, y)];
-
-				float pressureLeft =
-					state->Pressure[GetCellIndex(x - 1, y)];
-
-				state->VelocityX[GetVelocityXIndex(x, y)]
-					-= K * (pressureRight - pressureLeft);
+				float pressureRight = Pressure[GetCellIndex(x, y)];
+				float pressureLeft = Pressure[GetCellIndex(x - 1, y)];
+				VelocityX[GetVelocityXIndex(x, y)] -= K * (pressureRight - pressureLeft);
 			}
 		}
 
@@ -276,14 +285,9 @@ struct SmokeState
 				if (IsSolid(x, y - 1) || IsSolid(x, y))
 					continue;
 
-				float pressureTop =
-					state->Pressure[GetCellIndex(x, y)];
-
-				float pressureBottom =
-					state->Pressure[GetCellIndex(x, y - 1)];
-
-				state->VelocityY[GetVelocityYIndex(x, y)]
-					-= K * (pressureTop - pressureBottom);
+				float pressureTop = Pressure[GetCellIndex(x, y)];
+				float pressureBottom = Pressure[GetCellIndex(x, y - 1)];
+				VelocityY[GetVelocityYIndex(x, y)] -= K * (pressureTop - pressureBottom);
 			}
 		}
 	}
@@ -316,10 +320,10 @@ struct SmokeState
 
 		return std::lerp(bottom, top, ty);
 	}
-	glm::vec2 GetVelocityAtGridPos(SmokeState* state, glm::vec2 pos)
+	glm::vec2 GetVelocityAtGridPos(glm::vec2 pos)
 	{
 		float velX = SampleBilinear(
-			state->VelocityX,
+			VelocityX,
 			GridSizeX + 1,
 			GridSizeY,
 			pos.x,
@@ -327,7 +331,7 @@ struct SmokeState
 		);
 
 		float velY = SampleBilinear(
-			state->VelocityY,
+			VelocityY,
 			GridSizeX,
 			GridSizeY + 1,
 			pos.x - 0.5f,
@@ -337,7 +341,7 @@ struct SmokeState
 		return glm::vec2(velX, velY);
 	}
 
-	void AdvectDye(SmokeState* state, float dTime)
+	void AdvectDye(float dTime)
 	{
 		for (int x = 0; x < GridSizeX; x++)
 		{
@@ -356,13 +360,13 @@ struct SmokeState
 					y + 0.5f
 				);
 
-				glm::vec2 vel = GetVelocityAtGridPos(state, pos);
+				glm::vec2 vel = GetVelocityAtGridPos(pos);
 
 				glm::vec2 posPrev =
 					pos - vel * (dTime / CellSize);
 
 				TempDensity[i] = SampleBilinear(
-					state->Density,
+					Density,
 					GridSizeX,
 					GridSizeY,
 					posPrev.x - 0.5f,
@@ -374,13 +378,13 @@ struct SmokeState
 		// Copy temporary density back
 		for (int i = 0; i < GridSizeX * GridSizeY; i++)
 		{
-			state->Density[i] = TempDensity[i];
+			Density[i] = TempDensity[i];
 		}
 	}
-	float SampleVelocityX(SmokeState* state, glm::vec2 pos)
+	float SampleVelocityX(glm::vec2 pos)
 	{
 		return SampleBilinear(
-			state->VelocityX,
+			VelocityX,
 			GridSizeX + 1,
 			GridSizeY,
 			pos.x,
@@ -388,17 +392,17 @@ struct SmokeState
 		);
 	}
 
-	float SampleVelocityY(SmokeState* state, glm::vec2 pos)
+	float SampleVelocityY(glm::vec2 pos)
 	{
 		return SampleBilinear(
-			state->VelocityY,
+			VelocityY,
 			GridSizeX,
 			GridSizeY + 1,
 			pos.x - 0.5f,
 			pos.y
 		);
 	}
-	void AdvectVelocity(SmokeState* state, float dTime)
+	void AdvectVelocity(float dTime)
 	{
 		for (int x = 0; x < GridSizeX + 1; x++)
 		{
@@ -417,12 +421,12 @@ struct SmokeState
 					y + 0.5f
 				);
 
-				glm::vec2 vel = GetVelocityAtGridPos(state, pos);
+				glm::vec2 vel = GetVelocityAtGridPos(pos);
 
 				glm::vec2 posPrev =
 					pos - vel * (dTime / CellSize);
 
-				TempVelocityX[i] = SampleVelocityX(state, posPrev);
+				TempVelocityX[i] = SampleVelocityX(posPrev);
 			}
 		}
 
@@ -443,23 +447,23 @@ struct SmokeState
 					(float)y
 				);
 
-				glm::vec2 vel = GetVelocityAtGridPos(state, pos);
+				glm::vec2 vel = GetVelocityAtGridPos(pos);
 
 				glm::vec2 posPrev =
 					pos - vel * (dTime / CellSize);
 
-				TempVelocityY[i] = SampleVelocityY(state, posPrev);
+				TempVelocityY[i] = SampleVelocityY(posPrev);
 			}
 		}
 
 		for (int i = 0; i < (GridSizeX + 1) * GridSizeY; i++)
 		{
-			state->VelocityX[i] = TempVelocityX[i];
+			VelocityX[i] = TempVelocityX[i];
 		}
 
 		for (int i = 0; i < GridSizeX * (GridSizeY + 1); i++)
 		{
-			state->VelocityY[i] = TempVelocityY[i];
+			VelocityY[i] = TempVelocityY[i];
 		}
 	}
 };

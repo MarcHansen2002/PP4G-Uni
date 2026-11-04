@@ -38,38 +38,40 @@ void main ()
 	int x = id.x;
 	int y = id.y;
 
-	if (x >= GridSizeX + 1 || y >= GridSizeY)
-	{
-		return;
-	}
-
 	// Horizontal Velocity
-	int i = GetVelocityXIndex(x, y);
-
-	if (IsSolid(ivec2(x - 1, y)) || IsSolid(ivec2(x, y)))
+	if (x < GridSizeX + 1 && y < GridSizeY)
 	{
-		TempVelocityX[i] = 0.f;
-		return;
+		int i = GetVelocityXIndex(x, y);
+		if (IsSolid(ivec2(x - 1, y)) || IsSolid(ivec2(x, y)))
+		{
+			TempVelocityX[i] = 0.f;
+		}
+		else
+		{
+			vec2 pos = vec2(float(x), float(y) + 0.5);
+			vec2 vel = GetVelocityAtGridPos(pos);
+			vec2 posPrev = pos - vel * (dTime / CellSize);
+
+			TempVelocityX[i] = SampleVelocityX(posPrev);
+		}
 	}
-
-	vec2 pos = vec2(float(x), float(y) + 0.5);
-	vec2 vel = GetVelocityAtGridPos(pos);
-	vec2 posPrev = pos - vel * (dTime / CellSize);
-
-	TempVelocityX[i] = SampleVelocityX(posPrev);
-
-	 vel = GetVelocityAtGridPos(pos);
-	 posPrev = pos - vel * (dTime / CellSize);
-
-	TempVelocityX[i] = SampleVelocityX(posPrev);
 
 	// Vertical Velocity
-    pos = vec2(
-        float(x) + 0.5,
-        float(y)
-    );
+	if (x < GridSizeX && y < GridSizeY + 1)
+	{
+		int i = GetVelocityYIndex(x, y);
+		if (IsSolid(ivec2(x, y -1)) || IsSolid(ivec2(x, y)))
+		{
+			TempVelocityY[i] = 0.f;
+		}
+		else
+		{
+			
+			vec2 pos = vec2(float(x) + 0.5, float(y));
+			vec2 vel = GetVelocityAtGridPos(pos);
+			vec2 posPrev = pos - vel * (dTime / CellSize);
 
-    TempVelocityY[i] = SampleVelocityY(posPrev);
-
-
+			TempVelocityY[i] = SampleVelocityY(posPrev);
+		}
+	}
 }

@@ -37,11 +37,11 @@ int VulkanApp_Compute::Init(VulkanApp* app)
     }
     // TODO: I think this is the one that does the funky voodoo math
     // Might need to move this geezer since we need to compute each frame
-    if (!ComputeDispatch())
-    {
-        DBG_ASSERT(false);
-        return -1;
-    }
+    //if (!ComputeDispatch())
+    //{
+    //    DBG_ASSERT(false);
+    //    return -1;
+    //}
 }
 
 int VulkanApp_Compute::CreateComputePipeline()
@@ -237,7 +237,7 @@ int VulkanApp_Compute::BindComputeResources()
               .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
               //.pNext = VK_NULL_HANDLE,
               .dstSet = desc_set_0_compute.desc_set,
-              .dstBinding = 0u,
+              .dstBinding = 1u,
               .dstArrayElement = 0u,
               .descriptorCount = 1u,
               .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
@@ -249,7 +249,7 @@ int VulkanApp_Compute::BindComputeResources()
               .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
               //.pNext = VK_NULL_HANDLE,
               .dstSet = desc_set_0_compute.desc_set,
-              .dstBinding = 0u,
+              .dstBinding = 2u,
               .dstArrayElement = 0u,
               .descriptorCount = 1u,
               .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
@@ -261,7 +261,7 @@ int VulkanApp_Compute::BindComputeResources()
               .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
               //.pNext = VK_NULL_HANDLE,
               .dstSet = desc_set_0_compute.desc_set,
-              .dstBinding = 0u,
+              .dstBinding = 3u,
               .dstArrayElement = 0u,
               .descriptorCount = 1u,
               .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
@@ -272,7 +272,7 @@ int VulkanApp_Compute::BindComputeResources()
         };
 
         vkUpdateDescriptorSets(*VkApp->GetDevice(), // device
-            NUM_RESOURCES_COMPUTE_SET_0,  // descriptorWriteCount
+            4u,  // descriptorWriteCount
             write_descriptors,            // pDescriptorWrites
             0u,                           // descriptorCopyCount
             VK_NULL_HANDLE);              // pDescriptorCopies
@@ -307,57 +307,18 @@ int VulkanApp_Compute::CreateComputeSyncObjects()
     }
 }
 
-int VulkanApp_Compute::ComputeDispatch()
+int VulkanApp_Compute::ComputeDispatch(float dTime)
 {
-    if (!map_and_unmap_memory(
-        *VkApp->GetDevice(),
-        VkApp->GetSmoke()->Buffer_VelocityX.memory, [this](void* mem)
-        {
-            memcpy(mem, VkApp->GetSmoke()->VelocityX, sizeof(float) * CellCount);
-        }
-    ))
+    if (!MapData())
     {
         assert(false);
-        return -1;
-    }
-    if (!map_and_unmap_memory(
-        *VkApp->GetDevice(),
-        VkApp->GetSmoke()->Buffer_VelocityY.memory, [this](void* mem)
-        {
-            memcpy(mem, VkApp->GetSmoke()->VelocityY, sizeof(float) * CellCount);
-        }
-    ))
-    {
-        assert(false);
-        return -1;
-    }
-    if (!map_and_unmap_memory(
-        *VkApp->GetDevice(),
-        VkApp->GetSmoke()->Buffer_Temp_VelocityY.memory, [this](void* mem)
-        {
-            memcpy(mem, VkApp->GetSmoke()->TempVelocityX, sizeof(float) * CellCount);
-        }
-    ))
-    {
-        assert(false);
-        return -1;
-    }
-    if (!map_and_unmap_memory(
-        *VkApp->GetDevice(),
-        VkApp->GetSmoke()->Buffer_Temp_VelocityY.memory, [this](void* mem)
-        {
-            memcpy(mem, VkApp->GetSmoke()->TempVelocityX, sizeof(float) * CellCount);
-        }
-    ))
-    {
-        assert(false);
-        return -1;
+        return 0;
     }
 
     if (!begin_command_buffer(command_buffer_compute, 0u))
     {
         assert(false);
-        return -1;
+        return 0;
     }
 
     vkCmdBindPipeline(command_buffer_compute, VK_PIPELINE_BIND_POINT_COMPUTE, pipeline_compute);
@@ -368,23 +329,33 @@ int VulkanApp_Compute::ComputeDispatch()
     { 
         .GridSizeX = GridSizeX,
         .GridSizeY = GridSizeY,
-        .CellCount = (u32)CellCount,
+        .dTime = dTime,
         .CellSize = CellSize,
     };
 
     vkCmdPushConstants(command_buffer_compute, pipeline_layout_compute, 0u, 0u, sizeof(smoke_push_constants_compute),
         &data);
 
-    u32 const thread_group_dim = 256u; // Set in shader
+    u32 const thread_group_size = 16u; // Set in shader
+    u32 const thread_group_dim_x = (GridSizeX + 1 + thread_group_size - 1) / thread_group_size;
+    u32 const thread_group_dim_y = (GridSizeY + 1 + thread_group_size - 1) / thread_group_size;
 
-    vkCmdDispatch(command_buffer_compute, 256, 1, 1);
+    vkCmdDispatch(command_buffer_compute, thread_group_dim_x, thread_group_dim_y, 1);
     if (!end_command_buffer(command_buffer_compute))
     {
         assert(false);
-        return -1;
+        return 0;
     }
 
-    vkResetFences(*VkApp->GetDevice(), 1, &fence_compute);
+    if (HasSubmit)
+    {
+        if (vkResetFences(*VkApp->GetDevice(), 1, &fence_compute) != VK_SUCCESS)
+        {
+            assert(false);
+            return 0;
+        }
+    }
+    
 
     VkSubmitInfo const submit_info =
     {
@@ -402,7 +373,29 @@ int VulkanApp_Compute::ComputeDispatch()
         fence_compute))) // fence to signal when complete
     {
         DBG_ASSERT(false);
-        return -1;
+        return 0;
+    }
+    else
+    {
+        HasSubmit = true;
+    }
+
+    if (vkWaitForFences(
+        *VkApp->GetDevice(),
+        1u,
+        &fence_compute,
+        true,
+        UINT64_MAX
+    ) != VK_SUCCESS)
+    {
+        assert(false);
+        return 0;
+    }
+
+    if (!UnmapData())
+    {
+        assert(false);
+        return 0;
     }
 
     return 1;
@@ -521,6 +514,87 @@ int VulkanApp_Compute::ComputeDispatch()
             // the other overload will add the required commands to an EXISTING command buffer
         }
     }
+}
+
+int VulkanApp_Compute::MapData()
+{
+    if (!map_and_unmap_memory(
+        *VkApp->GetDevice(),
+        VkApp->GetSmoke()->Buffer_VelocityX.memory, [this](void* mem)
+        {
+            memcpy(mem, VkApp->GetSmoke()->VelocityX, sizeof(float) * VeloSizeX);
+        }
+    ))
+    {
+        assert(false);
+        return 0;
+    }
+    if (!map_and_unmap_memory(
+        *VkApp->GetDevice(),
+        VkApp->GetSmoke()->Buffer_VelocityY.memory, [this](void* mem)
+        {
+            memcpy(mem, VkApp->GetSmoke()->VelocityY, sizeof(float) * VeloSizeY);
+        }
+    ))
+    {
+        assert(false);
+        return 0;
+    }
+    // I don't think we need to upload the temp ones since well, they're temp
+    //if (!map_and_unmap_memory(
+    //    *VkApp->GetDevice(),
+    //    VkApp->GetSmoke()->Buffer_Temp_VelocityX
+    //    .memory, [this](void* mem)
+    //    {
+    //        memcpy(mem, VkApp->GetSmoke()->TempVelocityX, sizeof(float) * VeloSizeX);
+    //    }
+    //))
+    //{
+    //    assert(false);
+    //    return -1;
+    //}
+    //if (!map_and_unmap_memory(
+    //    *VkApp->GetDevice(),
+    //    VkApp->GetSmoke()->Buffer_Temp_VelocityY.memory, [this](void* mem)
+    //    {
+    //        memcpy(mem, VkApp->GetSmoke()->TempVelocityY, sizeof(float) * VeloSizeY);
+    //    }
+    //))
+    //{
+    //    assert(false);
+    //    return -1;
+    //}
+}
+
+int VulkanApp_Compute::UnmapData()
+{
+    SmokeState* smoke = VkApp->GetSmoke();
+
+    if (!map_and_unmap_memory(
+        *VkApp->GetDevice(),
+        smoke->Buffer_Temp_VelocityX.memory,
+        [smoke](void* mem)
+        {
+            memcpy(smoke->TempVelocityX, mem, sizeof(float) * (GridSizeX + 1) * GridSizeY);
+        }
+    ))
+    {
+        assert(false);
+        return 0;
+    }
+    if (!map_and_unmap_memory(
+        *VkApp->GetDevice(),
+        smoke->Buffer_Temp_VelocityY.memory,
+        [smoke](void* mem)
+        {
+            memcpy(smoke->TempVelocityY, mem, sizeof(float) * GridSizeX * (GridSizeY + 1));
+        }
+    ))
+    {
+        assert(false);
+        return 0;
+    }
+    return 1;
 }
 
 void VulkanApp_Compute::Terminate()
