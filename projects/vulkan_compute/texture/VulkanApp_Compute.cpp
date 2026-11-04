@@ -565,7 +565,7 @@ int VulkanApp_Compute::MapData()
     //    return -1;
     //}
 }
-
+// TODO: Can we just map this straight to velox/y rather than temp since this overwrites those values after anyway?
 int VulkanApp_Compute::UnmapData()
 {
     SmokeState* smoke = VkApp->GetSmoke();
