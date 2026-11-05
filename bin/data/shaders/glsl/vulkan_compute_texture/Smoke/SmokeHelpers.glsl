@@ -5,12 +5,12 @@
 
 int GetCellIndex(int x, int y)
 {
-	return x + y * GridSizeX;
+	return x + (y * GridSizeX);
 }
 
 int GetVelocityXIndex(int x, int y)
 {
-	return y * (GridSizeX + 1) + x;
+	return x + y * (GridSizeX + 1);
 }
 
 int GetVelocityYIndex(int x, int y)

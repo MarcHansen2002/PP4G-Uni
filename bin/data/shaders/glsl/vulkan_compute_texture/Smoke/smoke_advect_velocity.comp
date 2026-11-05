@@ -34,9 +34,8 @@ layout(push_constant) uniform Values
 void main ()
 {
 	ivec2 id = ivec2(gl_GlobalInvocationID.xy);
-
-	int x = id.x;
-	int y = id.y;
+    int x = id.x;
+    int y = id.y;
 
 	// Horizontal Velocity
 	if (x < GridSizeX + 1 && y < GridSizeY)

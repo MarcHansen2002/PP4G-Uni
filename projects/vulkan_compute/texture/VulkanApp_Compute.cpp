@@ -81,12 +81,11 @@ int VulkanApp_Compute::CreateComputePipeline()
     // group up all descriptor layout descriptions
     std::array <std::span <const VkDescriptorSetLayoutBinding>, NUM_SETS_COMPUTE> const descriptor_set_layout_bindings =
     {
-      descriptor_set_layout_binding_info_0 // set 0
-                                           // set 1...
+      descriptor_set_layout_binding_info_0
     };
     if (!create_vulkan_descriptor_set_layouts(
         *VkApp->GetDevice(),
-        NUM_SETS_COMPUTE,
+        1u,
         descriptor_set_layout_bindings.data(),
         descriptor_set_layouts_compute.data()))
     {
@@ -112,9 +111,6 @@ int VulkanApp_Compute::CreateComputePipeline()
         DBG_ASSERT(false);
         return -1;
     }
-
-    // fill in compute shader 'bin/data/shaders/glsl/vulkan_compute_texture/vulkan_compute_texture.comp'
-    // compile shaders by running 'compile_shaders_glsl.bat' (from the command line so you can check there are no errors)
 
     // TODO: Make shaders for all the other smoke simulation steps
     VkShaderModule shader_module_advect_velocity = VK_NULL_HANDLE;
@@ -309,7 +305,7 @@ int VulkanApp_Compute::CreateComputeSyncObjects()
 
 int VulkanApp_Compute::ComputeDispatch(float dTime)
 {
-    if (!MapData())
+    if (!VkApp->GetSmoke()->MapBuffers(*VkApp->GetDevice()))
     {
         assert(false);
         return 0;
@@ -333,7 +329,7 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
         .CellSize = CellSize,
     };
 
-    vkCmdPushConstants(command_buffer_compute, pipeline_layout_compute, 0u, 0u, sizeof(smoke_push_constants_compute),
+    vkCmdPushConstants(command_buffer_compute, pipeline_layout_compute, VK_SHADER_STAGE_COMPUTE_BIT, 0u, sizeof(smoke_push_constants_compute),
         &data);
 
     u32 const thread_group_size = 16u; // Set in shader
@@ -341,6 +337,23 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
     u32 const thread_group_dim_y = (GridSizeY + 1 + thread_group_size - 1) / thread_group_size;
 
     vkCmdDispatch(command_buffer_compute, thread_group_dim_x, thread_group_dim_y, 1);
+
+    VkMemoryBarrier barrier{};
+    barrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+    barrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+    barrier.dstAccessMask = VK_ACCESS_HOST_READ_BIT;
+
+    vkCmdPipelineBarrier(
+        command_buffer_compute,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+        VK_PIPELINE_STAGE_HOST_BIT,
+        0,
+        1,
+        &barrier,
+        0, nullptr,
+        0, nullptr
+    );
+
     if (!end_command_buffer(command_buffer_compute))
     {
         assert(false);
@@ -399,173 +412,8 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
     }
 
     return 1;
-    {
-        // RECORD COMMAND BUFFER
-        //{
-        //    if (!begin_command_buffer(command_buffer_compute, 0u))
-        //    {
-        //        DBG_ASSERT(false);
-        //        return -1;
-        //    }
-        //    {
-        //        // any compute related command after this point is attached to this pipeline (on this command buffer)
-                // bind compute pipeline
-        //        vkCmdBindPipeline(
-        //            command_buffer_compute,
-        //            VK_PIPELINE_BIND_POINT_COMPUTE,
-        //            pipeline_compute
-        //        );
-        //
-        //        // bind descriptor set - texture_compute_input & texture_compute_output
-        //        vkCmdBindDescriptorSets(
-        //            command_buffer_compute,
-        //            VK_PIPELINE_BIND_POINT_COMPUTE,
-        //            pipeline_layout_compute,
-        //            desc_set_0_compute.set_index,
-        //            1,
-        //            &desc_set_0_compute.desc_set,
-        //            0u,
-        //            VK_NULL_HANDLE
-        //        );
-        //
-        //        // dispatch compute shader
-                // see 'bin/data/shaders/glsl/vulkan_compute_texture/vulkan_compute_texture.comp' for thread group size!
-                // HINT: the thread groups are 2D and so will the 'grid' of thread groups we want to create
-        //        u32 const thread_group_dim = 16u;
-        //        u32 const thread_group_count_x = (u32)std::ceilf((float)GridSizeX / (float)thread_group_dim);
-        //        u32 const thread_group_count_y = (u32)std::ceilf((float)GridSizeY / (float)thread_group_dim);
-        //        vkCmdDispatch(
-        //            command_buffer_compute,
-        //            thread_group_count_x,
-        //            thread_group_count_y,
-        //            1
-        //        );
-        //
-        //    }
-        //    if (!end_command_buffer(command_buffer_compute))
-        //    {
-        //        DBG_ASSERT(false);
-        //        return -1;
-        //    }
-        //}
-        //
-        //// SUBMIT
-        //{
-        //    if (!CHECK_VULKAN_RESULT(vkResetFences(device, 1u, &fence_compute)))
-        //    {
-        //        DBG_ASSERT(false);
-        //        return -1;
-        //    }
-        //
-        //
-        //    // submit compute commands
-        //    VkSubmitInfo const submit_info =
-        //    {
-        //      .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
-        //      //.pNext = VK_NULL_HANDLE,
-        //      .waitSemaphoreCount = 0u,
-        //      .pWaitSemaphores = VK_NULL_HANDLE,
-        //      .pWaitDstStageMask = VK_NULL_HANDLE,
-        //      .commandBufferCount = 1u,
-        //      .pCommandBuffers = &command_buffer_compute,
-        //      .signalSemaphoreCount = 0u,
-        //      .pSignalSemaphores = VK_NULL_HANDLE
-        //    };
-        //
-        //    if (!CHECK_VULKAN_RESULT(vkQueueSubmit(queue_compute, 1u, &submit_info,
-        //        fence_compute))) // fence to signal when complete
-        //    {
-        //        DBG_ASSERT(false);
-        //        return -1;
-        //    }
-        //
-        //
-        //    // wait for fence to be triggered via vkQueueSubmit (slow!)
-        //    if (!CHECK_VULKAN_RESULT(vkWaitForFences(device,
-        //        1u,
-        //        &fence_compute,
-        //        VK_TRUE,
-        //        UINT64_MAX)))
-        //    {
-        //        DBG_ASSERT(false);
-        //        return -1;
-        //    }
-        //}
-
-        // TRANSITION IMAGE LAYOUTS
-        {
-            // NOTE: get output image ready for rendering via fragment shader
-            // can only perform this now compute write pipeline has completed
-            // TODO: once again, do we need this? We probably do just not here. Probably where we copy
-            // The smoke data to the texture
-            //if (!transition_image_layout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, Graphics.render_texture))
-            //{
-            //    DBG_ASSERT(false);
-            //    return -1;
-            //}
-            //if (!transition_image_layout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, Graphics.render_texture))
-            //{
-            //    DBG_ASSERT(false);
-            //    return -1;
-            //}
-
-            // NOTE: this function is overloaded
-            // the above version performs the transition as a 'one off' outside a command buffer
-            // the other overload will add the required commands to an EXISTING command buffer
-        }
-    }
 }
 
-int VulkanApp_Compute::MapData()
-{
-    if (!map_and_unmap_memory(
-        *VkApp->GetDevice(),
-        VkApp->GetSmoke()->Buffer_VelocityX.memory, [this](void* mem)
-        {
-            memcpy(mem, VkApp->GetSmoke()->VelocityX, sizeof(float) * VeloSizeX);
-        }
-    ))
-    {
-        assert(false);
-        return 0;
-    }
-    if (!map_and_unmap_memory(
-        *VkApp->GetDevice(),
-        VkApp->GetSmoke()->Buffer_VelocityY.memory, [this](void* mem)
-        {
-            memcpy(mem, VkApp->GetSmoke()->VelocityY, sizeof(float) * VeloSizeY);
-        }
-    ))
-    {
-        assert(false);
-        return 0;
-    }
-    // I don't think we need to upload the temp ones since well, they're temp
-    //if (!map_and_unmap_memory(
-    //    *VkApp->GetDevice(),
-    //    VkApp->GetSmoke()->Buffer_Temp_VelocityX
-    //    .memory, [this](void* mem)
-    //    {
-    //        memcpy(mem, VkApp->GetSmoke()->TempVelocityX, sizeof(float) * VeloSizeX);
-    //    }
-    //))
-    //{
-    //    assert(false);
-    //    return -1;
-    //}
-    //if (!map_and_unmap_memory(
-    //    *VkApp->GetDevice(),
-    //    VkApp->GetSmoke()->Buffer_Temp_VelocityY.memory, [this](void* mem)
-    //    {
-    //        memcpy(mem, VkApp->GetSmoke()->TempVelocityY, sizeof(float) * VeloSizeY);
-    //    }
-    //))
-    //{
-    //    assert(false);
-    //    return -1;
-    //}
-}
-// TODO: Can we just map this straight to velox/y rather than temp since this overwrites those values after anyway?
 int VulkanApp_Compute::UnmapData()
 {
     SmokeState* smoke = VkApp->GetSmoke();
@@ -575,7 +423,7 @@ int VulkanApp_Compute::UnmapData()
         smoke->Buffer_Temp_VelocityX.memory,
         [smoke](void* mem)
         {
-            memcpy(smoke->TempVelocityX, mem, sizeof(float) * (GridSizeX + 1) * GridSizeY);
+            memcpy(smoke->VelocityX, mem, sizeof(float) * VeloSizeX);
         }
     ))
     {
@@ -587,7 +435,7 @@ int VulkanApp_Compute::UnmapData()
         smoke->Buffer_Temp_VelocityY.memory,
         [smoke](void* mem)
         {
-            memcpy(smoke->TempVelocityY, mem, sizeof(float) * GridSizeX * (GridSizeY + 1));
+            memcpy(smoke->VelocityY, mem, sizeof(float) * VeloSizeY);
         }
     ))
     {
@@ -603,9 +451,6 @@ void VulkanApp_Compute::Terminate()
 
     release_vulkan_command_buffers(1u, command_pool_compute, &command_buffer_compute);
     release_vulkan_command_pool(command_pool_compute);
-
-    //release_vulkan_texture(device, texture_compute_output);
-    //release_vulkan_texture(device, texture_compute_input);
 
     release_vulkan_descriptor_sets(*VkApp->GetDevice(),
         1u, &desc_set_0_compute);

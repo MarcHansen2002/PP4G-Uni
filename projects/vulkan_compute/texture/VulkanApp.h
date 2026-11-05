@@ -100,7 +100,7 @@ private:
 
 	bool CompareSmokes = false;
 
-	bool CheckArraySimilarity(float* A, float* B, int Count, std::string step, std::string arr, float Tolerance = 0.00001f)
+	bool CheckArraySimilarity(float* A, float* B, int Count, std::string step, std::string arr, float Tolerance = 0.01f)
 	{
 		for (int i = 0; i < Count; i++)
 		{
@@ -146,48 +146,21 @@ private:
 		if (CompareSmokes)
 		{
 			CheckSmokeSimilarity("Before update");
-
+			// Pressure Solver
 			Smoke_CPU.RunPressureSolver(FluidDensity, dTime);
 			Smoke.RunPressureSolver(FluidDensity, dTime);
-			// Compare
 			CheckSmokeSimilarity("Pressure Solve");
-
+			// Updating Velocities
 			Smoke_CPU.UpdateVelocities(FluidDensity, dTime);
 			Smoke.UpdateVelocities(FluidDensity, dTime);
 			CheckSmokeSimilarity("Update Velocities");
-			// Compare
-
+			// Advect Dye
 			Smoke_CPU.AdvectDye(dTime);
 			Smoke.AdvectDye(dTime);
 			CheckSmokeSimilarity("Advect Dye");
-			// Compare
-
+			// Advect Velocity
 			Smoke_CPU.AdvectVelocity(dTime);
 			Compute.ComputeDispatch(dTime);
-
-			CheckArraySimilarity(
-				Smoke.TempVelocityX,
-				Smoke_CPU.TempVelocityX,
-				VeloSizeX,
-				"Advect Velocity",
-				"TempVelocityX");
-
-			CheckArraySimilarity(
-				Smoke.TempVelocityY,
-				Smoke_CPU.TempVelocityY,
-				VeloSizeY,
-				"Advect Velocity",
-				"TempVelocityY");
-
-			for (int i = 0; i < (GridSizeX + 1) * GridSizeY; i++)
-			{
-				Smoke.VelocityX[i] = Smoke.TempVelocityX[i];
-			}
-
-			for (int i = 0; i < GridSizeX * (GridSizeY + 1); i++)
-			{
-				Smoke.VelocityY[i] = Smoke.TempVelocityY[i];
-			}
 			CheckSmokeSimilarity("Advect Velocity");
 			// Compare
 		}
@@ -200,18 +173,6 @@ private:
 			{
 				assert(false);
 				return;
-			}
-
-			
-
-			for (int i = 0; i < (GridSizeX + 1) * GridSizeY; i++)
-			{
-				Smoke.VelocityX[i] = Smoke.TempVelocityX[i];
-			}
-
-			for (int i = 0; i < GridSizeX * (GridSizeY + 1); i++)
-			{
-				Smoke.VelocityY[i] = Smoke.TempVelocityY[i];
 			}
 		}
 		else

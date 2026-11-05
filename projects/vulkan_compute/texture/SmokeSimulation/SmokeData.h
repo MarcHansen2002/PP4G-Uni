@@ -78,7 +78,7 @@ struct SmokeState
 			sizeof(float) * CellCount,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			Buffer_Density))
 		{
 			assert(false);
@@ -88,7 +88,7 @@ struct SmokeState
 			sizeof(float) * CellCount,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			Buffer_Temperature))
 		{
 			assert(false);
@@ -98,7 +98,7 @@ struct SmokeState
 			sizeof(float) * CellCount,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			Buffer_Pressure))
 		{
 			assert(false);
@@ -108,7 +108,7 @@ struct SmokeState
 			sizeof(float) * VeloSizeX,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			Buffer_VelocityX))
 		{
 			assert(false);
@@ -118,7 +118,7 @@ struct SmokeState
 			sizeof(float) * VeloSizeY,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			Buffer_VelocityY))
 		{
 			assert(false);
@@ -128,7 +128,7 @@ struct SmokeState
 			sizeof(float) * VeloSizeX,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			Buffer_Temp_VelocityX))
 		{
 			assert(false);
@@ -138,7 +138,7 @@ struct SmokeState
 			sizeof(float) * VeloSizeY,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			Buffer_Temp_VelocityY))
 		{
 			assert(false);
@@ -148,7 +148,7 @@ struct SmokeState
 			sizeof(float) * CellCount,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			Buffer_Temp_Density))
 		{
 			assert(false);
@@ -158,12 +158,69 @@ struct SmokeState
 			sizeof(float) * CellCount,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
-			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			Buffer_Temp_Temperature))
 		{
 			assert(false);
 			return -1;
 		}
+	}
+
+	int MapBuffers(VkDevice dev)
+	{
+		if (!map_and_unmap_memory(
+			dev,
+			Buffer_VelocityX.memory, [this](void* mem)
+			{
+				memcpy(mem, VelocityX, sizeof(float) * VeloSizeX);
+			}
+		))
+		{
+			return 0;
+		}
+		if (!map_and_unmap_memory(
+			dev,
+			Buffer_VelocityY.memory, [this](void* mem)
+			{
+				memcpy(mem, VelocityY, sizeof(float) * VeloSizeY);
+			}
+		))
+		{
+			return 0;
+		}
+		if (!map_and_unmap_memory(
+			dev,
+			Buffer_Temp_VelocityX.memory, [this](void* mem)
+			{
+				memcpy(mem, TempVelocityX, sizeof(float) * VeloSizeX);
+			}
+		))
+		{
+			return 0;
+		}
+		if (!map_and_unmap_memory(
+			dev,
+			Buffer_Temp_VelocityY.memory, [this](void* mem)
+			{
+				memcpy(mem, TempVelocityY, sizeof(float) * VeloSizeX);
+			}
+		))
+		{
+			return 0;
+		}
+		if (!map_and_unmap_memory(
+			dev,
+			Buffer_Density.memory, [this](void* mem)
+			{
+				memcpy(mem, Density, sizeof(float) * CellCount);
+			}
+		))
+		{
+			return 0;
+		}
+
+
+		return 1;
 	}
 
 	// TODO: Move all this to a compute shader
@@ -404,6 +461,7 @@ struct SmokeState
 	}
 	void AdvectVelocity(float dTime)
 	{
+		// Horizontal
 		for (int x = 0; x < GridSizeX + 1; x++)
 		{
 			for (int y = 0; y < GridSizeY; y++)
@@ -429,7 +487,7 @@ struct SmokeState
 				TempVelocityX[i] = SampleVelocityX(posPrev);
 			}
 		}
-
+		// Vertical
 		for (int x = 0; x < GridSizeX; x++)
 		{
 			for (int y = 0; y < GridSizeY + 1; y++)
