@@ -39,13 +39,11 @@ int VulkanApp_Compute::Init(VulkanApp* app)
 
 int VulkanApp_Compute::CreateComputePipeline()
 {
-
-    //Set descriptors
-    //Set Shader
     Pipeline_AdvectVelocity.CreatePipeline(*VkApp->GetDevice(), Layout_AdvectVelocity);
     Pipeline_AdvectVelocity.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_advect_velocity.comp.spv");
     
-
+    Pipeline_AdvectDye.CreatePipeline(*VkApp->GetDevice(), Layout_AdvectDye);
+    Pipeline_AdvectDye.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_advect_dye.comp.spv");
     //TODO: Other pipelines
     return 1;
 }
@@ -93,6 +91,29 @@ int VulkanApp_Compute::CreateComputeDescriptorSets()
         DBG_ASSERT(false);
         return -1;
     }
+    // Advect Dye
+    std::array<VkDescriptorSetLayoutBinding, 4> const AdvectDyeBindings =
+    {
+        MakeBinding(0u, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT),    // Velocity X
+        MakeBinding(1u, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT),    // Velocity Y
+        MakeBinding(2u, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT),    // Density
+        MakeBinding(3u, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT),    // Temp Density
+    };
+    std::array <std::span <const VkDescriptorSetLayoutBinding>, 1> const AdvectDyeSetBindings =
+    {
+      AdvectDyeBindings
+    };
+    if (!create_vulkan_descriptor_set_layouts
+    (
+        *VkApp->GetDevice(),
+        1u,
+        AdvectDyeSetBindings.data(),
+        &Layout_AdvectDye
+    ))
+    {
+        DBG_ASSERT(false);
+        return -1;
+    }
     // Apply velocity...
     // Velocity dissipation...
     // etc etc...
@@ -102,14 +123,14 @@ int VulkanApp_Compute::CreateComputeDescriptorSets()
         { {
             {
                   .type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-                  .descriptorCount = 4u
+                  .descriptorCount = 8u
             }
           } };
 
         if (!create_vulkan_descriptor_pool
         (
             *VkApp->GetDevice(),
-            1u, // how many descriptor sets will we make from the sets in the pool?
+            2u, // how many descriptor sets will we make from the sets in the pool?
             pool_sizes.size(), pool_sizes.data(),
             descriptor_pool_compute))
         {
@@ -117,17 +138,25 @@ int VulkanApp_Compute::CreateComputeDescriptorSets()
             return -1;
         }
 
-        std::array <vulkan_descriptor_set_info, NUM_SETS_COMPUTE> const descriptor_set_infos =
+        std::array <vulkan_descriptor_set_info, 2> const descriptor_set_infos =
         { {
-                // Advect Velocity
-                {
-                  .desc_pool = &descriptor_pool_compute,         // the pool from which to allocate the individual descriptors from
-                  .layout = &Layout_AdvectVelocity, // layout of the descriptor set
-                  .set_index = 0u,                               // index of the descriptor set
-                  .out_set = &DescriptorSet // pointer to where to instantiate the descriptor set to
-                }
+            // Advect Velocity
+            {
+                .desc_pool = &descriptor_pool_compute,         // the pool from which to allocate the individual descriptors from
+                .layout = &Layout_AdvectVelocity, // layout of the descriptor set
+                .set_index = 0u,                               // index of the descriptor set
+                .out_set = &DescriptorSet_AdvectVelocity // pointer to where to instantiate the descriptor set to
+            },
+            // Advect Dye
+            {
+                .desc_pool = &descriptor_pool_compute,
+                .layout = &Layout_AdvectDye,
+                .set_index = 0u,
+                .out_set = &DescriptorSet_AdvectDye
+            }
             // The other pipelines
           } };
+
         if (!create_vulkan_descriptor_sets(
             *VkApp->GetDevice(),
             descriptor_set_infos.size(), descriptor_set_infos.data()))
@@ -160,7 +189,7 @@ int VulkanApp_Compute::BindComputeResources()
     for (int i = 0; i < 4; i++)
     {
         AdvectVelocityWriteDescriptors[i].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        AdvectVelocityWriteDescriptors[i].dstSet = DescriptorSet.desc_set;
+        AdvectVelocityWriteDescriptors[i].dstSet = DescriptorSet_AdvectVelocity.desc_set;
         AdvectVelocityWriteDescriptors[i].dstBinding = i;
         AdvectVelocityWriteDescriptors[i].descriptorCount = 1;
         AdvectVelocityWriteDescriptors[i].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
@@ -174,6 +203,36 @@ int VulkanApp_Compute::BindComputeResources()
         0u,                                        // descriptorCopyCount
         VK_NULL_HANDLE
     );
+    // Advect Dye
+    VkDescriptorBufferInfo const AdvectDyeBufferInfos[] =
+    {
+        {smoke->Buffer_VelocityX.buffer, 0u, VK_WHOLE_SIZE},
+        {smoke->Buffer_VelocityY.buffer, 0u, VK_WHOLE_SIZE},
+        {smoke->Buffer_Density.buffer, 0u, VK_WHOLE_SIZE},
+        {smoke->Buffer_Temp_Density.buffer, 0u, VK_WHOLE_SIZE},
+    };
+    VkWriteDescriptorSet AdvectDyeWriteDescriptors[4] =
+    {
+    };
+    for (int i = 0; i < 4; i++)
+    {
+        AdvectDyeWriteDescriptors[i].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        AdvectDyeWriteDescriptors[i].dstSet = DescriptorSet_AdvectDye.desc_set;
+        AdvectDyeWriteDescriptors[i].dstBinding = i;
+        AdvectDyeWriteDescriptors[i].descriptorCount = 1;
+        AdvectDyeWriteDescriptors[i].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        AdvectDyeWriteDescriptors[i].pBufferInfo = &AdvectDyeBufferInfos[i];
+    }
+    vkUpdateDescriptorSets
+    (
+        *VkApp->GetDevice(),                       // device
+        4u,                                        // descriptorWriteCount
+        AdvectDyeWriteDescriptors,            // pDescriptorWrites
+        0u,                                        // descriptorCopyCount
+        VK_NULL_HANDLE
+    );
+
+
 
     //{
     //    VkDescriptorBufferInfo const buffer_infos[] =
@@ -306,12 +365,14 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
         return 0;
     }
 
-    Pipeline_AdvectVelocity.Run(command_buffer_compute, dTime, DescriptorSet.set_index, &DescriptorSet.desc_set);
-
     u32 const thread_group_size = 16u; // Set in shader
     u32 const thread_group_dim_x = (GridSizeX + 1 + thread_group_size - 1) / thread_group_size;
     u32 const thread_group_dim_y = (GridSizeY + 1 + thread_group_size - 1) / thread_group_size;
 
+    Pipeline_AdvectDye.Run(command_buffer_compute, dTime, DescriptorSet_AdvectDye.set_index, &DescriptorSet_AdvectDye.desc_set);
+    vkCmdDispatch(command_buffer_compute, thread_group_dim_x, thread_group_dim_y, 1);
+
+    Pipeline_AdvectVelocity.Run(command_buffer_compute, dTime, DescriptorSet_AdvectVelocity.set_index, &DescriptorSet_AdvectVelocity.desc_set);
     vkCmdDispatch(command_buffer_compute, thread_group_dim_x, thread_group_dim_y, 1);
 
     VkMemoryBarrier barrier{};
@@ -418,6 +479,20 @@ int VulkanApp_Compute::UnmapData()
         assert(false);
         return 0;
     }
+
+    if (!map_and_unmap_memory(
+        *VkApp->GetDevice(),
+        smoke->Buffer_Temp_Density.memory,
+        [smoke](void* mem)
+        {
+            memcpy(smoke->Density, mem, sizeof(float) * CellCount);
+        }
+    ))
+    {
+        assert(false);
+        return 0;
+    }
+
     return 1;
 }
 
@@ -428,13 +503,18 @@ void VulkanApp_Compute::Terminate()
     release_vulkan_command_buffers(1u, command_pool_compute, &command_buffer_compute);
     release_vulkan_command_pool(command_pool_compute);
 
-    release_vulkan_descriptor_sets(*VkApp->GetDevice(),
-        1u, &DescriptorSet);
+   // release_vulkan_descriptor_sets(*VkApp->GetDevice(),
+   //     1u, &DescriptorSet);
+    release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_AdvectVelocity);
+    release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_AdvectDye);
+
     release_vulkan_descriptor_pool(*VkApp->GetDevice(), descriptor_pool_compute);
 
     Pipeline_AdvectVelocity.Release(*VkApp->GetDevice());
+    Pipeline_AdvectDye.Release(*VkApp->GetDevice());
 
     release_vulkan_descriptor_set_layouts(*VkApp->GetDevice(), 1u, &Layout_AdvectVelocity);
+    release_vulkan_descriptor_set_layouts(*VkApp->GetDevice(), 1u, &Layout_AdvectDye);
 
    //release_vulkan_descriptor_set_layouts(*VkApp->GetDevice(),
    //    NUM_SETS_COMPUTE, descriptor_set_layouts_compute.data());

@@ -168,7 +168,6 @@ private:
 		{
 			Smoke.RunPressureSolver(FluidDensity, dTime);
 			Smoke.UpdateVelocities(FluidDensity, dTime);
-			Smoke.AdvectDye(dTime);
 			if (!Compute.ComputeDispatch(dTime))
 			{
 				assert(false);

@@ -219,6 +219,17 @@ struct SmokeState
 			return 0;
 		}
 
+		if (!map_and_unmap_memory(
+			dev,
+			Buffer_Temp_Density.memory, [this](void* mem)
+			{
+				memcpy(mem, TempDensity, sizeof(float) * CellCount);
+			}
+		))
+		{
+			return 0;
+		}
+
 
 		return 1;
 	}

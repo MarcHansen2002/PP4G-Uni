@@ -61,11 +61,17 @@ public:
 	VkDescriptorSetLayout Layout_AdvectVelocity = VK_NULL_HANDLE;
 	VkDescriptorSet Set_AdvectVelocity = VK_NULL_HANDLE;
 	Vulkan_Compute_Pipeline Pipeline_AdvectVelocity;
+	vulkan_descriptor_set DescriptorSet_AdvectVelocity;
+
+	VkDescriptorSetLayout Layout_AdvectDye = VK_NULL_HANDLE;
+	VkDescriptorSet Set_AdvectDye = VK_NULL_HANDLE;
+	Vulkan_Compute_Pipeline Pipeline_AdvectDye;
+	vulkan_descriptor_set DescriptorSet_AdvectDye;
 
 	VkQueue queue_compute = VK_NULL_HANDLE;
 	//std::array <VkDescriptorSetLayout, NUM_SETS_COMPUTE> descriptor_set_layouts_compute = { VK_NULL_HANDLE };
 	VkDescriptorPool descriptor_pool_compute = VK_NULL_HANDLE;
-	vulkan_descriptor_set DescriptorSet; //for compute, texture_compute_input + texture_compute_output
+	//vulkan_descriptor_set DescriptorSet; //for compute, texture_compute_input + texture_compute_output
 
 	VkCommandPool command_pool_compute = VK_NULL_HANDLE;
 	VkCommandBuffer command_buffer_compute = VK_NULL_HANDLE;
