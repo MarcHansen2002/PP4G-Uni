@@ -1,0 +1,34 @@
+#version 430
+#extension GL_GOOGLE_include_directive : require
+
+#include "PressureSolver.glsl"
+
+layout (local_size_x = 16, local_size_y = 16) in;
+
+layout (std430, set = 0, binding = 0) readonly buffer velocity_x
+{
+	float VelocityX[];
+};
+layout (std430, set = 0, binding = 1) readonly buffer velocity_y
+{
+	float VelocityY[];
+};
+layout (std430, set = 0, binding = 2) writeonly buffer pressureSolve
+{
+	PressureSolver PressureSolve[];
+};
+
+layout(push_constant) uniform Values
+{
+	int GridSizeX;
+	int GridSizeY;
+	float dTime;
+	float CellSize;
+};
+
+//#include "SmokeHelpers.glsl"
+
+void main ()
+{
+
+}

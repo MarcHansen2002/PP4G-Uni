@@ -475,7 +475,6 @@ int VulkanApp_Graphics::CreateGraphicsResources()
         }
 
         const uvec2 ext = { GridSizeX, GridSizeY };
-        // TODO: Remove this, but first we need to change the compute shader to stop needing this (only needs the smoke data arrays)
         if (!create_vulkan_texture_empty
         (
             *VkApp->GetPhysicalDevice(),

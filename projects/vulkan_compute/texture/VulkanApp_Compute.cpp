@@ -40,6 +40,14 @@ int VulkanApp_Compute::CreateComputePipeline()
     Pipeline_AdvectDye.CreatePipeline(*VkApp->GetDevice(), Layout_AdvectDye);
     Pipeline_AdvectDye.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_advect_dye.comp.spv");
     //TODO: Other pipelines
+    Pipeline_UpdateVelocities.CreatePipeline(*VkApp->GetDevice(), Layout_UpdateVelocities);
+    Pipeline_UpdateVelocities.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_update_velocities.comp.spv");
+
+    Pipeline_PressureSolver.CreatePipeline(*VkApp->GetDevice(), Layout_PressureSolver);
+    Pipeline_PressureSolver.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_pressure_solver.comp.spv");
+
+    Pipeline_PreparePressureSolver.CreatePipeline(*VkApp->GetDevice(), Layout_PreparePressureSolver);
+    Pipeline_PreparePressureSolver.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_pressure_solver_prepare.comp.spv");
     return 1;
 }
 
@@ -87,11 +95,13 @@ void VulkanApp_Compute::WriteDescriptorSet(VkDescriptorSetLayout& layout, const 
 
 int VulkanApp_Compute::CreateComputeDescriptorSets()
 {
-    // TODO: Pressure Solver
-    // TODO: Update Velocities
-    WriteDescriptorSet(Layout_AdvectDye, 4);
-    WriteDescriptorSet(Layout_AdvectVelocity, 4);
+    WriteDescriptorSet(Layout_PreparePressureSolver, 3);    // VeloX, VeloY, PressureData
+    WriteDescriptorSet(Layout_PressureSolver, 2);           // PressureData, Pressure
+    WriteDescriptorSet(Layout_UpdateVelocities, 3);         // VeloX, VeloY, Pressure
 
+    WriteDescriptorSet(Layout_AdvectDye, 4);                 // VeloX, VeloY, TempVeloX, TempVeloY
+    WriteDescriptorSet(Layout_AdvectVelocity, 4);            // VeloX, VeloY, Density, TempDensity
+    
     // Apply velocity...
     // Velocity dissipation...
     // etc etc...
@@ -101,14 +111,14 @@ int VulkanApp_Compute::CreateComputeDescriptorSets()
         { {
             {
                   .type = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-                  .descriptorCount = 8u
+                  .descriptorCount = PipelineCount
             }
           } };
 
         if (!create_vulkan_descriptor_pool
         (
             *VkApp->GetDevice(),
-            2u, // how many descriptor sets will we make from the sets in the pool?
+            DescriptorCount, // how many descriptor sets will we make from the sets in the pool?
             pool_sizes.size(), pool_sizes.data(),
             descriptor_pool_compute))
         {
@@ -116,7 +126,7 @@ int VulkanApp_Compute::CreateComputeDescriptorSets()
             return -1;
         }
 
-        std::array <vulkan_descriptor_set_info, 2> const descriptor_set_infos =
+        std::array <vulkan_descriptor_set_info, 5> const descriptor_set_infos =
         { {
             // Advect Velocity
             {
@@ -131,9 +141,28 @@ int VulkanApp_Compute::CreateComputeDescriptorSets()
                 .layout = &Layout_AdvectDye,
                 .set_index = 0u,
                 .out_set = &DescriptorSet_AdvectDye
+            },
+            // Update Velocities
+            {
+                .desc_pool = &descriptor_pool_compute,
+                .layout = &Layout_UpdateVelocities,
+                .set_index = 0u,
+                .out_set = &DescriptorSet_UpdateVelocities
+            },
+            // Pressure Solver
+            {
+                .desc_pool = &descriptor_pool_compute,
+                .layout = &Layout_PressureSolver,
+                .set_index = 0u,
+                .out_set = &DescriptorSet_PressureSolver
+            },
+            // Pressure Solver Prepare
+            {
+                .desc_pool = &descriptor_pool_compute,
+                .layout = &Layout_PreparePressureSolver,
+                .set_index = 0u,
+                .out_set = &DescriptorSet_PreparePressureSolver
             }
-            // TODO: Pressure Solve
-            // TODO: Update Velocities
           } };
 
         if (!create_vulkan_descriptor_sets(
@@ -177,9 +206,26 @@ int VulkanApp_Compute::BindComputeResource(vulkan_descriptor_set dstSet, std::ve
 int VulkanApp_Compute::BindComputeResources()
 {
     SmokeState* smoke = VkApp->GetSmoke();
-    // TODO: Pressure Solver
-
-    // TODO: Update Velocities
+    // Pressure Solve
+    BindComputeResource
+    (
+        DescriptorSet_PreparePressureSolver,
+        { smoke->Buffer_VelocityX, smoke->Buffer_VelocityY, smoke->Buffer_PressureSolve },
+        3
+    );
+    BindComputeResource
+    (
+        DescriptorSet_PressureSolver,
+        { smoke->Buffer_VelocityX, smoke->Buffer_VelocityY, smoke->Buffer_PressureSolve, smoke->Buffer_Pressure },
+        4
+    );
+    // Update Velocity
+    BindComputeResource
+    (
+        DescriptorSet_UpdateVelocities,
+        { smoke->Buffer_VelocityX, smoke->Buffer_VelocityY, smoke->Buffer_Pressure },
+        3
+    );
 
     // Advect Dye
     BindComputeResource
@@ -225,6 +271,30 @@ int VulkanApp_Compute::CreateComputeSyncObjects()
     }
 }
 
+void VulkanApp_Compute::WaitForBarrier(VkAccessFlags flags)
+{
+    VkMemoryBarrier barrier =
+    {
+        .sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER,
+        .srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT,
+        .dstAccessMask = flags
+    };
+
+    vkCmdPipelineBarrier
+    (
+        command_buffer_compute,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+        VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+        0,
+        1,
+        &barrier,
+        0,
+        VK_NULL_HANDLE,
+        0,
+        VK_NULL_HANDLE
+    );
+}
+
 int VulkanApp_Compute::ComputeDispatch(float dTime)
 {
     if (!VkApp->GetSmoke()->MapBuffers(*VkApp->GetDevice()))
@@ -244,10 +314,15 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
     u32 const thread_group_dim_y = (GridSizeY + 1 + thread_group_size - 1) / thread_group_size;
 
     // TODO: Pressure Solver
+    //Pipeline_PreparePressureSolver.Run(command_buffer_compute, dTime, DescriptorSet_PreparePressureSolver.set_index, &DescriptorSet_PreparePressureSolver.desc_set);
+    //Pipeline_PressureSolver.Run(command_buffer_compute, dTime, DescriptorSet_PressureSolver.set_index, &DescriptorSet_PressureSolver.desc_set);
+    
+    Pipeline_UpdateVelocities.Run(command_buffer_compute, dTime, DescriptorSet_UpdateVelocities.set_index, &DescriptorSet_UpdateVelocities.desc_set);
+    vkCmdDispatch(command_buffer_compute, thread_group_dim_x, thread_group_dim_y, 1);
 
-    // TODO: Update Velocities
-
-    // TODO: Barrier will be needed here since updatevelocities writes to velocity whilst both advects read from it
+    // Update Velocities writes to velocityX and velocityY
+    // AdvectDye/Velocity reads from velocityX and velocityY
+    WaitForBarrier(VK_ACCESS_SHADER_READ_BIT);
 
     Pipeline_AdvectDye.Run(command_buffer_compute, dTime, DescriptorSet_AdvectDye.set_index, &DescriptorSet_AdvectDye.desc_set);
     vkCmdDispatch(command_buffer_compute, thread_group_dim_x, thread_group_dim_y, 1);
@@ -255,10 +330,12 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
     Pipeline_AdvectVelocity.Run(command_buffer_compute, dTime, DescriptorSet_AdvectVelocity.set_index, &DescriptorSet_AdvectVelocity.desc_set);
     vkCmdDispatch(command_buffer_compute, thread_group_dim_x, thread_group_dim_y, 1);
 
-    VkMemoryBarrier barrier{};
-    barrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
-    barrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
-    barrier.dstAccessMask = VK_ACCESS_HOST_READ_BIT;
+    VkMemoryBarrier barrier =
+    {
+        .sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER,
+        .srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT,
+        .dstAccessMask = VK_ACCESS_HOST_READ_BIT
+    };
 
     vkCmdPipelineBarrier(
         command_buffer_compute,
@@ -285,6 +362,8 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
             return 0;
         }
     }
+
+    // TODO: Semaphore and don't bother re-copying density to cpu and gpu again we can just render from the GPU density data
     
 
     VkSubmitInfo const submit_info =
@@ -383,16 +462,22 @@ void VulkanApp_Compute::Terminate()
     release_vulkan_command_buffers(1u, command_pool_compute, &command_buffer_compute);
     release_vulkan_command_pool(command_pool_compute);
 
-    // TODO: Pressure Solver
-    // TODO: Update Velocities
+    release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_PreparePressureSolver);
+    release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_PressureSolver);
+    release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_UpdateVelocities);
     release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_AdvectVelocity);
     release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_AdvectDye);
 
     release_vulkan_descriptor_pool(*VkApp->GetDevice(), descriptor_pool_compute);
 
+    Pipeline_PressureSolver.Release(*VkApp->GetDevice());
+    Pipeline_UpdateVelocities.Release(*VkApp->GetDevice());
     Pipeline_AdvectVelocity.Release(*VkApp->GetDevice());
     Pipeline_AdvectDye.Release(*VkApp->GetDevice());
 
+    release_vulkan_descriptor_set_layouts(*VkApp->GetDevice(), 1u, &Layout_PreparePressureSolver);
+    release_vulkan_descriptor_set_layouts(*VkApp->GetDevice(), 1u, &Layout_PressureSolver);
+    release_vulkan_descriptor_set_layouts(*VkApp->GetDevice(), 1u, &Layout_UpdateVelocities);
     release_vulkan_descriptor_set_layouts(*VkApp->GetDevice(), 1u, &Layout_AdvectVelocity);
     release_vulkan_descriptor_set_layouts(*VkApp->GetDevice(), 1u, &Layout_AdvectDye);
 

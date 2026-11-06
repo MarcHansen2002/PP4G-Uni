@@ -61,6 +61,8 @@ struct SmokeState
 	vulkan_buffer Buffer_Temp_Density;
 	vulkan_buffer Buffer_Temp_Temperature;
 
+	vulkan_buffer Buffer_PressureSolve;
+
 	void ClearSmoke()
 	{
 		std::fill_n(Density, CellCount, 0.f);
@@ -164,6 +166,16 @@ struct SmokeState
 			assert(false);
 			return -1;
 		}
+		if (!create_vulkan_buffer(physDev, dev,
+			sizeof(PressureSolver) * CellCount,
+			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+			VK_SHARING_MODE_EXCLUSIVE,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+			Buffer_PressureSolve))
+		{
+			assert(false);
+			return -1;
+		}
 	}
 
 	int MapBuffers(VkDevice dev)
@@ -230,6 +242,26 @@ struct SmokeState
 			return 0;
 		}
 
+		if (!map_and_unmap_memory(
+			dev,
+			Buffer_PressureSolve.memory, [this](void* mem)
+			{
+				memcpy(mem, PressureSolveData, sizeof(PressureSolver) * CellCount);
+			}))
+		{
+			return 0;
+		}
+		// TODO: I'm not 100% sure we need this once we get the pressure solver
+		// moved over to compute as that should be writing the pressure
+		if (!map_and_unmap_memory(
+			dev,
+			Buffer_Pressure.memory, [this](void* mem)
+			{
+				memcpy(mem, Pressure, sizeof(float) * CellCount);
+			}))
+		{
+			return 0;
+		}
 
 		return 1;
 	}

@@ -156,10 +156,8 @@ private:
 			CheckSmokeSimilarity("Update Velocities");
 			// Advect Dye
 			Smoke_CPU.AdvectDye(dTime);
-			Smoke.AdvectDye(dTime);
-			CheckSmokeSimilarity("Advect Dye");
-			// Advect Velocity
 			Smoke_CPU.AdvectVelocity(dTime);
+
 			Compute.ComputeDispatch(dTime);
 			CheckSmokeSimilarity("Advect Velocity");
 			// Compare
@@ -167,7 +165,7 @@ private:
 		else if (RunCompute)
 		{
 			Smoke.RunPressureSolver(FluidDensity, dTime);
-			Smoke.UpdateVelocities(FluidDensity, dTime);
+			//Smoke.UpdateVelocities(FluidDensity, dTime);
 			if (!Compute.ComputeDispatch(dTime))
 			{
 				assert(false);
@@ -182,15 +180,13 @@ private:
 			Smoke.AdvectVelocity(dTime);
 		}
 		
-
-		// TODO: (Smoke additions, do after moving current stuff to compute shader
-		// Bouyancy
-		// Velocity Dissipation
-		// Density Dissipation
-		// Velocity Diffusion
-		// Vorticity Confinement
-		// Temperature Dissipation
-		// Obstacle interaction (very big stretch, not likely to happen)
+		// TODO: Bouyancy
+		// TODO: Velocity Dissipation
+		// TODO: Density Dissipation
+		// TODO: Velocity Diffusion
+		// TODO: Vorticity Confinement
+		// TODO: Temperature Dissipation
+		// TODO: Obstacle interaction (very big stretch, not likely to happen)
 
 		//SmokeIndex = 1 - SmokeIndex;
 		// Re-copy memory to the GPU. This will not be needed once in the compute shader

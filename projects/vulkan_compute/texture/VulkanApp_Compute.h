@@ -46,6 +46,8 @@ public:
 	int CreateComputeSyncObjects();
 	int ComputeDispatch(float dTime);
 
+	void WaitForBarrier(VkAccessFlags flags);
+
 	void Terminate();
 
 	int UnmapData();
@@ -59,15 +61,34 @@ public:
 		const VkSampler* sampler = VK_NULL_HANDLE
 	);
 
-	VkDescriptorSetLayout Layout_AdvectVelocity = VK_NULL_HANDLE;
-	VkDescriptorSet Set_AdvectVelocity = VK_NULL_HANDLE;
-	Vulkan_Compute_Pipeline Pipeline_AdvectVelocity;
-	vulkan_descriptor_set DescriptorSet_AdvectVelocity;
+	uint32_t PipelineCount = 5;			// One per pipeline
+	uint32_t DescriptorCount = 18;		// Total bindings in each pipeline
+
+
+	VkDescriptorSetLayout Layout_PreparePressureSolver = VK_NULL_HANDLE;
+	VkDescriptorSet Set_PreparePressureSolver = VK_NULL_HANDLE;
+	Vulkan_Compute_Pipeline Pipeline_PreparePressureSolver;
+	vulkan_descriptor_set DescriptorSet_PreparePressureSolver;
+
+	VkDescriptorSetLayout Layout_PressureSolver = VK_NULL_HANDLE;
+	VkDescriptorSet Set_PressureSolver = VK_NULL_HANDLE;
+	Vulkan_Compute_Pipeline Pipeline_PressureSolver;
+	vulkan_descriptor_set DescriptorSet_PressureSolver;
+
+	VkDescriptorSetLayout Layout_UpdateVelocities = VK_NULL_HANDLE;
+	VkDescriptorSet Set_UpdateVelocities = VK_NULL_HANDLE;
+	Vulkan_Compute_Pipeline Pipeline_UpdateVelocities;
+	vulkan_descriptor_set DescriptorSet_UpdateVelocities;
 
 	VkDescriptorSetLayout Layout_AdvectDye = VK_NULL_HANDLE;
 	VkDescriptorSet Set_AdvectDye = VK_NULL_HANDLE;
 	Vulkan_Compute_Pipeline Pipeline_AdvectDye;
 	vulkan_descriptor_set DescriptorSet_AdvectDye;
+
+	VkDescriptorSetLayout Layout_AdvectVelocity = VK_NULL_HANDLE;
+	VkDescriptorSet Set_AdvectVelocity = VK_NULL_HANDLE;
+	Vulkan_Compute_Pipeline Pipeline_AdvectVelocity;
+	vulkan_descriptor_set DescriptorSet_AdvectVelocity;
 
 	VkQueue queue_compute = VK_NULL_HANDLE;
 	VkDescriptorPool descriptor_pool_compute = VK_NULL_HANDLE;
