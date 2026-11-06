@@ -242,6 +242,76 @@ struct SmokeState
 		return x <= 0 || x >= GridSizeX - 1 ||
 			y <= 0 || y >= GridSizeY - 1;
 	}
+	// Helper Maths
+	glm::vec2 GetVelocityAtGridPos(glm::vec2 pos)
+	{
+		float velX = SampleBilinear(
+			VelocityX,
+			GridSizeX + 1,
+			GridSizeY,
+			pos.x,
+			pos.y - 0.5f
+		);
+
+		float velY = SampleBilinear(
+			VelocityY,
+			GridSizeX,
+			GridSizeY + 1,
+			pos.x - 0.5f,
+			pos.y
+		);
+
+		return glm::vec2(velX, velY);
+	}
+	float SampleVelocityX(glm::vec2 pos)
+	{
+		return SampleBilinear(
+			VelocityX,
+			GridSizeX + 1,
+			GridSizeY,
+			pos.x,
+			pos.y - 0.5f
+		);
+	}
+	float SampleVelocityY(glm::vec2 pos)
+	{
+		return SampleBilinear(
+			VelocityY,
+			GridSizeX,
+			GridSizeY + 1,
+			pos.x - 0.5f,
+			pos.y
+		);
+	}
+	float SampleBilinear(const float* data, int width, int height, float x, float y)
+	{
+		x = std::clamp(x, 0.0f, (float)(width - 1));
+		y = std::clamp(y, 0.0f, (float)(height - 1));
+
+		int x0 = (int)std::floor(x);
+		int y0 = (int)std::floor(y);
+
+		int x1 = (std::min)(x0 + 1, width - 1);
+		int y1 = (std::min)(y0 + 1, height - 1);
+
+		float tx = x - x0;
+		float ty = y - y0;
+
+		float bottom = std::lerp(
+			data[x0 + y0 * width],
+			data[x1 + y0 * width],
+			tx
+		);
+
+		float top = std::lerp(
+			data[x0 + y1 * width],
+			data[x1 + y1 * width],
+			tx
+		);
+
+		return std::lerp(bottom, top, ty);
+	}
+
 
 	void PreparePressureSolver(float dTime)
 	{
@@ -349,55 +419,6 @@ struct SmokeState
 		}
 	}
 
-	float SampleBilinear(const float* data, int width, int height, float x, float y)
-	{
-		x = std::clamp(x, 0.0f, (float)(width - 1));
-		y = std::clamp(y, 0.0f, (float)(height - 1));
-
-		int x0 = (int)std::floor(x);
-		int y0 = (int)std::floor(y);
-
-		int x1 = (std::min)(x0 + 1, width - 1);
-		int y1 = (std::min)(y0 + 1, height - 1);
-
-		float tx = x - x0;
-		float ty = y - y0;
-
-		float bottom = std::lerp(
-			data[x0 + y0 * width],
-			data[x1 + y0 * width],
-			tx
-		);
-
-		float top = std::lerp(
-			data[x0 + y1 * width],
-			data[x1 + y1 * width],
-			tx
-		);
-
-		return std::lerp(bottom, top, ty);
-	}
-	glm::vec2 GetVelocityAtGridPos(glm::vec2 pos)
-	{
-		float velX = SampleBilinear(
-			VelocityX,
-			GridSizeX + 1,
-			GridSizeY,
-			pos.x,
-			pos.y - 0.5f
-		);
-
-		float velY = SampleBilinear(
-			VelocityY,
-			GridSizeX,
-			GridSizeY + 1,
-			pos.x - 0.5f,
-			pos.y
-		);
-
-		return glm::vec2(velX, velY);
-	}
-
 	void AdvectDye(float dTime)
 	{
 		for (int x = 0; x < GridSizeX; x++)
@@ -438,27 +459,7 @@ struct SmokeState
 			Density[i] = TempDensity[i];
 		}
 	}
-	float SampleVelocityX(glm::vec2 pos)
-	{
-		return SampleBilinear(
-			VelocityX,
-			GridSizeX + 1,
-			GridSizeY,
-			pos.x,
-			pos.y - 0.5f
-		);
-	}
 
-	float SampleVelocityY(glm::vec2 pos)
-	{
-		return SampleBilinear(
-			VelocityY,
-			GridSizeX,
-			GridSizeY + 1,
-			pos.x - 0.5f,
-			pos.y
-		);
-	}
 	void AdvectVelocity(float dTime)
 	{
 		// Horizontal

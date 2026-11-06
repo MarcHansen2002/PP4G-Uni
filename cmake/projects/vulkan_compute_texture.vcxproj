@@ -266,6 +266,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\VulkanApp_Compute.h" />
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\VulkanApp_Graphics.cpp" />
     <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\VulkanApp_Graphics.h" />
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\Vulkan_Compute_Pipeline.cpp" />
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\Vulkan_Compute_Pipeline.h" />
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\main.cpp" />
     <None Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\bin\data\shaders\glsl\vulkan_compute_texture\sprite.frag">
     </None>

@@ -18,6 +18,9 @@
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\VulkanApp_Graphics.cpp">
       <Filter>texture</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\Vulkan_Compute_Pipeline.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\main.cpp">
       <Filter>texture</Filter>
     </ClCompile>
@@ -38,6 +41,9 @@
       <Filter>texture</Filter>
     </ClInclude>
     <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\VulkanApp_Graphics.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\texture\Vulkan_Compute_Pipeline.h">
       <Filter>texture</Filter>
     </ClInclude>
   </ItemGroup>

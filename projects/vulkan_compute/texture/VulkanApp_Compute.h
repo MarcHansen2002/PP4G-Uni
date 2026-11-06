@@ -6,6 +6,7 @@
 #include "../vulkan_pipeline.h"
 #include "../vulkan_resources.h"
 #include "SmokeSimulation/SmokeData.h"
+#include "Vulkan_Compute_Pipeline.h"
 
 #include "imgui.h"
 
@@ -46,19 +47,25 @@ public:
 
 	void Terminate();
 
-	int MapData();
 	int UnmapData();
 
+	VkDescriptorSetLayoutBinding MakeBinding
+	(
+		uint32_t binding,
+		VkDescriptorType type,
+		uint32_t count,
+		VkShaderStageFlags flags,
+		const VkSampler* sampler = VK_NULL_HANDLE
+	);
+
+	VkDescriptorSetLayout Layout_AdvectVelocity = VK_NULL_HANDLE;
+	VkDescriptorSet Set_AdvectVelocity = VK_NULL_HANDLE;
+	Vulkan_Compute_Pipeline Pipeline_AdvectVelocity;
 
 	VkQueue queue_compute = VK_NULL_HANDLE;
-	std::array <VkDescriptorSetLayout, NUM_SETS_COMPUTE> descriptor_set_layouts_compute = { VK_NULL_HANDLE };
-	VkPipelineLayout pipeline_layout_compute = VK_NULL_HANDLE;
-	VkPipeline pipeline_compute = VK_NULL_HANDLE;
+	//std::array <VkDescriptorSetLayout, NUM_SETS_COMPUTE> descriptor_set_layouts_compute = { VK_NULL_HANDLE };
 	VkDescriptorPool descriptor_pool_compute = VK_NULL_HANDLE;
-	vulkan_descriptor_set desc_set_0_compute; //for compute, texture_compute_input + texture_compute_output
-
-	//vulkan_texture texture_compute_input;
-	//vulkan_texture texture_compute_output;
+	vulkan_descriptor_set DescriptorSet; //for compute, texture_compute_input + texture_compute_output
 
 	VkCommandPool command_pool_compute = VK_NULL_HANDLE;
 	VkCommandBuffer command_buffer_compute = VK_NULL_HANDLE;
