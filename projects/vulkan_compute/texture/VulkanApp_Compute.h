@@ -38,8 +38,9 @@ public:
 	int Init(VulkanApp* app);
 
 	int CreateComputePipeline();
+	void WriteDescriptorSet(VkDescriptorSetLayout& layout, const int count);
 	int CreateComputeDescriptorSets();
-	int CreateComputeResources();
+	int BindComputeResource(vulkan_descriptor_set dstSet, std::vector<vulkan_buffer> buffers, const int count);
 	int BindComputeResources();
 	int CreateComputeCommandBuffers();
 	int CreateComputeSyncObjects();
@@ -69,9 +70,7 @@ public:
 	vulkan_descriptor_set DescriptorSet_AdvectDye;
 
 	VkQueue queue_compute = VK_NULL_HANDLE;
-	//std::array <VkDescriptorSetLayout, NUM_SETS_COMPUTE> descriptor_set_layouts_compute = { VK_NULL_HANDLE };
 	VkDescriptorPool descriptor_pool_compute = VK_NULL_HANDLE;
-	//vulkan_descriptor_set DescriptorSet; //for compute, texture_compute_input + texture_compute_output
 
 	VkCommandPool command_pool_compute = VK_NULL_HANDLE;
 	VkCommandBuffer command_buffer_compute = VK_NULL_HANDLE;

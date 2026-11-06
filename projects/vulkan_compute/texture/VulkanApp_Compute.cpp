@@ -15,11 +15,6 @@ int VulkanApp_Compute::Init(VulkanApp* app)
         DBG_ASSERT(false);
         return -1;
     }
-    if (!CreateComputeResources())
-    {
-        DBG_ASSERT(false);
-        return -1;
-    }
     if (!BindComputeResources())
     {
         DBG_ASSERT(false);
@@ -66,54 +61,37 @@ VkDescriptorSetLayoutBinding VulkanApp_Compute::MakeBinding
     };
 }
 
+void VulkanApp_Compute::WriteDescriptorSet(VkDescriptorSetLayout& layout, const int count)
+{
+    std::vector< VkDescriptorSetLayoutBinding> Bindings(count);
+    for (int i = 0; i < count; i++)
+    {
+        Bindings[i] = MakeBinding(i, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT);
+    }
+    std::array <std::span <const VkDescriptorSetLayoutBinding>, 1> const SetBindings =
+    {
+        Bindings
+    };
+    if (!create_vulkan_descriptor_set_layouts
+    (
+        *VkApp->GetDevice(),
+        1u,
+        SetBindings.data(),
+        &layout
+    ))
+    {
+        DBG_ASSERT(false);
+        return;
+    }
+}
+
 int VulkanApp_Compute::CreateComputeDescriptorSets()
 {
-    // Advect Velocity
-    std::array<VkDescriptorSetLayoutBinding, 4> const AdvectVelocityBindings =
-    {
-        MakeBinding(0u, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT),    // Velocity X
-        MakeBinding(1u, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT),    // Velocity Y
-        MakeBinding(2u, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT),    // Temp Velocity X
-        MakeBinding(3u, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT),    // Temp Velocity Y
-    };
-    std::array <std::span <const VkDescriptorSetLayoutBinding>, 1> const AdvectVelocitySetBindings =
-    {
-      AdvectVelocityBindings
-    };
-    if (!create_vulkan_descriptor_set_layouts
-    (
-        *VkApp->GetDevice(),
-        1u,
-        AdvectVelocitySetBindings.data(),
-        &Layout_AdvectVelocity
-    ))
-    {
-        DBG_ASSERT(false);
-        return -1;
-    }
-    // Advect Dye
-    std::array<VkDescriptorSetLayoutBinding, 4> const AdvectDyeBindings =
-    {
-        MakeBinding(0u, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT),    // Velocity X
-        MakeBinding(1u, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT),    // Velocity Y
-        MakeBinding(2u, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT),    // Density
-        MakeBinding(3u, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1u, VK_SHADER_STAGE_COMPUTE_BIT),    // Temp Density
-    };
-    std::array <std::span <const VkDescriptorSetLayoutBinding>, 1> const AdvectDyeSetBindings =
-    {
-      AdvectDyeBindings
-    };
-    if (!create_vulkan_descriptor_set_layouts
-    (
-        *VkApp->GetDevice(),
-        1u,
-        AdvectDyeSetBindings.data(),
-        &Layout_AdvectDye
-    ))
-    {
-        DBG_ASSERT(false);
-        return -1;
-    }
+    // TODO: Pressure Solver
+    // TODO: Update Velocities
+    WriteDescriptorSet(Layout_AdvectDye, 4);
+    WriteDescriptorSet(Layout_AdvectVelocity, 4);
+
     // Apply velocity...
     // Velocity dissipation...
     // etc etc...
@@ -154,7 +132,8 @@ int VulkanApp_Compute::CreateComputeDescriptorSets()
                 .set_index = 0u,
                 .out_set = &DescriptorSet_AdvectDye
             }
-            // The other pipelines
+            // TODO: Pressure Solve
+            // TODO: Update Velocities
           } };
 
         if (!create_vulkan_descriptor_sets(
@@ -167,160 +146,55 @@ int VulkanApp_Compute::CreateComputeDescriptorSets()
     }
 }
 
-int VulkanApp_Compute::CreateComputeResources()
+int VulkanApp_Compute::BindComputeResource(vulkan_descriptor_set dstSet, std::vector<vulkan_buffer> buffers, const int count)
 {
+    std::vector<VkDescriptorBufferInfo> BufferInfos(count);
+    std::vector<VkWriteDescriptorSet> WriteDescriptors(count);
+    for (int i = 0; i < count; i++)
+    {
+        BufferInfos[i] = { buffers[i].buffer, 0, VK_WHOLE_SIZE };
+
+        WriteDescriptors[i].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        WriteDescriptors[i].dstSet = dstSet.desc_set;
+        WriteDescriptors[i].dstBinding = i;
+        WriteDescriptors[i].descriptorCount = 1;
+        WriteDescriptors[i].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        WriteDescriptors[i].pBufferInfo = &BufferInfos[i];
+    }
+
+    vkUpdateDescriptorSets
+    (
+        *VkApp->GetDevice(),                       // device
+        count,                                        // descriptorWriteCount
+        WriteDescriptors.data(),            // pDescriptorWrites
+        0u,                                        // descriptorCopyCount
+        VK_NULL_HANDLE
+    );
+
     return 1;
 }
 
 int VulkanApp_Compute::BindComputeResources()
 {
-    // Advect Velocity Resources
     SmokeState* smoke = VkApp->GetSmoke();
-    VkDescriptorBufferInfo const AdvectVelocityBufferInfos[] =
-    {
-        {smoke->Buffer_VelocityX.buffer, 0u, VK_WHOLE_SIZE},
-        {smoke->Buffer_VelocityY.buffer, 0u, VK_WHOLE_SIZE},
-        {smoke->Buffer_Temp_VelocityX.buffer, 0u, VK_WHOLE_SIZE},
-        {smoke->Buffer_Temp_VelocityY.buffer, 0u, VK_WHOLE_SIZE},
-    };
-    VkWriteDescriptorSet AdvectVelocityWriteDescriptors[4] =
-    {
-    };
-    for (int i = 0; i < 4; i++)
-    {
-        AdvectVelocityWriteDescriptors[i].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        AdvectVelocityWriteDescriptors[i].dstSet = DescriptorSet_AdvectVelocity.desc_set;
-        AdvectVelocityWriteDescriptors[i].dstBinding = i;
-        AdvectVelocityWriteDescriptors[i].descriptorCount = 1;
-        AdvectVelocityWriteDescriptors[i].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-        AdvectVelocityWriteDescriptors[i].pBufferInfo = &AdvectVelocityBufferInfos[i];
-    }
-    vkUpdateDescriptorSets
-    (
-        *VkApp->GetDevice(),                       // device
-        4u,                                        // descriptorWriteCount
-        AdvectVelocityWriteDescriptors,            // pDescriptorWrites
-        0u,                                        // descriptorCopyCount
-        VK_NULL_HANDLE
-    );
+    // TODO: Pressure Solver
+
+    // TODO: Update Velocities
+
     // Advect Dye
-    VkDescriptorBufferInfo const AdvectDyeBufferInfos[] =
-    {
-        {smoke->Buffer_VelocityX.buffer, 0u, VK_WHOLE_SIZE},
-        {smoke->Buffer_VelocityY.buffer, 0u, VK_WHOLE_SIZE},
-        {smoke->Buffer_Density.buffer, 0u, VK_WHOLE_SIZE},
-        {smoke->Buffer_Temp_Density.buffer, 0u, VK_WHOLE_SIZE},
-    };
-    VkWriteDescriptorSet AdvectDyeWriteDescriptors[4] =
-    {
-    };
-    for (int i = 0; i < 4; i++)
-    {
-        AdvectDyeWriteDescriptors[i].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        AdvectDyeWriteDescriptors[i].dstSet = DescriptorSet_AdvectDye.desc_set;
-        AdvectDyeWriteDescriptors[i].dstBinding = i;
-        AdvectDyeWriteDescriptors[i].descriptorCount = 1;
-        AdvectDyeWriteDescriptors[i].descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-        AdvectDyeWriteDescriptors[i].pBufferInfo = &AdvectDyeBufferInfos[i];
-    }
-    vkUpdateDescriptorSets
+    BindComputeResource
     (
-        *VkApp->GetDevice(),                       // device
-        4u,                                        // descriptorWriteCount
-        AdvectDyeWriteDescriptors,            // pDescriptorWrites
-        0u,                                        // descriptorCopyCount
-        VK_NULL_HANDLE
+        DescriptorSet_AdvectDye,
+        { smoke->Buffer_VelocityX, smoke->Buffer_VelocityY, smoke->Buffer_Density, smoke->Buffer_Temp_Density },
+        4
     );
-
-
-
-    //{
-    //    VkDescriptorBufferInfo const buffer_infos[] =
-    //    {
-    //        {
-    //            .buffer = VkApp->GetSmoke()->Buffer_VelocityX.buffer,
-    //            .offset = 0u,
-    //            .range = VK_WHOLE_SIZE
-    //        },
-    //        {
-    //            .buffer = VkApp->GetSmoke()->Buffer_VelocityY.buffer,
-    //            .offset = 0u,
-    //            .range = VK_WHOLE_SIZE
-    //        },
-    //        {
-    //            .buffer = VkApp->GetSmoke()->Buffer_Temp_VelocityX.buffer,
-    //            .offset = 0u,
-    //            .range = VK_WHOLE_SIZE
-    //        },
-    //        {
-    //            .buffer = VkApp->GetSmoke()->Buffer_Temp_VelocityY.buffer,
-    //            .offset = 0u,
-    //            .range = VK_WHOLE_SIZE
-    //        }
-    //    };
-    //
-    //    VkWriteDescriptorSet const write_descriptors[4] =
-    //    {
-    //        // desc_set_0_compute
-    //        {
-    //          .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-    //          //.pNext = VK_NULL_HANDLE,
-    //          .dstSet = DescriptorSet.desc_set,
-    //          .dstBinding = 0u,
-    //          .dstArrayElement = 0u,
-    //          .descriptorCount = 1u,
-    //          .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-    //          .pImageInfo = VK_NULL_HANDLE, // Velocity X
-    //          .pBufferInfo = &buffer_infos[0],
-    //          .pTexelBufferView = VK_NULL_HANDLE
-    //        },
-    //        {
-    //          .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-    //          //.pNext = VK_NULL_HANDLE,
-    //          .dstSet = DescriptorSet.desc_set,
-    //          .dstBinding = 1u,
-    //          .dstArrayElement = 0u,
-    //          .descriptorCount = 1u,
-    //          .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-    //          .pImageInfo = VK_NULL_HANDLE, // Velocity Y
-    //          .pBufferInfo = &buffer_infos[1],
-    //          .pTexelBufferView = VK_NULL_HANDLE
-    //        },
-    //        {
-    //          .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-    //          //.pNext = VK_NULL_HANDLE,
-    //          .dstSet = DescriptorSet.desc_set,
-    //          .dstBinding = 2u,
-    //          .dstArrayElement = 0u,
-    //          .descriptorCount = 1u,
-    //          .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-    //          .pImageInfo = VK_NULL_HANDLE, // Velocity X (TEMP)
-    //          .pBufferInfo = &buffer_infos[2],
-    //          .pTexelBufferView = VK_NULL_HANDLE
-    //        },
-    //        {
-    //          .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-    //          //.pNext = VK_NULL_HANDLE,
-    //          .dstSet = DescriptorSet.desc_set,
-    //          .dstBinding = 3u,
-    //          .dstArrayElement = 0u,
-    //          .descriptorCount = 1u,
-    //          .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-    //          .pImageInfo = VK_NULL_HANDLE, // Velocity Y (TEMP)
-    //          .pBufferInfo = &buffer_infos[3],
-    //          .pTexelBufferView = VK_NULL_HANDLE
-    //        },
-    //    };
-    //
-    //    vkUpdateDescriptorSets
-    //    (
-    //        *VkApp->GetDevice(), // device
-    //        4u,  // descriptorWriteCount
-    //        write_descriptors,            // pDescriptorWrites
-    //        0u,                           // descriptorCopyCount
-    //        VK_NULL_HANDLE
-    //    );              // pDescriptorCopies
-    //}
+    // Advect Velocity
+    BindComputeResource
+    (
+        DescriptorSet_AdvectVelocity,
+        {smoke->Buffer_VelocityX, smoke->Buffer_VelocityY, smoke->Buffer_Temp_VelocityX, smoke->Buffer_Temp_VelocityY},
+        4
+    );
     return 1;
 }
 
@@ -369,9 +243,15 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
     u32 const thread_group_dim_x = (GridSizeX + 1 + thread_group_size - 1) / thread_group_size;
     u32 const thread_group_dim_y = (GridSizeY + 1 + thread_group_size - 1) / thread_group_size;
 
+    // TODO: Pressure Solver
+
+    // TODO: Update Velocities
+
+    // TODO: Barrier will be needed here since updatevelocities writes to velocity whilst both advects read from it
+
     Pipeline_AdvectDye.Run(command_buffer_compute, dTime, DescriptorSet_AdvectDye.set_index, &DescriptorSet_AdvectDye.desc_set);
     vkCmdDispatch(command_buffer_compute, thread_group_dim_x, thread_group_dim_y, 1);
-
+    //  ^^^ No barrier needed since they do not require anything the other writes vvv
     Pipeline_AdvectVelocity.Run(command_buffer_compute, dTime, DescriptorSet_AdvectVelocity.set_index, &DescriptorSet_AdvectVelocity.desc_set);
     vkCmdDispatch(command_buffer_compute, thread_group_dim_x, thread_group_dim_y, 1);
 
@@ -454,7 +334,7 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
 int VulkanApp_Compute::UnmapData()
 {
     SmokeState* smoke = VkApp->GetSmoke();
-
+    // TODO: Map more buffers as needed (pressure solve, update velocities etc)
     if (!map_and_unmap_memory(
         *VkApp->GetDevice(),
         smoke->Buffer_Temp_VelocityX.memory,
@@ -503,8 +383,8 @@ void VulkanApp_Compute::Terminate()
     release_vulkan_command_buffers(1u, command_pool_compute, &command_buffer_compute);
     release_vulkan_command_pool(command_pool_compute);
 
-   // release_vulkan_descriptor_sets(*VkApp->GetDevice(),
-   //     1u, &DescriptorSet);
+    // TODO: Pressure Solver
+    // TODO: Update Velocities
     release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_AdvectVelocity);
     release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_AdvectDye);
 
@@ -515,9 +395,6 @@ void VulkanApp_Compute::Terminate()
 
     release_vulkan_descriptor_set_layouts(*VkApp->GetDevice(), 1u, &Layout_AdvectVelocity);
     release_vulkan_descriptor_set_layouts(*VkApp->GetDevice(), 1u, &Layout_AdvectDye);
-
-   //release_vulkan_descriptor_set_layouts(*VkApp->GetDevice(),
-   //    NUM_SETS_COMPUTE, descriptor_set_layouts_compute.data());
 
     queue_compute = VK_NULL_HANDLE;
 }
