@@ -109,7 +109,7 @@ void VulkanApp::RenderImGui(float dTime)
 {
     ImGui::Begin("Test window");
 
-    ImGui::Text("FPS: %i", (int)(dTime / 60.f));
+    ImGui::Text("FPS: %.2f", (1000.f / dTime));
     ImGui::NewLine();
 
     ImGui::Text("Smoke Parameters");
