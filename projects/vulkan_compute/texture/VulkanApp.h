@@ -167,9 +167,6 @@ private:
 		}
 		else if (RunCompute)
 		{
-			Smoke.PreparePressureSolver(dTime);
-			//Smoke.RunPressureSolver(FluidDensity, dTime);
-			//Smoke.UpdateVelocities(FluidDensity, dTime);
 			if (!Compute.ComputeDispatch(dTime))
 			{
 				assert(false);

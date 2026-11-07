@@ -326,10 +326,10 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
     u32 const thread_group_dim_y = (GridSizeY + 1 + thread_group_size - 1) / thread_group_size;
 
     // TODO: Pressure Solver Prepare
-    //Pipeline_PreparePressureSolver.Run(command_buffer_compute, dTime, DescriptorSet_PreparePressureSolver.set_index, &DescriptorSet_PreparePressureSolver.desc_set);
-    //Pipeline_PressureSolver.Run(command_buffer_compute, dTime, DescriptorSet_PressureSolver.set_index, &DescriptorSet_PressureSolver.desc_set);
-    
-    // TODO: Check if final output is in B
+    Pipeline_PreparePressureSolver.Run(command_buffer_compute, dTime, DescriptorSet_PreparePressureSolver.set_index, &DescriptorSet_PreparePressureSolver.desc_set);
+    vkCmdDispatch(command_buffer_compute, thread_group_dim_x, thread_group_dim_y, 1);
+    WaitForBarrier(VK_ACCESS_SHADER_READ_BIT);
+
     for (int i = 0; i < VkApp->GetSolverIterations(); i++)
     {
         Pipeline_PressureSolver.Run

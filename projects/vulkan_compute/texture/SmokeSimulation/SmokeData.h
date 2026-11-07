@@ -28,8 +28,8 @@ struct PressureSolver
 	float flowRight;
 	float flowTop;
 	float flowBottom;
-	int flowEdgeCount;
-	bool isSolid;
+	int32_t flowEdgeCount;
+	uint32_t isSolid;
 	float velocityTerm;
 };
 

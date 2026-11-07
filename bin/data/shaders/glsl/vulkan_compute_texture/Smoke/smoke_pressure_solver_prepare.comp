@@ -26,9 +26,41 @@ layout(push_constant) uniform Values
 	float CellSize;
 };
 
-//#include "SmokeHelpers.glsl"
+#include "SmokeHelpers.glsl"
 
 void main ()
 {
+	ivec2 id = ivec2(gl_GlobalInvocationID.xy);
+    int x = id.x;
+    int y = id.y;
 
+	if (x >= GridSizeX || y >= GridSizeY)
+	{
+		return;
+	}
+
+	int i = GetCellIndex(x, y);
+
+	int flowTop = IsSolid(x, y + 1) ? 0 : 1;
+	int flowLeft = IsSolid(x - 1, y) ? 0 : 1;
+	int flowRight = IsSolid(x + 1, y) ? 0 : 1;
+	int flowBot = IsSolid(x, y - 1) ? 0 : 1;
+	
+	int edgeCount = flowTop + flowLeft + flowRight + flowBot;
+	bool isSolid = IsSolid(x, y);
+	
+	float velTop = VelocityY[GetVelocityYIndex(x, y + 1)];
+	float velLeft = VelocityX[GetVelocityXIndex(x, y)];
+	float velRight = VelocityX[GetVelocityXIndex(x + 1, y)];
+	float velBot = VelocityY[GetVelocityYIndex(x, y)];
+	
+	float velTerm = (velRight - velLeft + velTop - velBot) / dTime;
+	
+	PressureSolve[GetCellIndex(x, y)].flowLeft = float(flowLeft);
+	PressureSolve[GetCellIndex(x, y)].flowRight = float(flowRight);
+	PressureSolve[GetCellIndex(x, y)].flowTop = float(flowTop);
+	PressureSolve[GetCellIndex(x, y)].flowBottom = float(flowBot);
+	PressureSolve[GetCellIndex(x, y)].flowEdgeCount = edgeCount;
+	PressureSolve[GetCellIndex(x, y)].isSolid = isSolid ? 1 : 0;
+	PressureSolve[GetCellIndex(x, y)].velocityTerm = velTerm;
 }
