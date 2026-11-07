@@ -212,27 +212,7 @@ struct SmokeState
 		{
 			return 0;
 		}
-		// TODO: Might not need to map these
-		if (!map_and_unmap_memory(
-			dev,
-			Buffer_Temp_VelocityX.memory, [this](void* mem)
-			{
-				memcpy(mem, TempVelocityX, sizeof(float) * VeloSizeX);
-			}
-		))
-		{
-			return 0;
-		}
-		if (!map_and_unmap_memory(
-			dev,
-			Buffer_Temp_VelocityY.memory, [this](void* mem)
-			{
-				memcpy(mem, TempVelocityY, sizeof(float) * VeloSizeX);
-			}
-		))
-		{
-			return 0;
-		}
+
 		if (!map_and_unmap_memory(
 			dev,
 			Buffer_Density.memory, [this](void* mem)
@@ -240,27 +220,6 @@ struct SmokeState
 				memcpy(mem, Density, sizeof(float) * CellCount);
 			}
 		))
-		{
-			return 0;
-		}
-
-		if (!map_and_unmap_memory(
-			dev,
-			Buffer_Temp_Density.memory, [this](void* mem)
-			{
-				memcpy(mem, TempDensity, sizeof(float) * CellCount);
-			}
-		))
-		{
-			return 0;
-		}
-
-		if (!map_and_unmap_memory(
-			dev,
-			Buffer_PressureSolve.memory, [this](void* mem)
-			{
-				memcpy(mem, PressureSolveData, sizeof(PressureSolver) * CellCount);
-			}))
 		{
 			return 0;
 		}

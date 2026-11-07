@@ -149,21 +149,15 @@ private:
 		if (CompareSmokes)
 		{
 			CheckSmokeSimilarity("Before update");
-			// Pressure Solver
+
 			Smoke_CPU.RunPressureSolver(FluidDensity, dTime);
-			Smoke.RunPressureSolver(FluidDensity, dTime);
-			CheckSmokeSimilarity("Pressure Solve");
-			// Updating Velocities
 			Smoke_CPU.UpdateVelocities(FluidDensity, dTime);
-			Smoke.UpdateVelocities(FluidDensity, dTime);
-			CheckSmokeSimilarity("Update Velocities");
-			// Advect Dye
 			Smoke_CPU.AdvectDye(dTime);
 			Smoke_CPU.AdvectVelocity(dTime);
 
 			Compute.ComputeDispatch(dTime);
-			CheckSmokeSimilarity("Advect Velocity");
-			// Compare
+
+			CheckSmokeSimilarity("After Update");
 		}
 		else if (RunCompute)
 		{
