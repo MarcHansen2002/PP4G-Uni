@@ -12,30 +12,8 @@ int VulkanApp::Init()
     Smoke.CreateBuffers(physical_device, device);
 
     Compute.Init(this);
-
-    // Setup smoke buffer
-    if (!create_vulkan_buffer(
-        physical_device,
-        device,
-        sizeof(float) * CellCount,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-        VK_SHARING_MODE_EXCLUSIVE,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-        buffer_density));
-
-    if (!map_and_unmap_memory(
-        device,
-        buffer_density.memory,
-        [this](void* mem)
-        {
-            memcpy(mem, Smoke.Density, sizeof(float) * CellCount);
-        }
-    ))
-    {
-        return -1;
-    }
-
     Graphics.Init(this);
+
     imgui_setup_context(Graphics.GetCommandBuffer());
 
     Compute.BindComputeResources();

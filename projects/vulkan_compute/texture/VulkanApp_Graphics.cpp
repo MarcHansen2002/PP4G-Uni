@@ -679,7 +679,7 @@ int VulkanApp_Graphics::Render(float dTime)
         vkCmdCopyBufferToImage
         (
             CommandBuffer,
-            VkApp->GetDensityBuffer()->buffer,
+            VkApp->GetSmoke()->Buffer_Density.buffer,
             Render_Texture.image,
             VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
             1,

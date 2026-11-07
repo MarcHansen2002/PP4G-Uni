@@ -71,7 +71,6 @@ public:
 	VkRenderPass* GetRenderPass() { return &render_pass; }
 	VkExtent2D* GetExtent() { return &extent; }
 
-	vulkan_buffer* GetDensityBuffer() { return &buffer_density; }
 	SmokeState* GetSmoke() { return &Smoke; }
 
 	int Init();
@@ -90,9 +89,6 @@ private:
 	VkExtent2D extent = {};
 	VkRenderPass render_pass = VK_NULL_HANDLE;
 
-	vulkan_buffer buffer_density;				// For storing density to put into the previous image
-
-	// ImGui
 	VkDescriptorPool imgui_descriptor_pool;
 
 	// Smoke Settings
@@ -139,7 +135,6 @@ private:
 	}
 	
 	// Smoke Simulation
-	// TODO: Move this into the compute shader
 	void UpdateSmoke(float dTime)
 	{
 		if (dTime <= 0)
@@ -173,7 +168,7 @@ private:
 			Smoke.AdvectDye(dTime);
 			Smoke.AdvectVelocity(dTime);
 		}
-		
+
 		// TODO: Bouyancy
 		// TODO: Velocity Dissipation
 		// TODO: Density Dissipation
@@ -181,22 +176,6 @@ private:
 		// TODO: Vorticity Confinement
 		// TODO: Temperature Dissipation
 		// TODO: Obstacle interaction (very big stretch, not likely to happen)
-
-		//SmokeIndex = 1 - SmokeIndex;
-		// Re-copy memory to the GPU. This will not be needed once in the compute shader
-		// As they will be modified on the GPU not on the CPU
-		if (!map_and_unmap_memory(
-			device,
-			buffer_density.memory,
-			[this](void* mem)
-			{
-				memcpy(mem, Smoke.Density, sizeof(float) * CellCount);
-			}
-		))
-		{
-			assert(false, "Unable to copy new density memory");
-			return;
-		}
 	}
 
 	SmokeEmitter Emitter;
