@@ -744,8 +744,6 @@ int VulkanApp_Graphics::Render(float dTime)
             VK_NULL_HANDLE
         );
 
-        // TODO: call vkCmdDrawIndexed
-        // we are drawing the same mesh again (just with different DSIs now :)
         vkCmdDrawIndexed
         (
             CommandBuffer,

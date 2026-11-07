@@ -39,7 +39,7 @@ int VulkanApp_Compute::CreateComputePipeline()
     
     Pipeline_AdvectDye.CreatePipeline(*VkApp->GetDevice(), Layout_AdvectDye);
     Pipeline_AdvectDye.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_advect_dye.comp.spv");
-    //TODO: Other pipelines
+
     Pipeline_UpdateVelocities.CreatePipeline(*VkApp->GetDevice(), Layout_UpdateVelocities);
     Pipeline_UpdateVelocities.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_update_velocities.comp.spv");
 
@@ -325,7 +325,6 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
     u32 const thread_group_dim_x = (GridSizeX + 1 + thread_group_size - 1) / thread_group_size;
     u32 const thread_group_dim_y = (GridSizeY + 1 + thread_group_size - 1) / thread_group_size;
 
-    // TODO: Pressure Solver Prepare
     Pipeline_PreparePressureSolver.Run(command_buffer_compute, dTime, DescriptorSet_PreparePressureSolver.set_index, &DescriptorSet_PreparePressureSolver.desc_set);
     vkCmdDispatch(command_buffer_compute, thread_group_dim_x, thread_group_dim_y, 1);
     WaitForBarrier(VK_ACCESS_SHADER_READ_BIT);
@@ -440,7 +439,6 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
 int VulkanApp_Compute::UnmapData()
 {
     SmokeState* smoke = VkApp->GetSmoke();
-    // TODO: Map more buffers as needed (pressure solve, update velocities etc)
     if (!map_and_unmap_memory(
         *VkApp->GetDevice(),
         smoke->Buffer_Temp_VelocityX.memory,

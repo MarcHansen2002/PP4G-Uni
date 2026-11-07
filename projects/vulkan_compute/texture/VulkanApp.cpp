@@ -136,7 +136,6 @@ void VulkanApp::RenderImGui(float dTime)
     {
         Smoke.ClearSmoke();
     }
-    // TODO: Emitter params
     ImGui::End();
 }
 
