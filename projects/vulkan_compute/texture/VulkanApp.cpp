@@ -37,6 +37,8 @@ int VulkanApp::Init()
 
     Graphics.Init(this);
     imgui_setup_context(Graphics.GetCommandBuffer());
+
+    Compute.BindComputeResources();
 }
 
 // Compute
@@ -95,8 +97,7 @@ int VulkanApp::Render(float dTime)
         Emitter.Emit(Smoke_CPU, dTime);
     }
 
-    // TODO: Do we need to run this each frame or just the once?
-    Compute.BindComputeResources();
+    
 
     UpdateSmoke(dTime);
 
