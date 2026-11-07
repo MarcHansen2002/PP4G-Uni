@@ -50,7 +50,7 @@ void Vulkan_Compute_Pipeline::CreatePipeline(VkDevice dev, VkDescriptorSetLayout
     }
 }
 
-void Vulkan_Compute_Pipeline::Run(VkCommandBuffer buff, float dTime, int firstSet, const VkDescriptorSet* set)
+void Vulkan_Compute_Pipeline::Run(VkCommandBuffer buff, float dTime, u32 firstSet, const VkDescriptorSet* set)
 {
     vkCmdBindPipeline
     (

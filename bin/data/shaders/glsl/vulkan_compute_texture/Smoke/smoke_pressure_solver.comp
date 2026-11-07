@@ -5,21 +5,17 @@
 
 layout (local_size_x = 16, local_size_y = 16) in;
 
-layout (std430, set = 0, binding = 0) readonly buffer velocity_x
-{
-	float VelocityX[];
-};
-layout (std430, set = 0, binding = 1) readonly buffer velocity_y
-{
-	float VelocityY[];
-};
-layout (std430, set = 0, binding = 2) writeonly buffer pressureSolve
+layout (std430, set = 0, binding = 0) readonly buffer pressureSolve
 {
 	PressureSolver PressureSolve[];
 };
-layout (std430, set = 0, binding = 3) writeonly buffer pressure
+layout (std430, set = 0, binding = 1) readonly buffer pressure
 {
 	float Pressure[];
+};
+layout (std430, set = 0, binding = 2) writeonly buffer pressureB
+{
+	float PressureB[];
 };
 
 layout(push_constant) uniform Values
@@ -30,9 +26,38 @@ layout(push_constant) uniform Values
 	float CellSize;
 };
 
-#include "SmokeHelpers.glsl"
+#include "SmokeHelpersMin.glsl"
 
 void main ()
 {
+	ivec2 id = ivec2(gl_GlobalInvocationID.xy);
+    int x = id.x;
+    int y = id.y;
+	int i = GetCellIndex(x, y);
 
+	float newPressure;
+
+	PressureSolver info = PressureSolve[GetCellIndex(x, y)];
+	
+	if (info.isSolid == 1 || info.flowEdgeCount == 0)
+	{
+		newPressure = 0;
+	}
+	else
+	{
+		float pressureTop = Pressure[GetCellIndex(x, min(y + 1, GridSizeY - 1))] * info.flowTop;
+		float pressureLeft = Pressure[GetCellIndex(max(x - 1, 0), y)] * info.flowLeft;
+		float pressureRight = Pressure[GetCellIndex(min(x + 1, GridSizeX - 1), y)] * info.flowRight;
+		float pressureBottom = Pressure[GetCellIndex(x, max(y - 1, 0))] * info.flowBottom;
+	
+		float pressureSum = pressureRight + pressureLeft + pressureTop + pressureBottom;
+		float CellSize = 1.f;
+		float FluidDensity = 1.f; // Push const
+
+		newPressure = (pressureSum - FluidDensity * CellSize * info.velocityTerm) / float(info.flowEdgeCount);
+	}
+	
+	float oldPressure = Pressure[GetCellIndex(x, y)];
+	float SOR = 1.f; // Push constant?
+	PressureB[GetCellIndex(x, y)] = oldPressure + (newPressure - oldPressure) * SOR;
 }

@@ -39,6 +39,7 @@ struct SmokeState
 	float Density[CellCount]{};
 	float Temperature[CellCount]{};
 	float Pressure[CellCount]{};
+	float PressureB[CellCount]{};
 	// Edge Centered
 	float VelocityX[CellCount + GridSizeX]{};
 	float VelocityY[CellCount + GridSizeY]{};
@@ -54,6 +55,7 @@ struct SmokeState
 	vulkan_buffer Buffer_Density;
 	vulkan_buffer Buffer_Temperature;
 	vulkan_buffer Buffer_Pressure;
+	vulkan_buffer Buffer_PressureB;
 	vulkan_buffer Buffer_VelocityX;
 	vulkan_buffer Buffer_VelocityY;
 	vulkan_buffer Buffer_Temp_VelocityX;
@@ -102,6 +104,16 @@ struct SmokeState
 			VK_SHARING_MODE_EXCLUSIVE,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
 			Buffer_Pressure))
+		{
+			assert(false);
+			return -1;
+		}
+		if (!create_vulkan_buffer(physDev, dev,
+			sizeof(float) * CellCount,
+			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
+			VK_SHARING_MODE_EXCLUSIVE,
+			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+			Buffer_PressureB))
 		{
 			assert(false);
 			return -1;
@@ -200,6 +212,7 @@ struct SmokeState
 		{
 			return 0;
 		}
+		// TODO: Might not need to map these
 		if (!map_and_unmap_memory(
 			dev,
 			Buffer_Temp_VelocityX.memory, [this](void* mem)
@@ -251,8 +264,7 @@ struct SmokeState
 		{
 			return 0;
 		}
-		// TODO: I'm not 100% sure we need this once we get the pressure solver
-		// moved over to compute as that should be writing the pressure
+
 		if (!map_and_unmap_memory(
 			dev,
 			Buffer_Pressure.memory, [this](void* mem)
@@ -390,22 +402,26 @@ struct SmokeState
 			}
 		}
 	}
-	void PressureSolve(float FluidDensity)
+	void PressureSolve(float FluidDensity, int iter)
 	{
 		for (int x = 0; x < GridSizeX; x++)
 		{
 			for (int y = 0; y < GridSizeY; y++)
 			{
 				float newPressure;
+
+				float* a = (iter % 2 == 0) ? Pressure : PressureB;
+				float* b = (iter % 2 == 0) ? PressureB : Pressure;
+
 				PressureSolver info = PressureSolveData[GetCellIndex(x, y)];
 
 				if (info.isSolid || info.flowEdgeCount == 0) newPressure = 0;
 				else
 				{
-					float pressureTop = Pressure[GetCellIndex(x, (std::min)(y + 1, GridSizeY - 1))] * info.flowTop;
-					float pressureLeft = Pressure[GetCellIndex((std::max)(x - 1, 0), y)] * info.flowLeft;
-					float pressureRight = Pressure[GetCellIndex((std::min)(x + 1, GridSizeX - 1), y)] * info.flowRight;
-					float pressureBottom = Pressure[GetCellIndex(x, (std::max)(y - 1, 0))] * info.flowBottom;
+					float pressureTop = a[GetCellIndex(x, (std::min)(y + 1, GridSizeY - 1))] * info.flowTop;
+					float pressureLeft = a[GetCellIndex((std::max)(x - 1, 0), y)] * info.flowLeft;
+					float pressureRight = a[GetCellIndex((std::min)(x + 1, GridSizeX - 1), y)] * info.flowRight;
+					float pressureBottom = a[GetCellIndex(x, (std::max)(y - 1, 0))] * info.flowBottom;
 
 					float pressureSum = pressureRight + pressureLeft + pressureTop + pressureBottom;
 					float CellSize = 1.f;
@@ -413,9 +429,9 @@ struct SmokeState
 					newPressure = (pressureSum - FluidDensity * CellSize * info.velocityTerm) / (float)info.flowEdgeCount;
 				}
 
-				float oldPressure = Pressure[GetCellIndex(x, y)];
+				float oldPressure = a[GetCellIndex(x, y)];
 				float SOR = 1.f;
-				Pressure[GetCellIndex(x, y)] = oldPressure + (newPressure - oldPressure) * SOR;
+				b[GetCellIndex(x, y)] = oldPressure + (newPressure - oldPressure) * SOR;
 			}
 		}
 	}
@@ -425,7 +441,7 @@ struct SmokeState
 		PreparePressureSolver(dTime);
 		for (int i = 0; i < numIts; i++)
 		{
-			PressureSolve(FluidDensity);
+			PressureSolve(FluidDensity, i);
 		}
 	}
 

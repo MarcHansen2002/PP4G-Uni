@@ -74,6 +74,7 @@ public:
 	VkDescriptorSet Set_PressureSolver = VK_NULL_HANDLE;
 	Vulkan_Compute_Pipeline Pipeline_PressureSolver;
 	vulkan_descriptor_set DescriptorSet_PressureSolver;
+	vulkan_descriptor_set DescriptorSet_PressureSolverB;
 
 	VkDescriptorSetLayout Layout_UpdateVelocities = VK_NULL_HANDLE;
 	VkDescriptorSet Set_UpdateVelocities = VK_NULL_HANDLE;

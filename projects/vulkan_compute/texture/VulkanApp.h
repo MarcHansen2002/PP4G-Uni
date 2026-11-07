@@ -81,6 +81,8 @@ public:
 	int Render(float dTime);
 	void RenderImGui(float dTime);
 
+	int GetSolverIterations() { return PressureSolverIterations; }
+
 	void Terminate();
 private:
 	// TODO: Separate compute and graphics pipelines into their own classes for clarity
@@ -97,6 +99,7 @@ private:
 	// Smoke Settings
 	float FluidDensity = 1.f;
 	bool RunCompute = true;
+	int PressureSolverIterations = 80;
 
 	bool CompareSmokes = false;
 
@@ -164,7 +167,8 @@ private:
 		}
 		else if (RunCompute)
 		{
-			Smoke.RunPressureSolver(FluidDensity, dTime);
+			Smoke.PreparePressureSolver(dTime);
+			//Smoke.RunPressureSolver(FluidDensity, dTime);
 			//Smoke.UpdateVelocities(FluidDensity, dTime);
 			if (!Compute.ComputeDispatch(dTime))
 			{

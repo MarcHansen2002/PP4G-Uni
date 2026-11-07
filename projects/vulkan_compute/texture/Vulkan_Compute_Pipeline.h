@@ -19,7 +19,7 @@ public:
 
 	void CreatePipeline(VkDevice dev, VkDescriptorSetLayout SetLayout);
 
-	void Run(VkCommandBuffer buff, float dTime, int firstSet, const VkDescriptorSet* set);
+	void Run(VkCommandBuffer buff, float dTime, u32 firstSet, const VkDescriptorSet* set);
 
 	void Release(VkDevice dev);
 

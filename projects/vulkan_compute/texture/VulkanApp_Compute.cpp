@@ -96,7 +96,7 @@ void VulkanApp_Compute::WriteDescriptorSet(VkDescriptorSetLayout& layout, const 
 int VulkanApp_Compute::CreateComputeDescriptorSets()
 {
     WriteDescriptorSet(Layout_PreparePressureSolver, 3);    // VeloX, VeloY, PressureData
-    WriteDescriptorSet(Layout_PressureSolver, 2);           // PressureData, Pressure
+    WriteDescriptorSet(Layout_PressureSolver, 3);           // PressureData, Pressure
     WriteDescriptorSet(Layout_UpdateVelocities, 3);         // VeloX, VeloY, Pressure
 
     WriteDescriptorSet(Layout_AdvectDye, 4);                 // VeloX, VeloY, TempVeloX, TempVeloY
@@ -126,7 +126,7 @@ int VulkanApp_Compute::CreateComputeDescriptorSets()
             return -1;
         }
 
-        std::array <vulkan_descriptor_set_info, 5> const descriptor_set_infos =
+        std::array <vulkan_descriptor_set_info, 6> const descriptor_set_infos =
         { {
             // Advect Velocity
             {
@@ -155,6 +155,12 @@ int VulkanApp_Compute::CreateComputeDescriptorSets()
                 .layout = &Layout_PressureSolver,
                 .set_index = 0u,
                 .out_set = &DescriptorSet_PressureSolver
+            },
+            {
+                .desc_pool = &descriptor_pool_compute,
+                .layout = &Layout_PressureSolver,
+                .set_index = 0u,
+                .out_set = &DescriptorSet_PressureSolverB
             },
             // Pressure Solver Prepare
             {
@@ -216,8 +222,14 @@ int VulkanApp_Compute::BindComputeResources()
     BindComputeResource
     (
         DescriptorSet_PressureSolver,
-        { smoke->Buffer_VelocityX, smoke->Buffer_VelocityY, smoke->Buffer_PressureSolve, smoke->Buffer_Pressure },
-        4
+        { smoke->Buffer_PressureSolve, smoke->Buffer_Pressure, smoke->Buffer_PressureB },
+        3
+    );
+    BindComputeResource
+    (
+        DescriptorSet_PressureSolverB,
+        { smoke->Buffer_PressureSolve, smoke->Buffer_PressureB, smoke->Buffer_Pressure },
+        3
     );
     // Update Velocity
     BindComputeResource
@@ -313,10 +325,25 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
     u32 const thread_group_dim_x = (GridSizeX + 1 + thread_group_size - 1) / thread_group_size;
     u32 const thread_group_dim_y = (GridSizeY + 1 + thread_group_size - 1) / thread_group_size;
 
-    // TODO: Pressure Solver
+    // TODO: Pressure Solver Prepare
     //Pipeline_PreparePressureSolver.Run(command_buffer_compute, dTime, DescriptorSet_PreparePressureSolver.set_index, &DescriptorSet_PreparePressureSolver.desc_set);
     //Pipeline_PressureSolver.Run(command_buffer_compute, dTime, DescriptorSet_PressureSolver.set_index, &DescriptorSet_PressureSolver.desc_set);
     
+    // TODO: Check if final output is in B
+    for (int i = 0; i < VkApp->GetSolverIterations(); i++)
+    {
+        Pipeline_PressureSolver.Run
+        (
+            command_buffer_compute,
+            dTime,
+            (i % 2 == 0) ?  DescriptorSet_PressureSolver.set_index : DescriptorSet_PressureSolverB.set_index,
+            (i % 2 == 0) ?  &DescriptorSet_PressureSolver.desc_set : &DescriptorSet_PressureSolverB.desc_set
+        );
+        vkCmdDispatch(command_buffer_compute, thread_group_dim_x, thread_group_dim_y, 1);
+        WaitForBarrier(VK_ACCESS_SHADER_READ_BIT);
+    }
+    WaitForBarrier(VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT);
+
     Pipeline_UpdateVelocities.Run(command_buffer_compute, dTime, DescriptorSet_UpdateVelocities.set_index, &DescriptorSet_UpdateVelocities.desc_set);
     vkCmdDispatch(command_buffer_compute, thread_group_dim_x, thread_group_dim_y, 1);
 
@@ -452,6 +479,19 @@ int VulkanApp_Compute::UnmapData()
         return 0;
     }
 
+    if (!map_and_unmap_memory(
+        *VkApp->GetDevice(),
+        (VkApp->GetSolverIterations() % 2 == 0) ? smoke->Buffer_Pressure.memory : smoke->Buffer_PressureB.memory,
+        [smoke](void* mem)
+        {
+            memcpy(smoke->Pressure, mem, sizeof(float) * CellCount);
+        }
+    ))
+    {
+        assert(false);
+        return 0;
+    }
+
     return 1;
 }
 
@@ -464,6 +504,7 @@ void VulkanApp_Compute::Terminate()
 
     release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_PreparePressureSolver);
     release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_PressureSolver);
+    release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_PressureSolverB);
     release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_UpdateVelocities);
     release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_AdvectVelocity);
     release_vulkan_descriptor_sets(*VkApp->GetDevice(), 1u, &DescriptorSet_AdvectDye);
