@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\maths.cpp" />
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\utility.cpp" />
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\vulkan_context.cpp" />
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\vulkan_pipeline.cpp" />
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\vulkan_resources.cpp" />
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\SmokeSimulation\SmokeSimulation\SmokeData.cpp">
+      <Filter>SmokeSimulation\SmokeSimulation</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\SmokeSimulation\VulkanApp.cpp">
+      <Filter>SmokeSimulation</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\SmokeSimulation\VulkanApp_Compute.cpp">
+      <Filter>SmokeSimulation</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\SmokeSimulation\VulkanApp_Graphics.cpp">
+      <Filter>SmokeSimulation</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\SmokeSimulation\Vulkan_Compute_Pipeline.cpp">
+      <Filter>SmokeSimulation</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\SmokeSimulation\main.cpp">
+      <Filter>SmokeSimulation</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\maths.h" />
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\utility.h" />
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\vulkan_context.h" />
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\vulkan_pipeline.h" />
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\vulkan_resources.h" />
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\SmokeSimulation\SmokeSimulation\SmokeData.h">
+      <Filter>SmokeSimulation\SmokeSimulation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\SmokeSimulation\VulkanApp.h">
+      <Filter>SmokeSimulation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\SmokeSimulation\VulkanApp_Compute.h">
+      <Filter>SmokeSimulation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\SmokeSimulation\VulkanApp_Graphics.h">
+      <Filter>SmokeSimulation</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\vulkan_compute\SmokeSimulation\Vulkan_Compute_Pipeline.h">
+      <Filter>SmokeSimulation</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="SmokeSimulation">
+      <UniqueIdentifier>{030D870E-771C-3954-84FD-F5E15D3D0FD3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SmokeSimulation\SmokeSimulation">
+      <UniqueIdentifier>{D0AD93AB-CEA2-3502-A5BA-8796DF03401A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

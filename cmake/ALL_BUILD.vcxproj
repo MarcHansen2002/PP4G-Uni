@@ -140,6 +140,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
+    <ProjectReference Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\cmake\projects\PP4G_CellularAutomata.vcxproj">
+      <Project>{112B3F0B-24CC-35CE-B9A0-CF8F69DA637A}</Project>
+      <Name>PP4G_CellularAutomata</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\cmake\projects\PP4G_SmokeSimulation.vcxproj">
+      <Project>{04059331-1A64-382D-BF62-357B4118756B}</Project>
+      <Name>PP4G_SmokeSimulation</Name>
+    </ProjectReference>
     <ProjectReference Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\cmake\_deps\glfw-build\src\glfw.vcxproj">
       <Project>{20548472-4EA8-3544-9175-F60E9BE8BFD3}</Project>
       <Name>glfw</Name>
@@ -147,14 +155,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ProjectReference Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\cmake\imgui.vcxproj">
       <Project>{64915363-14A5-3F77-85A4-0724F8714959}</Project>
       <Name>imgui</Name>
-    </ProjectReference>
-    <ProjectReference Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\cmake\projects\vulkan_compute_buffer.vcxproj">
-      <Project>{ECB866CE-2AEE-354F-82A6-F1469DFACD7C}</Project>
-      <Name>vulkan_compute_buffer</Name>
-    </ProjectReference>
-    <ProjectReference Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\cmake\projects\vulkan_compute_texture.vcxproj">
-      <Project>{B39C1E7C-4132-37F7-A254-9CEC40E170CC}</Project>
-      <Name>vulkan_compute_texture</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\maths.cpp" />
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\utility.cpp" />
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\vulkan_context.cpp" />
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\vulkan_pipeline.cpp" />
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\vulkan_resources.cpp" />
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\Automata\Automata.cpp">
+      <Filter>CellularAutomata\Automata</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\VulkanApp.cpp">
+      <Filter>CellularAutomata</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\VulkanApp_Graphics.cpp">
+      <Filter>CellularAutomata</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\main.cpp">
+      <Filter>CellularAutomata</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\maths.h" />
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\utility.h" />
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\vulkan_context.h" />
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\vulkan_pipeline.h" />
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\vulkan_resources.h" />
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\Automata\Automata.h">
+      <Filter>CellularAutomata\Automata</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\VulkanApp.h">
+      <Filter>CellularAutomata</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\VulkanApp_Graphics.h">
+      <Filter>CellularAutomata</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CellularAutomata">
+      <UniqueIdentifier>{32DF34A1-264C-38FB-A2C5-268396B028BE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CellularAutomata\Automata">
+      <UniqueIdentifier>{CFDC3DD9-3D4E-3939-BCAF-E8C2EE058CD6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
