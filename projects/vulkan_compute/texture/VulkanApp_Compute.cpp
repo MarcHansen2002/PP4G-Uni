@@ -391,7 +391,7 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
 
     // TODO: Semaphore and don't bother re-copying density to cpu and gpu again we can just render from the GPU density data
     
-
+    VkSemaphore* semaphore = VkApp->Graphics.GetComputeSemaphore();
     VkSubmitInfo const submit_info =
     {
       .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
@@ -401,8 +401,8 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
       .pWaitDstStageMask = VK_NULL_HANDLE,
       .commandBufferCount = 1u,
       .pCommandBuffers = &command_buffer_compute,
-      .signalSemaphoreCount = 0u,
-      .pSignalSemaphores = VK_NULL_HANDLE         // semaphores to trigger when command buffer has finished executing
+      .signalSemaphoreCount = 1u,
+      .pSignalSemaphores = semaphore         // semaphores to trigger when command buffer has finished executing
     };
     if (!CHECK_VULKAN_RESULT(vkQueueSubmit(queue_compute, 1u, &submit_info,
         fence_compute))) // fence to signal when complete
@@ -414,6 +414,8 @@ int VulkanApp_Compute::ComputeDispatch(float dTime)
     {
         HasSubmit = true;
     }
+
+    VkApp->Graphics.Render(dTime);
 
     if (vkWaitForFences(
         *VkApp->GetDevice(),

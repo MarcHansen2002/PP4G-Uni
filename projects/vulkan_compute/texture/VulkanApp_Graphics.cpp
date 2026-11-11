@@ -592,6 +592,11 @@ int VulkanApp_Graphics::CreateGraphicsSyncObjects()
         DBG_ASSERT(false);
         return -1;
     }
+    if (!create_vulkan_semaphores(1u, &semaphore_compute))
+    {
+        DBG_ASSERT(false);
+        return -1;
+    }
     if (!create_vulkan_fences(1u, 0u, &Fence))
     {
         DBG_ASSERT(false);
@@ -765,6 +770,7 @@ int VulkanApp_Graphics::Render(float dTime)
             return -1;
         }
     }
+    Submit();
 }
 
 int VulkanApp_Graphics::Submit()
@@ -775,18 +781,24 @@ int VulkanApp_Graphics::Submit()
         return -1;
     }
 
+    std::array<VkSemaphore, 2> const wait_semaphores =
+    {
+        swapchain_image_available_semaphore,
+        semaphore_compute
+    };
+    std::array<VkPipelineStageFlags, 2> const stage_flags =
+    {
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+        VK_PIPELINE_STAGE_TRANSFER_BIT
+    };
 
-    // submit graphics commands
-    VkPipelineStageFlags const wait_stage_mask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT; // look me up!
-    // fill in 'submit_info'
-    // remember we must WAIT for 'swapchain_image_available_semaphore' semaphore to be triggered before we submit
     VkSubmitInfo const submit_info =
     {
         .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
         //.pNext = VK_NULL_HANDLE,
-        .waitSemaphoreCount = 1u,
-        .pWaitSemaphores = &swapchain_image_available_semaphore, // wait for these semaphores to be signalled before submitting command buffers
-        .pWaitDstStageMask = &wait_stage_mask,
+        .waitSemaphoreCount = 2u,
+        .pWaitSemaphores = wait_semaphores.data(), // wait for these semaphores to be signalled before submitting command buffers
+        .pWaitDstStageMask = stage_flags.data(),
         .commandBufferCount = 1u,
         .pCommandBuffers = &CommandBuffer,
         .signalSemaphoreCount = 0u,
@@ -833,6 +845,7 @@ void VulkanApp_Graphics::Terminate()
 {
     release_vulkan_fences(1u, &Fence);
     release_vulkan_semaphores(1u, &swapchain_image_available_semaphore);
+    release_vulkan_semaphores(1u, &semaphore_compute);
 
     release_vulkan_mesh(*VkApp->GetDevice(), PlaneMesh);
 

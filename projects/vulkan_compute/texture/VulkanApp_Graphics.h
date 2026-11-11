@@ -30,6 +30,8 @@ class VulkanApp_Graphics
 public:
 	VulkanApp_Graphics() {}
 
+	VkSemaphore* GetComputeSemaphore() { return &semaphore_compute; }
+
 	VulkanApp* VkApp = VK_NULL_HANDLE;
 #pragma region Getters
 	VkCommandBuffer* GetCommandBuffer() { return &CommandBuffer; }
@@ -45,6 +47,7 @@ public:
 	vulkan_texture Render_Texture;	// Empty texture to build the smoke density into
 
 	VkSemaphore swapchain_image_available_semaphore = VK_NULL_HANDLE;
+	VkSemaphore semaphore_compute = VK_NULL_HANDLE;
 
 	VkQueue Queue = VK_NULL_HANDLE;
 

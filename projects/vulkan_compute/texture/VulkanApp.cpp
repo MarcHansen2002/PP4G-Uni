@@ -79,8 +79,7 @@ int VulkanApp::Render(float dTime)
 
     UpdateSmoke(dTime);
 
-    Graphics.Render(dTime);
-    Graphics.Submit();
+    //Graphics.Render(dTime);
 
     return 1;
 }

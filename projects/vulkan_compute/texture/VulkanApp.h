@@ -163,18 +163,22 @@ private:
 		}
 		else
 		{
+			// TODO: Bouyancy
+			// TODO: Vorticity Confinement
+			// TODO: Velocity Diffusion
+			// TODO: Velocity Dissipation
+
 			Smoke.RunPressureSolver(FluidDensity, dTime);
 			Smoke.UpdateVelocities(FluidDensity, dTime);
 			Smoke.AdvectDye(dTime);
 			Smoke.AdvectVelocity(dTime);
+
+			// TODO: Density Dissipation
+			// TODO: Temperature Dissipation
 		}
 
-		// TODO: Bouyancy
-		// TODO: Velocity Dissipation
-		// TODO: Density Dissipation
-		// TODO: Velocity Diffusion
-		// TODO: Vorticity Confinement
-		// TODO: Temperature Dissipation
+		
+		
 		// TODO: Obstacle interaction (very big stretch, not likely to happen)
 	}
 
