@@ -462,7 +462,7 @@ int VulkanApp_Graphics::CreateGraphicsResources()
         }
 
 
-        VkFormat const image_format = VK_FORMAT_R8G8B8A8_UNORM;
+        VkFormat const image_format = VK_FORMAT_R32_SFLOAT;
 
         VkFormatProperties format_properties = {};
         // Get device properties for the requested texture format

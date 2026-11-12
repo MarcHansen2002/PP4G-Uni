@@ -56,20 +56,13 @@ public:
 				if (Alive(x, y-1)) aliveCount++;
 				if (Alive(x + 1, y-1)) aliveCount++;
 
-				// Survive
-				if (Alive(x, y) && (aliveCount == 2 || aliveCount == 3))
+				if (Alive(x, y))
 				{
-					continue;
+					newCells[i] = (aliveCount == 2 || aliveCount == 3);
 				}
-				// Reproduce
-				else if ((!Alive(x, y)) && aliveCount == 3)
-				{
-					newCells[i] = 1;
-				}
-				// Die
 				else
 				{
-					newCells[i] = 0;
+					newCells[i] = aliveCount == 3;
 				}
 			}
 		}
@@ -101,6 +94,7 @@ public:
 			}
 		))
 		{
+			assert(false);
 			return;
 		}
 	}
