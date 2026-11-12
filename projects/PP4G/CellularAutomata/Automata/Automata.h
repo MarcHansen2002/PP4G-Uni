@@ -10,21 +10,20 @@ constexpr static int GridSizeX = 256;
 constexpr static int GridSizeY = 256;
 constexpr static int CellCount = GridSizeX * GridSizeY;
 
-enum Direction
+enum GameTypes
 {
-	Up,
-	Left,
-	Right,
-	Down
+	E_GameOfLife,
 };
 
 class Automata
 {
 public:
-
+	Automata() {};
 	vulkan_buffer CellBuffer;
-
 	float Cells[CellCount]{};
+	virtual void UpdateOnce() {};
+	virtual void Inspector() {};
+
 
 	bool Alive(int x, int y)
 	{
@@ -35,41 +34,6 @@ public:
 	{
 		return x + (y * GridSizeX);
 	}
-
-	void UpdateOnce()
-	{
-		// TODO: Cellular automata method
-		float* newCells = new float[CellCount]{};
-
-		for (int x = 0; x < GridSizeX; x++)
-		{
-			for (int y = 0; y < GridSizeY; y++)
-			{
-				int i = GetCellIndex(x, y);
-				int aliveCount = 0;
-				if (Alive(x - 1, y)) aliveCount++;
-				if (Alive(x + 1, y)) aliveCount++;
-				if (Alive(x - 1, y+1)) aliveCount++;
-				if (Alive(x, y+1)) aliveCount++;
-				if (Alive(x + 1, y+1)) aliveCount++;
-				if (Alive(x - 1, y-1)) aliveCount++;
-				if (Alive(x, y-1)) aliveCount++;
-				if (Alive(x + 1, y-1)) aliveCount++;
-
-				if (Alive(x, y))
-				{
-					newCells[i] = (aliveCount == 2 || aliveCount == 3);
-				}
-				else
-				{
-					newCells[i] = aliveCount == 3;
-				}
-			}
-		}
-		memcpy(Cells, newCells, sizeof(float) * CellCount);
-		delete[] newCells;
-	}
-
 	void CreateBuffers(VkPhysicalDevice physDev, VkDevice dev)
 	{
 		if (!create_vulkan_buffer(physDev, dev,
@@ -83,7 +47,6 @@ public:
 			return;
 		}
 	}
-
 	void MapBuffer(VkDevice dev)
 	{
 		if (!map_and_unmap_memory(
@@ -98,4 +61,9 @@ public:
 			return;
 		}
 	}
+	void Terminate(VkDevice dev)
+	{
+		release_vulkan_buffer(dev, CellBuffer);
+	}
+private:
 };

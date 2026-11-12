@@ -9,8 +9,7 @@ int VulkanApp::Init()
         DBG_ASSERT(false);
         return -1;
     }
-
-    Grid.CreateBuffers(physical_device, device);
+    SwapType(E_GameOfLife);
     Graphics.Init(this);
 
     imgui_setup_context(Graphics.GetCommandBuffer());
@@ -62,9 +61,9 @@ int VulkanApp::Render(float dTime)
 {
     if (play)
     {
-        Grid.UpdateOnce();
+        Grid->UpdateOnce();
     }
-    Grid.MapBuffer(device);
+    Grid->MapBuffer(device);
 
     Graphics.Render(dTime);
 
@@ -81,24 +80,26 @@ void VulkanApp::RenderImGui(float dTime)
     ImGui::Checkbox("Play/Pause", &play);
     if (ImGui::Button("Proceed one frame"))
     {
-        Grid.UpdateOnce();
+        Grid->UpdateOnce();
     }
 
     if (ImGui::Button("Clear Grid"))
     {
-        std::fill_n(Grid.Cells, CellCount, 0);
+        std::fill_n(Grid->Cells, CellCount, 0);
     }
     if (ImGui::Button("Fill Random"))
     {
         std::mt19937 rng(std::random_device{}());
         std::uniform_int_distribution<int> dist(0, 1);
 
-        std::generate_n(Grid.Cells, CellCount, [&]()
+        std::generate_n(Grid->Cells, CellCount, [&]()
             {
                 return float(dist(rng));
             });
 
     }
+
+    Grid->Inspector();
 
     ImGui::End();
 }

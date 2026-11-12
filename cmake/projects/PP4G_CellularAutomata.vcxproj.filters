@@ -9,6 +9,9 @@
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\Automata\Automata.cpp">
       <Filter>CellularAutomata\Automata</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\Automata\GameOfLife\GameOfLife.cpp">
+      <Filter>CellularAutomata\Automata\GameOfLife</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\VulkanApp.cpp">
       <Filter>CellularAutomata</Filter>
     </ClCompile>
@@ -28,6 +31,9 @@
     <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\Automata\Automata.h">
       <Filter>CellularAutomata\Automata</Filter>
     </ClInclude>
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\Automata\GameOfLife\GameOfLife.h">
+      <Filter>CellularAutomata\Automata\GameOfLife</Filter>
+    </ClInclude>
     <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\VulkanApp.h">
       <Filter>CellularAutomata</Filter>
     </ClInclude>
@@ -44,6 +50,9 @@
     </Filter>
     <Filter Include="CellularAutomata\Automata">
       <UniqueIdentifier>{CFDC3DD9-3D4E-3939-BCAF-E8C2EE058CD6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CellularAutomata\Automata\GameOfLife">
+      <UniqueIdentifier>{E776DE0C-C0ED-3896-8B80-19C4F68111E1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

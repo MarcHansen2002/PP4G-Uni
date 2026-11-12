@@ -21,6 +21,7 @@
 
 #include "VulkanApp_Graphics.h"
 #include "Automata/Automata.h"
+#include "Automata/GameOfLife/GameOfLife.h"
 
 struct vertex_2d_uv
 {
@@ -64,7 +65,7 @@ public:
 	}
 
 	VulkanApp_Graphics Graphics;
-	Automata Grid;
+	Automata* Grid = nullptr;
 
 	VkDevice* GetDevice() { return &device; }
 	VkPhysicalDevice* GetPhysicalDevice() { return &physical_device; }
@@ -88,5 +89,28 @@ private:
 	VkDescriptorPool imgui_descriptor_pool;
 
 	bool play = false;
+
+	GameTypes currentType = E_GameOfLife;
+
+	void SwapType(GameTypes type)
+	{
+		if (Grid != nullptr)
+		{
+			Grid->Terminate(device);
+			delete Grid;
+			Grid = nullptr;
+		}
+		currentType = type;
+		switch (currentType)
+		{
+		case E_GameOfLife:
+			Grid = new GameOfLife;
+			break;
+		default:
+			assert(false);
+			return;
+		}
+		Grid->CreateBuffers(physical_device, device);
+	}
 
 };

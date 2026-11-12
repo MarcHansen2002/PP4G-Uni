@@ -447,12 +447,15 @@ int VulkanApp_Graphics::CreateGraphicsResources()
             {
                 model_buffer* buf = (model_buffer*)mem;
 
+                f32 minScale = VkApp->GetExtent()->width > VkApp->GetExtent()->height ?
+                    VkApp->GetExtent()->height : VkApp->GetExtent()->width;
+
                 buf->model_matrix = fast_transform_2D
                 (
                     0.f, 0.f,
                     0.f,
                     0.f, 0.f,
-                    VkApp->GetExtent()->width, VkApp->GetExtent()->height
+                    minScale, minScale
                 );
             }
         ))
@@ -687,7 +690,7 @@ int VulkanApp_Graphics::Render(float dTime)
         vkCmdCopyBufferToImage
         (
             CommandBuffer,
-            VkApp->Grid.CellBuffer.buffer,
+            VkApp->Grid->CellBuffer.buffer,
             Render_Texture.image,
             VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
             1,

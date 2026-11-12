@@ -260,6 +260,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\vulkan_resources.h" />
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\Automata\Automata.cpp" />
     <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\Automata\Automata.h" />
+    <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\Automata\GameOfLife\GameOfLife.cpp" />
+    <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\Automata\GameOfLife\GameOfLife.h" />
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\VulkanApp.cpp" />
     <ClInclude Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\VulkanApp.h" />
     <ClCompile Include="C:\Users\MarcH\Desktop\Projects\Uni\Masters\PP4G\PP4G-Uni\projects\PP4G\CellularAutomata\VulkanApp_Graphics.cpp" />
