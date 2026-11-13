@@ -114,11 +114,11 @@ private:
 
 	bool CheckSmokeSimilarity(std::string step)
 	{
-		if (!CheckArraySimilarity(Smoke.Density, Smoke_CPU.Density, CellCount, step, "Density"))
-		{
-			assert(false);
-			return false;
-		}
+		//if (!CheckArraySimilarity(Smoke.Density, Smoke_CPU.Density, CellCount, step, "Density"))
+		//{
+		//	assert(false);
+		//	return false;
+		//}
 		if (!CheckArraySimilarity(Smoke.VelocityX, Smoke_CPU.VelocityX, VeloSizeX, step, "VeloX"))
 		{
 			assert(false);

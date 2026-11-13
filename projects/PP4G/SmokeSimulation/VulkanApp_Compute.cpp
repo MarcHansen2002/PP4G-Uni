@@ -471,7 +471,7 @@ int VulkanApp_Compute::UnmapData()
         smoke->Buffer_Temp_Density.memory,
         [smoke](void* mem)
         {
-            memcpy(smoke->Density, mem, sizeof(float) * CellCount);
+            memcpy(smoke->Density, mem, sizeof(SmokeCell) * CellCount);
         }
     ))
     {

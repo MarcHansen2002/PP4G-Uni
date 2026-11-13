@@ -34,10 +34,27 @@ struct PressureSolver
 	float velocityTerm;
 };
 
+struct SmokeCell
+{
+	SmokeCell()
+	{
+		Density = 0.f;
+		Red = 0.f;
+		Blue = 0.f;
+		Green = 0.f;
+	}
+	
+	float Red;
+	float Green;
+	float Blue;
+	float Density;
+};
+
 struct SmokeState
 {
 	// Cell centered
-	float Density[CellCount]{};
+	//float Density[CellCount]{};
+	SmokeCell Density[CellCount]{};
 	float Temperature[CellCount]{};
 	float Pressure[CellCount]{};
 	float PressureB[CellCount]{};
@@ -48,7 +65,8 @@ struct SmokeState
 	// Temporary values
 	float TempVelocityX[CellCount + GridSizeX]{};
 	float TempVelocityY[CellCount + GridSizeY]{};
-	float TempDensity[CellCount]{};
+	//float TempDensity[CellCount]{};
+	SmokeCell TempDensity[CellCount]{};
 	float TempTemperature[CellCount]{};
 
 	PressureSolver PressureSolveData[CellCount]{};
@@ -68,7 +86,7 @@ struct SmokeState
 
 	void ClearSmoke()
 	{
-		std::fill_n(Density, CellCount, 0.f);
+		std::fill_n(Density, CellCount, SmokeCell());
 		std::fill_n(Temperature, CellCount, 0.f);
 		std::fill_n(Pressure, CellCount, 0.f);
 		std::fill_n(VelocityX, VeloSizeX, 0.f);
@@ -80,7 +98,7 @@ struct SmokeState
 	int CreateBuffers(VkPhysicalDevice physDev, VkDevice dev)
 	{
 		if (!create_vulkan_buffer(physDev, dev,
-			sizeof(float) * CellCount,
+			sizeof(SmokeCell) * CellCount,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
@@ -160,7 +178,7 @@ struct SmokeState
 			return -1;
 		}
 		if (!create_vulkan_buffer(physDev, dev,
-			sizeof(float) * CellCount,
+			sizeof(SmokeCell) * CellCount,
 			VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,
 			VK_SHARING_MODE_EXCLUSIVE,
 			VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
@@ -218,7 +236,7 @@ struct SmokeState
 			dev,
 			Buffer_Density.memory, [this](void* mem)
 			{
-				memcpy(mem, Density, sizeof(float) * CellCount);
+				memcpy(mem, Density, sizeof(SmokeCell) * CellCount);
 			}
 		))
 		{
@@ -439,37 +457,37 @@ struct SmokeState
 
 	void AdvectDye(float dTime)
 	{
-		for (int x = 0; x < GridSizeX; x++)
-		{
-			for (int y = 0; y < GridSizeY; y++)
-			{
-				int i = GetCellIndex(x, y);
-
-				if (IsSolid(x, y))
-				{
-					TempDensity[i] = 0.0f;
-					continue;
-				}
-
-				glm::vec2 pos(
-					x + 0.5f,
-					y + 0.5f
-				);
-
-				glm::vec2 vel = GetVelocityAtGridPos(pos);
-
-				glm::vec2 posPrev =
-					pos - vel * (dTime / CellSize);
-
-				TempDensity[i] = SampleBilinear(
-					Density,
-					GridSizeX,
-					GridSizeY,
-					posPrev.x - 0.5f,
-					posPrev.y - 0.5f
-				);
-			}
-		}
+		//for (int x = 0; x < GridSizeX; x++)
+		//{
+		//	for (int y = 0; y < GridSizeY; y++)
+		//	{
+		//		int i = GetCellIndex(x, y);
+		//
+		//		if (IsSolid(x, y))
+		//		{
+		//			TempDensity[i] = 0.0f;
+		//			continue;
+		//		}
+		//
+		//		glm::vec2 pos(
+		//			x + 0.5f,
+		//			y + 0.5f
+		//		);
+		//
+		//		glm::vec2 vel = GetVelocityAtGridPos(pos);
+		//
+		//		glm::vec2 posPrev =
+		//			pos - vel * (dTime / CellSize);
+		//
+		//		TempDensity[i] = SampleBilinear(
+		//			Density,
+		//			GridSizeX,
+		//			GridSizeY,
+		//			posPrev.x - 0.5f,
+		//			posPrev.y - 0.5f
+		//		);
+		//	}
+		//}
 
 		// Copy temporary density back
 		for (int i = 0; i < GridSizeX * GridSizeY; i++)
@@ -552,6 +570,10 @@ struct SmokeEmitter
 	int x = GridSizeX / 2;
 	int y = GridSizeY / 2;
 
+	float r = 1.f;
+	float g = 1.f;
+	float b = 1.f;
+
 	float Density = 2.f;
 	float Temperature = 5.f;
 
@@ -571,7 +593,10 @@ struct SmokeEmitter
 
 			int i = state.GetCellIndex(x, y);
 
-			state.Density[i] = Density;
+			state.Density[i].Density = Density;
+			state.Density[i].Red = r;
+			state.Density[i].Green = g;
+			state.Density[i].Blue = b;
 			state.Temperature[i] = Temperature;
 
 			state.VelocityX[state.GetVelocityXIndex(x, y)] = VelocityX;
@@ -598,6 +623,10 @@ struct SmokeEmitter
 
 			ImGui::SliderFloat("Velocity X", &VelocityX, -10.f, 10.f);
 			ImGui::SliderFloat("Velocity Y", &VelocityY, -10.f, 10.f);
+
+			ImGui::SliderFloat("Red", &r, 0.f, 1.f);
+			ImGui::SliderFloat("Green", &g, 0.f, 1.f);
+			ImGui::SliderFloat("Blue", &b, 0.f, 1.f);
 		}
 	}
 

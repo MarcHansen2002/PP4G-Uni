@@ -1,6 +1,14 @@
 #version 430
 #extension GL_GOOGLE_include_directive : require
 
+struct SmokeCell
+{
+	float Red;
+	float Green;
+	float Blue;
+	float Density;
+};
+
 layout (local_size_x = 16, local_size_y = 16) in;
 
 layout (std430, set = 0, binding = 0) readonly buffer velocity_x
@@ -11,13 +19,13 @@ layout (std430, set = 0, binding = 1) readonly buffer velocity_y
 {
 	float VelocityY[];
 };
-layout (std430, set = 0, binding = 2) writeonly buffer density
+layout (std430, set = 0, binding = 2) writeonly buffer smoke
 {
-	float Density[];
+	SmokeCell Smoke[];
 };
-layout (std430, set = 0, binding = 3) writeonly buffer temp_density
+layout (std430, set = 0, binding = 3) writeonly buffer temp_smoke
 {
-	float TempDensity[];
+	SmokeCell TempSmoke[];
 };
 
 layout(push_constant) uniform Values
@@ -39,7 +47,10 @@ void main ()
 
 	if (IsSolid(x, y))
 	{
-		TempDensity[i] = 0.0f;
+		TempSmoke[i].Density = 0.0f;
+		TempSmoke[i].Red = 0.0f;
+		TempSmoke[i].Blue = 0.0f;
+		TempSmoke[i].Green = 0.0f;
 		return;
 	}
 
@@ -62,5 +73,13 @@ void main ()
     int x1 = min(x0 + 1, width - 1);
     int y1 = min(y0 + 1, height - 1);
 
-	TempDensity[i] = SampleBilinear(Density[x0 + y0 * width], Density[x1 + y0 * width], Density[x0 + y1 * width], Density[x1 + y1 * width], fract(posPrev));
+	int a = x0 + y0 * width;
+	int b = x1 + y0 * width;
+	int c = x0 + y1 * width;
+	int d = x1 + y1 * width;
+
+	TempSmoke[i].Density = SampleBilinear(Smoke[a].Density, Smoke[b].Density, Smoke[c].Density, Smoke[d].Density, fract(posPrev));
+	TempSmoke[i].Red = SampleBilinear(Smoke[a].Red, Smoke[b].Red, Smoke[c].Red, Smoke[d].Red, fract(posPrev));
+	TempSmoke[i].Green = SampleBilinear(Smoke[a].Green, Smoke[b].Green, Smoke[c].Green, Smoke[d].Green, fract(posPrev));
+	TempSmoke[i].Blue = SampleBilinear(Smoke[a].Blue, Smoke[b].Blue, Smoke[c].Blue, Smoke[d].Blue, fract(posPrev));
 }

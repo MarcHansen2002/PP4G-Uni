@@ -240,7 +240,7 @@ int VulkanApp_Graphics::CreateGraphicsPipeline()
         VkPipelineColorBlendAttachmentState const pipeline_colour_blend_attachment_states[] =
         {
             {
-    #if 0
+    #if 1
                 .blendEnable = VK_TRUE,
                 
                 // if you want alpha blending
@@ -446,13 +446,14 @@ int VulkanApp_Graphics::CreateGraphicsResources()
             [this](void* mem)
             {
                 model_buffer* buf = (model_buffer*)mem;
+                float maxScale = VkApp->GetExtent()->width > VkApp->GetExtent()->height ? VkApp->GetExtent()->height : VkApp->GetExtent()->width;
 
                 buf->model_matrix = fast_transform_2D
                 (
                     0.f, 0.f,
                     0.f,
                     0.f, 0.f,
-                    VkApp->GetExtent()->width, VkApp->GetExtent()->height
+                    maxScale, maxScale
                 );
             }
         ))
@@ -462,7 +463,7 @@ int VulkanApp_Graphics::CreateGraphicsResources()
         }
 
 
-        VkFormat const image_format = VK_FORMAT_R32_SFLOAT;
+        VkFormat const image_format = VK_FORMAT_R32G32B32A32_SFLOAT;
 
         VkFormatProperties format_properties = {};
         // Get device properties for the requested texture format
@@ -692,7 +693,7 @@ int VulkanApp_Graphics::Render(float dTime)
         );
 
 
-        begin_render_pass(CommandBuffer, { 0.39f, 0.8f, 0.92f }); // cornflower blue
+        begin_render_pass(CommandBuffer, { 0.f, 0.f, 0.f }); // Black
 
         // any graphics related command after this point is attached to this pipeline (on this command buffer)
         // bind graphics pipeline
