@@ -35,19 +35,19 @@ int VulkanApp_Compute::Init(VulkanApp* app)
 int VulkanApp_Compute::CreateComputePipeline()
 {
     Pipeline_AdvectVelocity.CreatePipeline(*VkApp->GetDevice(), Layout_AdvectVelocity);
-    Pipeline_AdvectVelocity.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_advect_velocity.comp.spv");
+    Pipeline_AdvectVelocity.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/Compute_Smoke/Smoke/smoke_advect_velocity.comp.spv");
     
     Pipeline_AdvectDye.CreatePipeline(*VkApp->GetDevice(), Layout_AdvectDye);
-    Pipeline_AdvectDye.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_advect_dye.comp.spv");
+    Pipeline_AdvectDye.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/Compute_Smoke/Smoke/smoke_advect_dye.comp.spv");
 
     Pipeline_UpdateVelocities.CreatePipeline(*VkApp->GetDevice(), Layout_UpdateVelocities);
-    Pipeline_UpdateVelocities.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_update_velocities.comp.spv");
+    Pipeline_UpdateVelocities.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/Compute_Smoke/Smoke/smoke_update_velocities.comp.spv");
 
     Pipeline_PressureSolver.CreatePipeline(*VkApp->GetDevice(), Layout_PressureSolver);
-    Pipeline_PressureSolver.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_pressure_solver.comp.spv");
+    Pipeline_PressureSolver.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/Compute_Smoke/Smoke/smoke_pressure_solver.comp.spv");
 
     Pipeline_PreparePressureSolver.CreatePipeline(*VkApp->GetDevice(), Layout_PreparePressureSolver);
-    Pipeline_PreparePressureSolver.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_pressure_solver_prepare.comp.spv");
+    Pipeline_PreparePressureSolver.SetShader(*VkApp->GetDevice(), "data/shaders/glsl/Compute_Smoke/Smoke/smoke_pressure_solver_prepare.comp.spv");
     return 1;
 }
 

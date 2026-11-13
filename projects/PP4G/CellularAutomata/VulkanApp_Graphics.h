@@ -21,8 +21,8 @@
 class VulkanApp;
 
 constexpr u32 NUM_SETS_GRAPHICS = 2u;
-constexpr char const* COMPILED_GRAPHICS_SHADER_PATH_VERT = "data/shaders/glsl/vulkan_compute_texture/sprite.vert.spv";
-constexpr char const* COMPILED_GRAPHICS_SHADER_PATH_FRAG = "data/shaders/glsl/vulkan_compute_texture/sprite.frag.spv";
+constexpr char const* COMPILED_GRAPHICS_SHADER_PATH_VERT = "data/shaders/glsl/Compute_Smoke/sprite.vert.spv";
+constexpr char const* COMPILED_GRAPHICS_SHADER_PATH_FRAG = "data/shaders/glsl/Compute_Smoke/sprite.frag.spv";
 
 class VulkanApp_Graphics
 {

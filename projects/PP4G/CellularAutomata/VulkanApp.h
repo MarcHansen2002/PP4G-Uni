@@ -42,7 +42,7 @@ struct smoke_render_buffer
 	float density[CellCount];
 };
 
-constexpr char const* WINDOW_TITLE = "vulkan_compute_texture";
+constexpr char const* WINDOW_TITLE = "Cellular Automata";
 
 constexpr u32 NUM_RESOURCES_COMPUTE_SET_0 = 2u;
 constexpr u32 BINDING_ID_SET_0_TEXTURE_INPUT = 0u;

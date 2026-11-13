@@ -100,6 +100,4 @@ public:
 	VkFence fence_compute = VK_NULL_HANDLE;
 
 	bool HasSubmit = false;
-	char const* COMPILED_COMPUTE_SHADER_ADVECT_VELOCITY = "data/shaders/glsl/vulkan_compute_texture/Smoke/smoke_advect_velocity.comp.spv";
-
 };
