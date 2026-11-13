@@ -112,6 +112,7 @@ void VulkanApp::RenderImGui(float dTime)
     if (ImGui::Button("Clear Smoke"))
     {
         Smoke.ClearSmoke();
+        Smoke.MapBuffers(device);
     }
     ImGui::End();
 }
