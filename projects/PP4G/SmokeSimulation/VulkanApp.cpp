@@ -69,10 +69,16 @@ int VulkanApp::CreateContext()
 // Render & Shutdown
 int VulkanApp::Render(float dTime)
 {
-    Emitter.Emit(Smoke, dTime);
+    std::for_each(Emitters.begin(), Emitters.end(), [&](SmokeEmitter emitter)
+        {
+            emitter.Emit(Smoke, dTime);
+        });
     if (CompareSmokes)
     {
-        Emitter.Emit(Smoke_CPU, dTime);
+        std::for_each(Emitters.begin(), Emitters.end(), [&](SmokeEmitter emitter)
+            {
+                emitter.Emit(Smoke_CPU, dTime);
+            });
     }
 
     
@@ -106,8 +112,24 @@ void VulkanApp::RenderImGui(float dTime)
     // TODO: Smoke params
     ImGui::NewLine();
     ImGui::Text("Emitter Parameters");
+    int index = 0;
+    std::for_each(Emitters.begin(), Emitters.end(), [&](SmokeEmitter& emitter)
+        {
+            ImGui::PushID(index);
+            emitter.ShowInspector(index);
+            index++;
+            ImGui::PopID();
+        });
 
-    Emitter.ShowInspector();
+    if (ImGui::Button("+"))
+    {
+        Emitters.push_back(SmokeEmitter());
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("-"))
+    {
+        Emitters.pop_back();
+    }
 
     if (ImGui::Button("Clear Smoke"))
     {
@@ -115,6 +137,8 @@ void VulkanApp::RenderImGui(float dTime)
         Smoke.MapBuffers(device);
     }
     ImGui::End();
+
+    // TODO: Draw emitters if view emitters is on
 }
 
 void VulkanApp::Terminate()

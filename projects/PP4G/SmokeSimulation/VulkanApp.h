@@ -182,7 +182,7 @@ private:
 		// TODO: Obstacle interaction (very big stretch, not likely to happen)
 	}
 
-	SmokeEmitter Emitter;
+	std::vector<SmokeEmitter> Emitters;
 	SmokeState Smoke;
 	SmokeState Smoke_CPU;
 };

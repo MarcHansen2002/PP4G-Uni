@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <string>
 #include "imgui.h"
 
 #include <vulkan/vulkan.h>
@@ -557,8 +558,12 @@ struct SmokeEmitter
 	float VelocityX = 0;
 	float VelocityY = -10;
 
+	bool active = false;
+
 	void Emit(SmokeState& state, float dTime)
 	{
+		if (!active) return;
+
 		timer += dTime;
 		if (timer >= speed * 1000)
 		{
@@ -577,18 +582,23 @@ struct SmokeEmitter
 		}
 	}
 
-	void ShowInspector()
+	void ShowInspector(int index = 0)
 	{
-		ImGui::SliderFloat("Spawn every X second", &speed, 0.001f, 10.f);
+		std::string title = "Emitter - " + std::to_string(index);
+		if (ImGui::CollapsingHeader(title.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::Checkbox("Enabled", &active);
+			ImGui::SliderFloat("Spawn every X second", &speed, 0.001f, 10.f);
 
-		ImGui::SliderInt("X Spawn", &x, 0, GridSizeX - 1);
-		ImGui::SliderInt("Y Spawn", &y, 0, GridSizeY - 1);
+			ImGui::SliderInt("X Spawn", &x, 0, GridSizeX - 1);
+			ImGui::SliderInt("Y Spawn", &y, 0, GridSizeY - 1);
 
-		ImGui::SliderFloat("Density", &Density, 0.f, 10.f);
-		ImGui::SliderFloat("Temperature", &Temperature, -50.f, 50.f);
+			ImGui::SliderFloat("Density", &Density, 0.f, 10.f);
+			ImGui::SliderFloat("Temperature", &Temperature, -50.f, 50.f);
 
-		ImGui::SliderFloat("Velocity X", &VelocityX, -10.f, 10.f);
-		ImGui::SliderFloat("Velocity Y", &VelocityY, -10.f, 10.f);
+			ImGui::SliderFloat("Velocity X", &VelocityX, -10.f, 10.f);
+			ImGui::SliderFloat("Velocity Y", &VelocityY, -10.f, 10.f);
+		}
 	}
 
 private:
