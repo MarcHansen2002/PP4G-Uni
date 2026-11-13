@@ -61,7 +61,7 @@ int VulkanApp::Render(float dTime)
 {
     if (play)
     {
-        Grid->UpdateOnce();
+        Grid->UpdateOnce(simd);
     }
     Grid->MapBuffer(device);
 
@@ -76,11 +76,11 @@ void VulkanApp::RenderImGui(float dTime)
 
     ImGui::Text("FPS: %.2f", (1000.f / dTime));
     ImGui::NewLine();
-
+    ImGui::Checkbox("Use SIMD", &simd);
     ImGui::Checkbox("Play/Pause", &play);
     if (ImGui::Button("Proceed one frame"))
     {
-        Grid->UpdateOnce();
+        Grid->UpdateOnce(simd);
     }
 
     if (ImGui::Button("Clear Grid"))

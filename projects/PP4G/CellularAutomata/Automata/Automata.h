@@ -5,6 +5,7 @@
 
 #include <vulkan/vulkan.h>
 #include "../../vulkan_resources.h"
+#include <nmmintrin.h>
 
 constexpr static int GridSizeX = 256;
 constexpr static int GridSizeY = 256;
@@ -21,18 +22,35 @@ public:
 	Automata() {};
 	vulkan_buffer CellBuffer;
 	float Cells[CellCount]{};
-	virtual void UpdateOnce() {};
+	virtual void UpdateOnceScalar() {};
+	virtual void UpdateOnceSIMD() {};
 	virtual void Inspector() {};
 
+	void UpdateOnce(bool SIMD)
+	{
+		SIMD ? UpdateOnceSIMD() : UpdateOnceScalar();
+	}
 
 	bool Alive(int x, int y)
 	{
+		if (x >= GridSizeX || x < 0) return false;
+		if (y >= GridSizeY || y < 0) return false;
 		int i = GetCellIndex(x, y);
 		return (Cells[i] > 0);
 	}
 	int GetCellIndex(int x, int y)
 	{
 		return x + (y * GridSizeX);
+	}
+	__m128 GetCellIndexSIMD(__m128 x, __m128 y)
+	{
+		__m128 xSize = _mm_set1_ps(GridSizeX);
+		y = _mm_mul_ps(y, xSize);
+		return _mm_add_ps(x, y);
+	}
+	vec2 GetCellCoord(int index)
+	{
+		return vec2(index % GridSizeX, index / GridSizeY);
 	}
 	void CreateBuffers(VkPhysicalDevice physDev, VkDevice dev)
 	{

@@ -89,6 +89,7 @@ private:
 	VkDescriptorPool imgui_descriptor_pool;
 
 	bool play = false;
+	bool simd = false;
 
 	GameTypes currentType = E_GameOfLife;
 
