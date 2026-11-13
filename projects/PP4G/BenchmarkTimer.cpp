@@ -1,4 +1,5 @@
 #include "BenchmarkTimer.h"
+#include <algorithm>
 
 float BenchmarkTimer::Restart()
 {
@@ -17,4 +18,10 @@ float BenchmarkTimer::Restart()
 void BenchmarkTimer::Start()
 {
 	recorded = clock.now();
+}
+void BenchmarkTimer::Clear()
+{
+	index = 0;
+	times = std::vector<float>(maxIndex, 0);
+	looped = false;
 }

@@ -123,6 +123,9 @@ public:
 	void Inspector() override
 	{
 		ImGui::Text("Game Of Life");
+
+		Automata::Inspector();
+
 		ImGui::PushID("Birth");
 		for (int i = 0; i < BirthRule.size(); i++)
 		{

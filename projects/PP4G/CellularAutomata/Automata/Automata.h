@@ -6,6 +6,7 @@
 #include <vulkan/vulkan.h>
 #include "../../vulkan_resources.h"
 #include <nmmintrin.h>
+#include "../../BenchmarkTimer.h"
 
 constexpr static int GridSizeX = 256;
 constexpr static int GridSizeY = 256;
@@ -19,16 +20,20 @@ enum GameTypes
 class Automata
 {
 public:
-	Automata() {};
+	Automata() : timer(1000)
+	{};
 	vulkan_buffer CellBuffer;
 	float Cells[CellCount]{};
 	virtual void UpdateOnceScalar() {};
 	virtual void UpdateOnceSIMD() {};
-	virtual void Inspector() {};
+	virtual void Inspector();
+	BenchmarkTimer timer;
 
 	void UpdateOnce(bool SIMD)
 	{
+		timer.Start();
 		SIMD ? UpdateOnceSIMD() : UpdateOnceScalar();
+		timer.Restart();
 	}
 
 	bool Alive(int x, int y)
