@@ -2,6 +2,11 @@
 #include "../Automata.h"
 #include <vector>
 
+#define S_ZERO _mm_set1_ps(0)
+#define S_ONE _mm_set1_ps(1)
+#define S_TWO _mm_set1_ps(2)
+#define S_THREE _mm_set1_ps(3)
+
 class GameOfLife : public Automata
 {
 public:
@@ -58,11 +63,6 @@ public:
 
 	void UpdateOnceSIMD() override
 	{
-		__m128 zero = _mm_set1_ps(0);
-		__m128 one = _mm_set1_ps(1);
-		__m128 two = _mm_set1_ps(2);
-		__m128 three = _mm_set1_ps(3);
-
 		float* newCells = new float[CellCount] {};	// Array of new cells so we don't overwrite the old ones before reading
 		__m128* check = (__m128*)Cells;				// Pointer to start of original array
 		for (int i = 0; i < CellCount; i+=4)
@@ -89,8 +89,8 @@ public:
 					__m128 xCheck = _mm_add_ps(cellX, _mm_set1_ps(x));
 					__m128 yCheck = _mm_add_ps(cellY, _mm_set1_ps(y));
 
-					__m128 validCellX = _mm_and_ps(_mm_cmplt_ps(xCheck, _mm_set1_ps(GridSizeX)), _mm_cmpge_ps(xCheck, zero));
-					__m128 validCellY = _mm_and_ps(_mm_cmplt_ps(yCheck, _mm_set1_ps(GridSizeY)), _mm_cmpge_ps(yCheck, zero));
+					__m128 validCellX = _mm_and_ps(_mm_cmplt_ps(xCheck, _mm_set1_ps(GridSizeX)), _mm_cmpge_ps(xCheck, S_ZERO));
+					__m128 validCellY = _mm_and_ps(_mm_cmplt_ps(yCheck, _mm_set1_ps(GridSizeY)), _mm_cmpge_ps(yCheck, S_ZERO));
 					__m128 validCell = _mm_and_ps(validCellX, validCellY);
 
 					// Load values of neighbours, Row major so Y changes should be accounted for
@@ -104,14 +104,14 @@ public:
 			}
 
 			// Set new state
-			__m128 alive = _mm_cmpeq_ps(*check, one);				// 1 if alive, 0 if dead
-			__m128 twoAlive = _mm_cmpeq_ps(aliveCount, two);		// 1 if 2 neighbours
-			__m128 threeAlive = _mm_cmpeq_ps(aliveCount, three);	// 1 if 3 neighbours
+			__m128 alive = _mm_cmpeq_ps(*check, S_ONE);				// 1 if alive, 0 if dead
+			__m128 twoAlive = _mm_cmpeq_ps(aliveCount, S_TWO);		// 1 if 2 neighbours
+			__m128 threeAlive = _mm_cmpeq_ps(aliveCount, S_THREE);	// 1 if 3 neighbours
 
 			__m128 survives = _mm_and_ps(alive, _mm_or_ps(twoAlive, threeAlive));	// 1 if the cell should survive
 			__m128 born = _mm_andnot_ps(alive, threeAlive);	// 1 if the cell should be born
 
-			__m128 result = _mm_and_ps(_mm_or_ps(survives, born), one);
+			__m128 result = _mm_and_ps(_mm_or_ps(survives, born), S_ONE);
 			_mm_store_ps(newCells + i, result);
 			check++; // Go to next 4 values
 		}
